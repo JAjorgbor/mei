@@ -15,7 +15,10 @@
     "@heroui/react": "^2.7.8",
     "@heroui/system": "^2.4.15",
     "@heroui/theme": "^2.4.15",
+    "@hookform/resolvers": "^5.0.1",
     "@reduxjs/toolkit": "^2.7.0",
+    "@tanstack/react-table": "^8.21.3",
+    "@types/react-color": "^3.0.13",
     "eslint-plugin-next-on-pages": "^1.13.12",
     "framer-motion": "^12.9.4",
     "hamburger-react": "^2.5.2",
@@ -24,8 +27,13 @@
     "next": "14.1.1",
     "next-auth": "^5.0.0-beta.26",
     "react": "^18.2.0",
+    "react-color": "^2.19.3",
     "react-dom": "^18.2.0",
-    "react-redux": "^9.2.0"
+    "react-hook-form": "^7.56.1",
+    "react-otp-input": "^3.1.1",
+    "react-redux": "^9.2.0",
+    "tailwind-merge": "^3.2.0",
+    "zod": "^3.24.3"
   },
   "devDependencies": {
     "@cloudflare/next-on-pages": "^1.13.12",

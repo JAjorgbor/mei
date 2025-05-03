@@ -10,6 +10,7 @@ import {
   LayoutDashboardIcon,
   UsersIcon,
 } from 'lucide-react'
+import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
@@ -77,6 +78,7 @@ const Sidebar: React.FC = () => {
                       <nav className='space-y-1'>
                         {navItems.map((item) => (
                           <Button
+                            as={Link}
                             key={item.path}
                             href={item.path}
                             variant={pathname === item.path ? 'flat' : 'light'}
