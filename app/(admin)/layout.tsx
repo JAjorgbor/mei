@@ -1,19 +1,21 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
-import '../globals.css'
-import { SessionProvider } from 'next-auth/react'
+
 import Providers from '@/app/Providers'
 import Header from '@/components/scaffold/Header'
 import Sidebar from '@/components/scaffold/Sidebar'
+import { SessionProvider } from 'next-auth/react'
+import '../globals.css'
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+import { Inter, Roboto } from 'next/font/google'
+
+const inter = Inter({
   subsets: ['latin'],
+  weight: ['400', '500', '700'],
 })
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
+const roboto = Roboto({
   subsets: ['latin'],
+  weight: ['400', '500', '700'],
 })
 
 export const metadata: Metadata = {
@@ -28,9 +30,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${inter.className} ${roboto.className}  antialiased`}>
         <Providers>
           <SessionProvider>
             <div

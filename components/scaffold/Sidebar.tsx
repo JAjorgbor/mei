@@ -39,6 +39,9 @@ const Sidebar: React.FC = () => {
     { path: '/admin/users', label: 'Users', icon: <UsersIcon size={18} /> },
     { path: '/admin/editor', label: 'Editor', icon: <Edit2Icon size={18} /> },
   ]
+  useEffect(() => {
+    dispatch(setOpenSidebar(false))
+  }, [pathname])
   return (
     <aside className='relative' id='sidebar-wrapper'>
       {hydrated &&
@@ -56,16 +59,16 @@ const Sidebar: React.FC = () => {
                   />
                 )}
                 <motion.div
-                  initial={{ x: 0, opacity: 0 }}
-                  animate={{ x: 250, opacity: 1 }}
-                  exit={{ x: 0, opacity: 0 }}
+                  initial={{ x: -250, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -250, opacity: 0 }}
                   transition={{ type: 'tween' }}
                   className={`-translate-x-full ${
                     isMobile ? 'fixed' : 'sticky'
                   } font-normal text-sm top-0 z-50 h-screen w-[250px] `}
                 >
                   <div className='bg-content2 border-r border-divider h-screen flex flex-col'>
-                    <div className='px-4 py-4.5 flex items-center gap-2 '>
+                    <div className='px-4 py-[1.11rem] flex items-center gap-2 '>
                       <BookOpenIcon className='text-primary text-2xl' />
                       <h1 className='text-xl font-bold'>Mei Admin</h1>
                     </div>

@@ -25,7 +25,7 @@ const Header: React.FC = () => {
   const dispatch = useAppDispatch()
   const { openSidebar } = useAppSelector((state) => state.sidebar)
 
-  const isMobile = useMediaQuery(700)
+  const isMobile = useMediaQuery(1027)
   const { theme: reduxTheme } = useAppSelector((state) => state.header)
 
   const [themeState, setThemeState] = useState('')
