@@ -167,7 +167,7 @@ const ChaptersSection = () => {
             size='sm'
             variant='flat'
             className='capitalize'
-            radius='md'
+            radius='sm'
             color={
               getValue() == 'published'
                 ? 'success'
@@ -193,7 +193,7 @@ const ChaptersSection = () => {
           href={`/contacts/${info.row.original.id}`}
           className='py-1 px-2'
         >
-          View Details
+          Manage Pages
         </Button>
       ),
     }),
