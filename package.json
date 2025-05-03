@@ -11,6 +11,8 @@
   "dependencies": {
     "@heroui/react": "2.8.0-beta.2",
     "@reduxjs/toolkit": "^2.7.0",
+    "framer-motion": "^12.9.4",
+    "hamburger-react": "^2.5.2",
     "install": "^0.13.0",
     "lucide-react": "^0.503.0",
     "next": "15.3.1",

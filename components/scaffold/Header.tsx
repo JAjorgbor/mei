@@ -1,5 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react'
+import { Fade as Hamburger } from 'hamburger-react'
+
 import {
   Navbar,
   NavbarBrand,
@@ -11,16 +13,19 @@ import {
   DropdownTrigger,
   Avatar,
   Button,
+  NavbarMenuToggle,
 } from '@heroui/react'
 import { MonitorIcon, MoonIcon, PlusIcon, SunIcon } from 'lucide-react'
 import { useAppDispatch, useAppSelector } from '@/features/store'
 import useMediaQuery from '@/hooks/useMediaQuery'
 import { setTheme } from '@/features/headerSlice'
+import { setOpenSidebar } from '@/features/sidebarSlice'
 
 const Header: React.FC = () => {
   const dispatch = useAppDispatch()
+  const { openSidebar } = useAppSelector((state) => state.sidebar)
 
-  const isMobile = useMediaQuery(1027)
+  const isMobile = useMediaQuery(700)
   const { theme: reduxTheme } = useAppSelector((state) => state.header)
 
   const [themeState, setThemeState] = useState('')
@@ -30,12 +35,15 @@ const Header: React.FC = () => {
   }, [reduxTheme])
 
   return (
-    <Navbar className='border-b border-b-foreground-300'>
-      <NavbarBrand>
-        <div className='hidden sm:flex'>
-          <p className='font-bold text-inherit'>StoryAdmin</p>
-        </div>
-      </NavbarBrand>
+    <Navbar className='border-b border-b-foreground-300 z-20' maxWidth='xl'>
+      {isMobile && (
+        <Hamburger
+          aria-label={openSidebar ? 'Close sidebar' : 'Open sidebar'}
+          size={20}
+          toggled={openSidebar}
+          onToggle={(value) => dispatch(setOpenSidebar(value))}
+        />
+      )}
       <NavbarContent justify='end'>
         <NavbarItem>
           <Dropdown className='min-w-max text-foreground'>

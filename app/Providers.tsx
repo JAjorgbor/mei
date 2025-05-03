@@ -1,52 +1,53 @@
-"use client";
+'use client'
 
-import { store, useAppSelector } from "@/features/store";
-import { HeroUIProvider } from "@heroui/react";
-import { useEffect } from "react";
-import { Provider } from "react-redux";
+import { store, useAppSelector } from '@/features/store'
+import { HeroUIProvider } from '@heroui/react'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
+import { Provider } from 'react-redux'
 
 interface ProvidersProps {
-  children: any;
+  children: any
 }
 
 const Content = ({ children }: ProvidersProps) => {
-  const { theme } = useAppSelector((state) => state.header);
-
+  const { theme } = useAppSelector((state) => state.header)
+  const router = useRouter()
   useEffect(() => {
     const handleSystemColorTheme = () => {
       const prefersDark = window.matchMedia(
-        "(prefers-color-scheme: dark)"
-      ).matches;
+        '(prefers-color-scheme: dark)'
+      ).matches
       if (prefersDark) {
-        document.documentElement.classList.remove("light");
-        document.documentElement.classList.add("dark");
+        document.documentElement.classList.remove('light')
+        document.documentElement.classList.add('dark')
       } else {
-        document.documentElement.classList.remove("dark");
-        document.documentElement.classList.add("light");
+        document.documentElement.classList.remove('dark')
+        document.documentElement.classList.add('light')
       }
-    };
-
-    if (theme === "system") {
-      handleSystemColorTheme();
-      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-      mediaQuery.addEventListener("change", handleSystemColorTheme);
-      return () => {
-        mediaQuery.removeEventListener("change", handleSystemColorTheme);
-      };
-    } else {
-      document.documentElement.className = theme;
     }
-  }, [theme]);
 
-  return <HeroUIProvider>{children}</HeroUIProvider>;
-};
+    if (theme === 'system') {
+      handleSystemColorTheme()
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+      mediaQuery.addEventListener('change', handleSystemColorTheme)
+      return () => {
+        mediaQuery.removeEventListener('change', handleSystemColorTheme)
+      }
+    } else {
+      document.documentElement.className = theme
+    }
+  }, [theme])
+
+  return <HeroUIProvider navigate={router.push}>{children}</HeroUIProvider>
+}
 
 const Providers = ({ children }: ProvidersProps) => {
   return (
     <Provider store={store}>
       <Content>{children}</Content>
     </Provider>
-  );
-};
+  )
+}
 
-export default Providers;
+export default Providers
