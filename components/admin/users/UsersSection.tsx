@@ -1,4 +1,6 @@
 'use client'
+import moment from 'moment'
+import { useMemo } from 'react'
 import InputField from '@/components/elements/InputField'
 import {
   Button,
@@ -28,107 +30,160 @@ import {
 } from '@tanstack/react-table'
 import React, { useCallback, useState } from 'react'
 
-interface IChapter {
+interface IUser {
   id: number
-  title: string
-  status: 'published' | 'draft' | 'review'
-  pages: number
-  lastUpdated: string
+  name: string
+  email: string
+  status: 'active' | 'inactive' | 'pending'
+  plan: 'Basic' | 'Pro'
+  paymentMethod: 'Credit Card' | 'PayPal' | 'Bank Transfer'
+  lastPayment: string
+  amount: string
+  avatar: string
 }
 
-const chapters: IChapter[] = [
+const columnHelper = createColumnHelper<IUser>()
+
+const users: IUser[] = [
   {
     id: 1,
-    title: 'Chapter 1: The Beginning',
-    status: 'published',
-    pages: 32,
-    lastUpdated: '2023-05-15',
+    name: 'Emma Wilson',
+    email: 'emma@example.com',
+    status: 'active',
+    plan: 'Pro',
+    paymentMethod: 'Credit Card',
+    lastPayment: '2023-05-12',
+    amount: '$19.99',
+    avatar: 'https://img.heroui.chat/image/avatar?w=40&h=40&u=user1',
   },
   {
     id: 2,
-    title: 'Chapter 2: The Discovery',
-    status: 'published',
-    pages: 28,
-    lastUpdated: '2023-05-12',
+    name: 'James Rodriguez',
+    email: 'james@example.com',
+    status: 'active',
+    plan: 'Basic',
+    paymentMethod: 'PayPal',
+    lastPayment: '2023-05-10',
+    amount: '$9.99',
+    avatar: 'https://img.heroui.chat/image/avatar?w=40&h=40&u=user2',
   },
   {
     id: 3,
-    title: 'Chapter 3: The Journey',
-    status: 'published',
-    pages: 35,
-    lastUpdated: '2023-05-10',
+    name: 'Olivia Martinez',
+    email: 'olivia@example.com',
+    status: 'inactive',
+    plan: 'Pro',
+    paymentMethod: 'Credit Card',
+    lastPayment: '2023-04-28',
+    amount: '$19.99',
+    avatar: 'https://img.heroui.chat/image/avatar?w=40&h=40&u=user3',
   },
   {
     id: 4,
-    title: 'Chapter 4: The Challenge',
-    status: 'review',
-    pages: 38,
-    lastUpdated: '2023-05-08',
+    name: 'William Chen',
+    email: 'william@example.com',
+    status: 'active',
+    plan: 'Pro',
+    paymentMethod: 'Bank Transfer',
+    lastPayment: '2023-05-15',
+    amount: '$19.99',
+    avatar: 'https://img.heroui.chat/image/avatar?w=40&h=40&u=user4',
   },
   {
     id: 5,
-    title: 'Chapter 5: The Revelation',
-    status: 'draft',
-    pages: 29,
-    lastUpdated: '2023-05-05',
+    name: 'Sophia Kim',
+    email: 'sophia@example.com',
+    status: 'active',
+    plan: 'Pro',
+    paymentMethod: 'Credit Card',
+    lastPayment: '2023-05-14',
+    amount: '$29.99',
+    avatar: 'https://img.heroui.chat/image/avatar?w=40&h=40&u=user5',
   },
   {
     id: 6,
-    title: 'Chapter 6: The Confrontation',
-    status: 'draft',
-    pages: 31,
-    lastUpdated: '2023-05-03',
+    name: 'Ethan Brown',
+    email: 'ethan@example.com',
+    status: 'pending',
+    plan: 'Basic',
+    paymentMethod: 'PayPal',
+    lastPayment: '2023-05-08',
+    amount: '$9.99',
+    avatar: 'https://img.heroui.chat/image/avatar?w=40&h=40&u=user6',
   },
   {
     id: 7,
-    title: 'Chapter 7: The Decision',
-    status: 'draft',
-    pages: 27,
-    lastUpdated: '2023-04-30',
+    name: 'Isabella Garcia',
+    email: 'isabella@example.com',
+    status: 'active',
+    plan: 'Pro',
+    paymentMethod: 'Credit Card',
+    lastPayment: '2023-05-11',
+    amount: '$19.99',
+    avatar: 'https://img.heroui.chat/image/avatar?w=40&h=40&u=user7',
   },
   {
     id: 8,
-    title: 'Chapter 8: The Sacrifice',
-    status: 'draft',
-    pages: 34,
-    lastUpdated: '2023-04-28',
+    name: 'Mason Taylor',
+    email: 'mason@example.com',
+    status: 'inactive',
+    plan: 'Basic',
+    paymentMethod: 'Bank Transfer',
+    lastPayment: '2023-04-25',
+    amount: '$9.99',
+    avatar: 'https://img.heroui.chat/image/avatar?w=40&h=40&u=user8',
   },
   {
     id: 9,
-    title: 'Chapter 9: The Aftermath',
-    status: 'draft',
-    pages: 25,
-    lastUpdated: '2023-04-25',
+    name: 'Ava Johnson',
+    email: 'ava@example.com',
+    status: 'active',
+    plan: 'Pro',
+    paymentMethod: 'Credit Card',
+    lastPayment: '2023-05-13',
+    amount: '$29.99',
+    avatar: 'https://img.heroui.chat/image/avatar?w=40&h=40&u=user9',
   },
   {
     id: 10,
-    title: 'Chapter 10: The Resolution',
-    status: 'draft',
-    pages: 33,
-    lastUpdated: '2023-04-22',
+    name: 'Noah Williams',
+    email: 'noah@example.com',
+    status: 'active',
+    plan: 'Pro',
+    paymentMethod: 'PayPal',
+    lastPayment: '2023-05-09',
+    amount: '$19.99',
+    avatar: 'https://img.heroui.chat/image/avatar?w=40&h=40&u=user10',
   },
   {
     id: 11,
-    title: 'Chapter 11: The New Beginning',
-    status: 'draft',
-    pages: 26,
-    lastUpdated: '2023-04-20',
+    name: 'Mia Davis',
+    email: 'mia@example.com',
+    status: 'pending',
+    plan: 'Basic',
+    paymentMethod: 'Credit Card',
+    lastPayment: '2023-05-07',
+    amount: '$9.99',
+    avatar: 'https://img.heroui.chat/image/avatar?w=40&h=40&u=user11',
   },
   {
     id: 12,
-    title: 'Chapter 12: The Epilogue',
-    status: 'draft',
-    pages: 18,
-    lastUpdated: '2023-04-18',
+    name: 'Liam Miller',
+    email: 'liam@example.com',
+    status: 'active',
+    plan: 'Pro',
+    paymentMethod: 'Bank Transfer',
+    lastPayment: '2023-05-16',
+    amount: '$29.99',
+    avatar: 'https://img.heroui.chat/image/avatar?w=40&h=40&u=user12',
   },
 ]
-
-const columnHelper = createColumnHelper<IChapter>()
-const ChaptersSection = () => {
+const UsersSection = () => {
   const [globalFilter, setGlobalFilter] = useState<any>('')
-  const [chaptersLoading, setChaptersLoading] = useState(false)
+  const [usersLoading, setUsersLoading] = useState(false)
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
     { id: 'status', value: 'all' },
+    { id: 'plan', value: 'all' },
   ])
 
   const [pagination, setPagination] = useState({
@@ -138,29 +193,21 @@ const ChaptersSection = () => {
 
   const [sorting, setSorting] = useState<SortingState>([])
   const columns = [
-    columnHelper.accessor(`title`, {
-      id: 'title',
-      header: 'Title',
+    columnHelper.accessor((row) => `${row.name} ${row.email}`, {
+      id: 'name',
+      header: 'User',
       enableHiding: false, // disable hiding for this column
 
       cell: ({ row: { original }, getValue }) => (
         <div className='flex flex-col text-cloudburst'>
-          <p className='text-bold text-small capitalize'>{getValue()}</p>
-        </div>
-      ),
-    }),
-    columnHelper.accessor('pages', {
-      header: 'Pages',
-      enableHiding: false, // disable hiding for this column
-      cell: (info) => (
-        <div className='flex flex-col '>
-          <p className='text-bold text-small lowercase'>{info.getValue()}</p>
+          <p className='text-bold capitalize'>{original.name}</p>
+          <p className='text-foreground-400 text-xs'>{original.email}</p>
         </div>
       ),
     }),
     columnHelper.accessor(`status`, {
       header: 'Status',
-      filterFn: 'contactStatusFilter' as any,
+      filterFn: 'statusFilter' as any,
       cell: ({ getValue }) => (
         <div className='inline-block'>
           <Chip
@@ -169,9 +216,9 @@ const ChaptersSection = () => {
             className='capitalize'
             radius='sm'
             color={
-              getValue() == 'published'
+              getValue() == 'active'
                 ? 'success'
-                : getValue() == 'draft'
+                : getValue() == 'inactive'
                 ? 'warning'
                 : 'danger'
             }
@@ -181,6 +228,35 @@ const ChaptersSection = () => {
         </div>
       ),
     }),
+    columnHelper.accessor(`plan`, {
+      header: 'Plan',
+      filterFn: 'planFilter' as any,
+      cell: ({ getValue }) => (
+        <div className='inline-block'>
+          <Chip
+            size='sm'
+            variant='flat'
+            className='capitalize'
+            radius='sm'
+            color={getValue() == 'Basic' ? 'warning' : 'success'}
+          >
+            {getValue()}
+          </Chip>
+        </div>
+      ),
+    }),
+    columnHelper.accessor('lastPayment', {
+      header: 'Last Payment',
+      enableHiding: false, // disable hiding for this column
+      cell: (info) => (
+        <div className='flex flex-col '>
+          <p className='text-bold text-small '>
+            {moment(info.getValue()).format('MMMM Do, YYYY')}
+          </p>
+        </div>
+      ),
+    }),
+
     columnHelper.display({
       id: 'actions',
       header: 'Actions',
@@ -190,10 +266,10 @@ const ChaptersSection = () => {
           size='sm'
           color='primary'
           variant='ghost'
-          href={`/chapters/${info.row.original.id}`}
+          href={`/users/${info.row.original.id}`}
           className='py-1 px-2'
         >
-          Manage Pages
+          Manage User
         </Button>
       ),
     }),
@@ -202,7 +278,7 @@ const ChaptersSection = () => {
   //   useGetAllAgencyContacts()
 
   const table = useReactTable({
-    data: chapters || [],
+    data: users || [],
     columns,
     state: {
       globalFilter,
@@ -220,9 +296,13 @@ const ChaptersSection = () => {
     onColumnFiltersChange: setColumnFilters,
     onSortingChange: setSorting,
     filterFns: {
-      contactStatusFilter: (row, columnId, filterValue) => {
+      statusFilter: (row, columnId, filterValue) => {
         if (filterValue == 'all') return true
         return row.original.status.toLowerCase() == filterValue
+      },
+      planFilter: (row, columnId, filterValue) => {
+        if (filterValue == 'all') return true
+        return row.original.plan.toLowerCase() == filterValue
       },
     },
   })
@@ -271,14 +351,14 @@ const ChaptersSection = () => {
       }
       <TableBody
         loadingContent={<Spinner label={'Loading, Please wait...' as any} />}
-        isLoading={chaptersLoading}
+        isLoading={usersLoading}
         emptyContent={
-          chapters && chapters?.length > 0
-            ? 'No chapters found. Try adjusting your filters.'
-            : 'No chapters available at the moment.'
+          users && users?.length > 0
+            ? 'No users found. Try adjusting your filters.'
+            : 'No users available at the moment.'
         }
       >
-        {!chaptersLoading &&
+        {!usersLoading &&
           (table.getRowModel().rows.map((row) => (
             <TableRow key={row.id}>
               {row.getVisibleCells().map((cell) => (
@@ -293,68 +373,87 @@ const ChaptersSection = () => {
   )
 }
 
-export default ChaptersSection
+export default UsersSection
 
 const TopContent = ({
   table,
   setGlobalFilter,
 }: {
-  table: TableType<IChapter>
+  table: TableType<IUser>
   setGlobalFilter: any
 }) => {
   //   const { allAgencyContacts } = useGetAllAgencyContacts()
-  const getStatusCount = useCallback(
-    (status: string) => {
-      if (chapters) {
-        if (status == 'all') return chapters.length
+  const getFieldCount = useCallback(
+    (status: string, key: string) => {
+      if (users) {
+        if (status == 'all') return users.length
         else
-          return chapters.filter(
-            (each) => each.status.toLocaleLowerCase() == status
+          return users.filter(
+            (each: any) => each?.[key]?.toLocaleLowerCase() == status
           ).length
       }
     },
-    [chapters, table.getColumn('status')?.getFilterValue()]
+    [users, table.getColumn('status')?.getFilterValue()]
   )
   return (
     <div className='flex flex-col gap-4'>
       <div className='flex gap-6 flex-wrap justify-between'>
         <div className='flex gap-4 flex-wrap'>
-          <Button color='secondary' variant='shadow'>
-            Add Chapter
-          </Button>
           <InputField
             type='select'
-            className='w-36'
+            className='w-40'
             value={table.getColumn('status')?.getFilterValue() as string}
             onChange={(value) => {
               table.getColumn('status')?.setFilterValue(value)
             }}
             options={[
-              { value: 'all', label: `All (${getStatusCount('all')})` },
               {
-                value: 'published',
-                label: `Published (${getStatusCount('published')})`,
+                value: 'all',
+                label: `All Statuses (${getFieldCount('all', 'status')})`,
               },
-              { value: 'draft', label: `Draft (${getStatusCount('draft')})` },
               {
-                value: 'review',
-                label: `Review (${getStatusCount('review')})`,
+                value: 'active',
+                label: `Active (${getFieldCount('active', 'status')})`,
+              },
+              {
+                value: 'inactive',
+                label: `Inactive (${getFieldCount('inactive', 'status')})`,
+              },
+            ]}
+          />
+          <InputField
+            type='select'
+            className='w-36'
+            value={table.getColumn('plan')?.getFilterValue() as string}
+            onChange={(value) => {
+              table.getColumn('plan')?.setFilterValue(value)
+            }}
+            options={[
+              {
+                value: 'all',
+                label: `All Plans (${getFieldCount('all', 'plan')})`,
+              },
+              {
+                value: 'basic',
+                label: `Basic (${getFieldCount('basic', 'plan')})`,
+              },
+              {
+                value: 'pro',
+                label: `Pro (${getFieldCount('pro', 'plan')})`,
               },
             ]}
           />
         </div>
         <InputField
           type='search'
-          placeholder='Search chapters'
+          placeholder='Search users'
           register={{ onChange: (e: any) => setGlobalFilter(e.target.value) }}
         />
       </div>
       <div className='flex justify-between items-center'>
-        <span className='text-default-400 text-small'>
-          <span className='capitalize'>
-            {String(table.getColumn('status')?.getFilterValue())}
-          </span>{' '}
-          chapters ({table.getFilteredRowModel().rows.length || 0})
+        <span className='text-default-400 text-small capitalize'>
+          {String(table.getColumn('status')?.getFilterValue())} users (
+          {table.getFilteredRowModel().rows.length || 0})
         </span>
         <label className='flex items-center text-default-400 text-small'>
           Rows per page:
@@ -372,10 +471,10 @@ const TopContent = ({
   )
 }
 
-const BottomContent = ({ table }: { table: TableType<IChapter> }) => {
+const BottomContent = ({ table }: { table: TableType<IUser> }) => {
   //   const { allAgencyContacts } = useGetAllAgencyContacts()
   return (
-    chapters && (
+    users && (
       <div className='py-2 px-2 flex justify-between items-center'>
         <div className='flex-grow flex justify-center'>
           <Pagination
