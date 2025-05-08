@@ -1,18 +1,19 @@
 'use client'
 import InputField from '@/components/elements/InputField'
 import {
+  BreadcrumbItem,
+  Breadcrumbs,
   Button,
   Chip,
+  Pagination,
+  Selection,
   Spinner,
   Table,
-  Selection,
   TableBody,
   TableCell,
   TableColumn,
   TableHeader,
   TableRow,
-  ButtonGroup,
-  Pagination,
 } from '@heroui/react'
 import {
   ColumnFiltersState,
@@ -20,10 +21,10 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
-  Table as TableType,
   getPaginationRowModel,
   getSortedRowModel,
   SortingState,
+  Table as TableType,
   useReactTable,
 } from '@tanstack/react-table'
 import React, { useCallback, useState } from 'react'
@@ -230,66 +231,72 @@ const ChaptersSection = () => {
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set([]))
 
   return (
-    <Table
-      aria-label='Recent Contacts'
-      isHeaderSticky
-      bottomContent={<BottomContent table={table} />}
-      bottomContentPlacement='outside'
-      selectedKeys={selectedKeys}
-      topContent={
-        <TopContent table={table} setGlobalFilter={setGlobalFilter} />
-      }
-      classNames={{
-        th: 'bg-default-200 text-md capitalize text-foreground font-normal',
-        thead: '[&>tr]:first:shadow-none',
-        tbody: 'divide-y',
-      }}
-      topContentPlacement='outside'
-      onSelectionChange={setSelectedKeys}
-    >
-      {
-        table.getHeaderGroups().map((headerGroup) => (
-          <TableHeader
-            // columns={headerColumns}
-            key={headerGroup.id}
-          >
-            {headerGroup.headers.map((header) => (
-              <TableColumn
-                key={header.id}
-                align={header.id === 'actions' ? 'center' : 'start'}
-                allowsSorting={['title', 'pages'].includes(header.id)}
-                onClick={header.column.getToggleSortingHandler()}
-              >
-                {flexRender(
-                  header.column.columnDef.header,
-                  header.getContext()
-                )}
-              </TableColumn>
-            ))}
-          </TableHeader>
-        )) as any
-      }
-      <TableBody
-        loadingContent={<Spinner label={'Loading, Please wait...' as any} />}
-        isLoading={chaptersLoading}
-        emptyContent={
-          chapters && chapters?.length > 0
-            ? 'No chapters found. Try adjusting your filters.'
-            : 'No chapters available at the moment.'
+    <div className='space-y-6'>
+      <Breadcrumbs>
+        <BreadcrumbItem href='/admin/dashboard'>Dashboard</BreadcrumbItem>
+        <BreadcrumbItem href='/admin/chapters'>Chapters</BreadcrumbItem>
+      </Breadcrumbs>
+      <Table
+        aria-label='Recent Contacts'
+        isHeaderSticky
+        bottomContent={<BottomContent table={table} />}
+        bottomContentPlacement='outside'
+        selectedKeys={selectedKeys}
+        topContent={
+          <TopContent table={table} setGlobalFilter={setGlobalFilter} />
         }
+        classNames={{
+          th: 'bg-default-200 text-md capitalize text-foreground font-normal',
+          thead: '[&>tr]:first:shadow-none',
+          tbody: 'divide-y',
+        }}
+        topContentPlacement='outside'
+        onSelectionChange={setSelectedKeys}
       >
-        {!chaptersLoading &&
-          (table.getRowModel().rows.map((row) => (
-            <TableRow key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <TableCell key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </TableCell>
+        {
+          table.getHeaderGroups().map((headerGroup) => (
+            <TableHeader
+              // columns={headerColumns}
+              key={headerGroup.id}
+            >
+              {headerGroup.headers.map((header) => (
+                <TableColumn
+                  key={header.id}
+                  align={header.id === 'actions' ? 'center' : 'start'}
+                  allowsSorting={['title', 'pages'].includes(header.id)}
+                  onClick={header.column.getToggleSortingHandler()}
+                >
+                  {flexRender(
+                    header.column.columnDef.header,
+                    header.getContext()
+                  )}
+                </TableColumn>
               ))}
-            </TableRow>
-          )) as any)}
-      </TableBody>
-    </Table>
+            </TableHeader>
+          )) as any
+        }
+        <TableBody
+          loadingContent={<Spinner label={'Loading, Please wait...' as any} />}
+          isLoading={chaptersLoading}
+          emptyContent={
+            chapters && chapters?.length > 0
+              ? 'No chapters found. Try adjusting your filters.'
+              : 'No chapters available at the moment.'
+          }
+        >
+          {!chaptersLoading &&
+            (table.getRowModel().rows.map((row) => (
+              <TableRow key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
+              </TableRow>
+            )) as any)}
+        </TableBody>
+      </Table>
+    </div>
   )
 }
 
