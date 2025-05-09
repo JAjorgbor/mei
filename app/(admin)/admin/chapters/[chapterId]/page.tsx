@@ -1,5 +1,7 @@
 import Container from '@/components/elements/Container'
 
+export const runtime = 'edge'
+
 export default function ChapterPage() {
   return (
     <Container>
