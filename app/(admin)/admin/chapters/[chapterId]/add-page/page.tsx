@@ -6,7 +6,7 @@ const AddPageSection = dynamic(
   () => import('@/components/admin/chapters/AddPageSection'),
   { ssr: false }
 )
-
+export const runtime = 'edge'
 export default function AddPage() {
   return (
     <Container>
