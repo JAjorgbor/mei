@@ -210,7 +210,7 @@ const InputField: FC<InputFieldProps> = ({
     className,
     classNames.input,
     disabled && 'cursor-not-allowed',
-    'focus:outline-secondary disabled:bg-gray-100',
+    'focus:outline-secondary disabled:bg-gray-100 bg-default-100',
     `${selectSize == 'sm' && type == 'select' ? 'h-7 min-h-7' : ''}`
   )
 

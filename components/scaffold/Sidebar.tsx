@@ -36,9 +36,9 @@ const Sidebar: React.FC = () => {
       path: '/admin/chapters',
       label: 'Chapters',
       icon: <BookOpenIcon size={18} />,
+      isNested: true,
     },
     { path: '/admin/users', label: 'Users', icon: <UsersIcon size={18} /> },
-    { path: '/admin/editor', label: 'Editor', icon: <Edit2Icon size={18} /> },
   ]
   useEffect(() => {
     dispatch(setOpenSidebar(false))
@@ -81,9 +81,17 @@ const Sidebar: React.FC = () => {
                             as={Link}
                             key={item.path}
                             href={item.path}
-                            variant={pathname === item.path ? 'flat' : 'light'}
+                            variant={
+                              pathname === item.path ||
+                              (item.isNested && pathname.startsWith(item.path))
+                                ? 'flat'
+                                : 'light'
+                            }
                             color={
-                              pathname === item.path ? 'primary' : 'default'
+                              pathname === item.path ||
+                              (item.isNested && pathname.startsWith(item.path))
+                                ? 'primary'
+                                : 'default'
                             }
                             className='w-full justify-start mb-1'
                             startContent={item.icon}

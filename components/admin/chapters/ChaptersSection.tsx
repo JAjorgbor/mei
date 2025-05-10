@@ -194,7 +194,7 @@ const ChaptersSection = () => {
           href={`/chapters/${info.row.original.id}`}
           className='py-1 px-2'
         >
-          Manage Pages
+          Manage Chapter
         </Button>
       ),
     }),
