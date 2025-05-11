@@ -32,9 +32,7 @@ export default function RootLayout({
       <body className={`${inter.className} ${roboto.className}  antialiased`}>
         <Providers>
           <SessionProvider>
-            <main>
-              <Suspense>{children}</Suspense>
-            </main>
+            <main>{children}</main>
           </SessionProvider>
         </Providers>
       </body>
