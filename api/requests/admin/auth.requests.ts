@@ -1,5 +1,7 @@
 import axios from 'axios'
 
+export const runtime = 'edge'
+
 export const loginAdmin = (data: any) => {
   return new Promise((resolve) => {
     setTimeout(() => {
