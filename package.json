@@ -19,6 +19,7 @@
     "@reduxjs/toolkit": "^2.7.0",
     "@tanstack/react-table": "^8.21.3",
     "@types/react-color": "^3.0.13",
+    "axios": "^1.9.0",
     "eslint-plugin-next-on-pages": "^1.13.12",
     "framer-motion": "^12.9.4",
     "hamburger-react": "^2.5.2",

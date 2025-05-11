@@ -1,10 +1,11 @@
 'use client'
-
+import { SessionProvider } from 'next-auth/react'
 import { store, useAppSelector } from '@/features/store'
 import { HeroUIProvider } from '@heroui/react'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { Provider } from 'react-redux'
+import { ToastProvider } from '@heroui/toast'
 
 interface ProvidersProps {
   children: any
@@ -39,14 +40,22 @@ const Content = ({ children }: ProvidersProps) => {
     }
   }, [theme])
 
-  return <HeroUIProvider navigate={router.push}>{children}</HeroUIProvider>
+  return (
+    <HeroUIProvider navigate={router.push}>
+      {' '}
+      <ToastProvider />
+      {children}
+    </HeroUIProvider>
+  )
 }
 
 const Providers = ({ children }: ProvidersProps) => {
   return (
-    <Provider store={store}>
-      <Content>{children}</Content>
-    </Provider>
+    <SessionProvider>
+      <Provider store={store}>
+        <Content>{children}</Content>
+      </Provider>
+    </SessionProvider>
   )
 }
 

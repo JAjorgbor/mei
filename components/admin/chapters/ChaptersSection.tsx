@@ -1,4 +1,5 @@
 'use client'
+import Link from 'next/link'
 import InputField from '@/components/elements/InputField'
 import {
   BreadcrumbItem,
@@ -191,7 +192,8 @@ const ChaptersSection = () => {
           size='sm'
           color='primary'
           variant='ghost'
-          href={`/chapters/${info.row.original.id}`}
+          as={Link}
+          href={`/admin/chapters/${info.row.original.id}`}
           className='py-1 px-2'
         >
           Manage Chapter

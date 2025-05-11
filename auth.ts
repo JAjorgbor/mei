@@ -1,21 +1,41 @@
-import NextAuth from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
+import NextAuth from 'next-auth'
+import GoogleProvider from 'next-auth/providers/google'
+import CredentialsProvideer from 'next-auth/providers/credentials'
+import { loginAdmin } from '@/api/requests/admin/auth.requests'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  providers: [GoogleProvider],
+  providers: [
+    GoogleProvider,
+    CredentialsProvideer({
+      name: 'credentials',
+      credentials: {
+        email: { label: 'Email', type: 'email' },
+        password: { label: 'Password', type: 'password' },
+        role: {},
+      },
+      async authorize(credentials) {
+        try {
+          const user = await loginAdmin(credentials)
+
+          if (user) {
+            return user
+          }
+          throw new Error('Invalid credentials')
+        } catch (error) {
+          console.log(error)
+          throw new Error((error as Error).message || 'Login failed')
+        }
+      },
+    }),
+  ],
   callbacks: {
-    async jwt({ token, account }) {
-      // Store the access token in the JWT on initial sign in
-      if (account) {
-        token.accessToken = account.access_token;
-      }
-      return token;
+    async jwt({ token, user }) {
+      if (user) token.user = user
+      return token
     },
     async session({ session, token }: { session: any; token: any }) {
-      // Make the access token available in the session
-
-      session.accessToken = token.accessToken;
-      return session;
+      session.user = token.user
+      return session
     },
   },
-});
+})
