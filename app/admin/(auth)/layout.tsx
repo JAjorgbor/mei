@@ -5,6 +5,7 @@ import { SessionProvider } from 'next-auth/react'
 import '../../globals.css'
 
 import { Inter, Roboto } from 'next/font/google'
+import { Suspense } from 'react'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -31,7 +32,9 @@ export default function RootLayout({
       <body className={`${inter.className} ${roboto.className}  antialiased`}>
         <Providers>
           <SessionProvider>
-            <main>{children}</main>
+            <main>
+              <Suspense>{children}</Suspense>
+            </main>
           </SessionProvider>
         </Providers>
       </body>
