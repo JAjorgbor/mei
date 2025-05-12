@@ -4,12 +4,11 @@ import { signIn } from 'next-auth/react'
 import InputField from '@/components/elements/InputField'
 import { addToast, Button, Card, CardBody } from '@heroui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { BookOpenIcon, Router } from 'lucide-react'
+import { BookOpenIcon } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { loginAdmin } from '@/api/requests/admin/auth.requests'
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
