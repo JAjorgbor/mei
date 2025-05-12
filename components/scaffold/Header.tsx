@@ -1,25 +1,23 @@
 'use client'
-import React, { useEffect, useState } from 'react'
 import { Fade as Hamburger } from 'hamburger-react'
+import { signOut } from 'next-auth/react'
+import React, { useEffect, useState } from 'react'
 
-import {
-  Navbar,
-  NavbarBrand,
-  NavbarContent,
-  NavbarItem,
-  DropdownMenu,
-  DropdownItem,
-  Dropdown,
-  DropdownTrigger,
-  Avatar,
-  Button,
-  NavbarMenuToggle,
-} from '@heroui/react'
-import { MonitorIcon, MoonIcon, PlusIcon, SunIcon } from 'lucide-react'
-import { useAppDispatch, useAppSelector } from '@/features/store'
-import useMediaQuery from '@/hooks/useMediaQuery'
 import { setTheme } from '@/features/headerSlice'
 import { setOpenSidebar } from '@/features/sidebarSlice'
+import { useAppDispatch, useAppSelector } from '@/features/store'
+import useMediaQuery from '@/hooks/useMediaQuery'
+import {
+  Avatar,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Navbar,
+  NavbarContent,
+  NavbarItem,
+} from '@heroui/react'
+import { MonitorIcon, MoonIcon, SunIcon } from 'lucide-react'
 
 const Header: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -111,7 +109,7 @@ const Header: React.FC = () => {
             </DropdownItem>
             <DropdownItem key='settings'>My Settings</DropdownItem>
             <DropdownItem key='help_and_feedback'>Help & Feedback</DropdownItem>
-            <DropdownItem key='logout' color='danger'>
+            <DropdownItem key='logout' color='danger' onPress={() => signOut()}>
               Log Out
             </DropdownItem>
           </DropdownMenu>
