@@ -1,7 +1,6 @@
 import NextAuth from 'next-auth'
-import GoogleProvider from 'next-auth/providers/google'
 import CredentialsProvideer from 'next-auth/providers/credentials'
-import { loginAdmin } from '@/api/requests/admin/auth.requests'
+import GoogleProvider from 'next-auth/providers/google'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
