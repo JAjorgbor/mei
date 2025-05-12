@@ -5,6 +5,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 export default async (req: NextRequest) => {
   const token: any = await getToken({ req, secret: process.env.AUTH_SECRET })
+  console.log(token)
   // const isLoggedIn = !!req.auth?.user
   const { searchParams } = new URL(req.url)
   const callbackUrl = searchParams.get('callbackUrl') || '/admin/dashboard'
