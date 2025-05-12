@@ -48,4 +48,5 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return session
     },
   },
+  secret: 'bec56a29ab187ed64d8089197a577ac3',
 })
