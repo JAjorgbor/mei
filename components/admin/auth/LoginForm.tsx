@@ -39,7 +39,7 @@ const LoginForm = () => {
       router.push(callbackUrl)
       setKeepLoading(true)
     } catch (error: any) {
-      addToast({ title: error.message, color: 'danger' })
+      addToast({ title: 'Invalid credentials', color: 'danger' })
       console.log(error)
     }
   }

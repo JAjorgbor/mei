@@ -13,9 +13,20 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: 'Password', type: 'password' },
         role: {},
       },
-      async authorize(credentials) {
+      async authorize(credentials: any) {
         try {
-          const user = await loginAdmin(credentials)
+          const user = await new Promise((resolve) => {
+            setTimeout(() => {
+              if (credentials.email.includes('example.com')) {
+                resolve({
+                  id: 1,
+                  name: 'Joshua Ajorgbor',
+                  email: 'joshua@example.com',
+                  role: 'admin',
+                })
+              } else resolve(false)
+            }, 500)
+          })
 
           if (user) {
             return user
