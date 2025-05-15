@@ -47,7 +47,6 @@ const Content = ({ children }: ProvidersProps) => {
   const { data: session } = useSession()
 
   useEffect(() => {
-    console.log(session)
     if (session) {
       if (
         pathname.startsWith('/admin') &&
