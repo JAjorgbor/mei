@@ -61,29 +61,30 @@ const Content = ({ children }: ProvidersProps) => {
   }, [pathname, session])
 
   return (
-    <HeroUIProvider navigate={router.push}>
+    <>
       {' '}
+      <ToastProvider />
       {isLoading ? (
         <div className='grid place-items-center h-screen w-screen'>
           <Spinner />
         </div>
       ) : (
-        <>
-          <ToastProvider />
-          {children}
-        </>
+        <>{children}</>
       )}
-    </HeroUIProvider>
+    </>
   )
 }
 
 const Providers = ({ children }: ProvidersProps) => {
+  const router = useRouter()
   return (
     <SessionProvider>
       <Provider store={store}>
-        <Suspense>
+        <HeroUIProvider navigate={router.push}>
+          {/* <Suspense> */}
           <Content>{children}</Content>
-        </Suspense>
+          {/* </Suspense> */}
+        </HeroUIProvider>
       </Provider>
     </SessionProvider>
   )

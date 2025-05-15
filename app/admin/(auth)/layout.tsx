@@ -1,11 +1,9 @@
 import type { Metadata } from 'next'
 
 import Providers from '@/app/Providers'
-import { SessionProvider } from 'next-auth/react'
 import '../../globals.css'
 
 import { Inter, Roboto } from 'next/font/google'
-import { Suspense } from 'react'
 
 const inter = Inter({
   subsets: ['latin'],
