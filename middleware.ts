@@ -9,12 +9,11 @@ export default async (req: NextRequest) => {
 
   const { searchParams } = new URL(req.url)
   const callbackUrl = searchParams.get('callbackUrl') || '/admin/dashboard'
-  const isLoggedIn = !!token
   const whiteListedAdminRoutes = ['/admin']
 
   const { pathname } = req.nextUrl
   if (pathname.startsWith('/admin')) {
-    if (token?.user?.role == 'admin' && pathname == '/admin') {
+    if (token && pathname == '/admin') {
       return NextResponse.redirect(new URL(callbackUrl, req.url))
     }
     if (whiteListedAdminRoutes.some((each) => each !== pathname) && !token) {
