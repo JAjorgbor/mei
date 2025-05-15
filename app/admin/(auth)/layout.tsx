@@ -31,9 +31,7 @@ export default function RootLayout({
     <html lang='en'>
       <body className={`${inter.className} ${roboto.className}  antialiased`}>
         <Providers>
-          <SessionProvider>
-            <main>{children}</main>
-          </SessionProvider>
+          <main>{children}</main>
         </Providers>
       </body>
     </html>

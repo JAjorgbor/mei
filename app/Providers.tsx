@@ -1,10 +1,12 @@
 'use client'
-import { SessionProvider } from 'next-auth/react'
+import { useSession, SessionProvider } from 'next-auth/react'
+import { usePathname } from 'next/navigation'
 import { store, useAppSelector } from '@/features/store'
 import { HeroUIProvider } from '@heroui/react'
 import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, Suspense, useState } from 'react'
 import { Provider } from 'react-redux'
+import { Spinner } from '@heroui/react'
 import { ToastProvider } from '@heroui/toast'
 
 interface ProvidersProps {
@@ -13,6 +15,7 @@ interface ProvidersProps {
 
 const Content = ({ children }: ProvidersProps) => {
   const { theme } = useAppSelector((state) => state.header)
+  const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
   useEffect(() => {
     const handleSystemColorTheme = () => {
@@ -40,11 +43,36 @@ const Content = ({ children }: ProvidersProps) => {
     }
   }, [theme])
 
+  const pathname = usePathname()
+  const { data: session } = useSession()
+
+  useEffect(() => {
+    console.log(session)
+    if (session) {
+      if (
+        pathname.startsWith('/admin') &&
+        pathname !== '/admin' &&
+        session?.user?.role !== 'admin'
+      ) {
+        router.push(`/admin?callbackUrl=${pathname}`)
+      }
+    }
+    setIsLoading(false)
+  }, [pathname, session])
+
   return (
     <HeroUIProvider navigate={router.push}>
       {' '}
-      <ToastProvider />
-      {children}
+      {isLoading ? (
+        <div className='grid place-items-center h-screen w-screen'>
+          <Spinner />
+        </div>
+      ) : (
+        <>
+          <ToastProvider />
+          {children}
+        </>
+      )}
     </HeroUIProvider>
   )
 }
@@ -53,7 +81,9 @@ const Providers = ({ children }: ProvidersProps) => {
   return (
     <SessionProvider>
       <Provider store={store}>
-        <Content>{children}</Content>
+        <Suspense>
+          <Content>{children}</Content>
+        </Suspense>
       </Provider>
     </SessionProvider>
   )

@@ -1,15 +1,12 @@
-import { auth } from '@/auth'
-import { getToken } from 'next-auth/jwt'
+import { jwtDecrypt } from 'jose'
 
 import { NextRequest, NextResponse } from 'next/server'
 
 export default async (req: NextRequest) => {
-  const token: any = await getToken({
-    req,
-    secret: 'bec56a29ab187ed64d8089197a577ac3',
-  })
-  console.log(token)
-  // const isLoggedIn = !!req.auth?.user
+  const token =
+    req.cookies.get('__Secure-authjs.session-token')?.value ||
+    req.cookies.get('authjs.session-token')?.value
+
   const { searchParams } = new URL(req.url)
   const callbackUrl = searchParams.get('callbackUrl') || '/admin/dashboard'
   const isLoggedIn = !!token

@@ -26,7 +26,7 @@ const LoginForm = () => {
   })
   const handleSubmit = async (data: LoginSchema) => {
     try {
-      const res = await signIn('credentials', {
+      const res: any = await signIn('credentials', {
         ...data,
         role: 'admin',
         redirect: false,
@@ -55,6 +55,7 @@ const LoginForm = () => {
               </div>
               <InputField
                 label='Email Address'
+                placeholder='admin@mei.com'
                 type='email'
                 register={formMethods.register('email')}
                 errorMessage={formMethods.formState.errors.email?.message}
