@@ -2,6 +2,7 @@ import ManageChapterSection from '@/components/admin/chapters/ManageChapterSecti
 import Container from '@/components/elements/Container'
 
 export const runtime = 'edge'
+export const dynamic = 'force-dynamic'
 
 export default function ChapterPage() {
   return (
