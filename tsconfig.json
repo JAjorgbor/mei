@@ -30,5 +30,6 @@
     "next.config.mjs",
     "tailwind.config.ts"
   ],
+  "typeRoots": ["./types", "./node_modules/@types"],
   "exclude": ["node_modules"]
 }
