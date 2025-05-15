@@ -2,13 +2,14 @@ import Container from '@/components/elements/Container'
 
 import dynamicImport from 'next/dynamic'
 
-export const dynamic = 'force-dynamic'
-
 const AddPageSection = dynamicImport(
   () => import('@/components/admin/chapters/AddPageSection'),
   { ssr: false }
 )
+
 export const runtime = 'edge'
+export const dynamic = 'force-dynamic'
+export const dynamicParams = true
 export default function AddPage() {
   return (
     <Container>
