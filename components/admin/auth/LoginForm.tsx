@@ -1,6 +1,5 @@
 'use client'
 import { signIn } from 'next-auth/react'
-
 import InputField from '@/components/elements/InputField'
 import { addToast, Button, Card, CardBody } from '@heroui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
