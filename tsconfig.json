@@ -31,5 +31,8 @@
     "tailwind.config.ts"
   ],
   "typeRoots": ["./types", "./node_modules/@types"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "skipLibCheck": true,
+  "maxDepth": 50,
+  "disableSizeLimit": true
 }
