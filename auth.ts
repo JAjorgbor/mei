@@ -2,6 +2,8 @@ import NextAuth from 'next-auth'
 import CredentialsProvideer from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
 
+export const runtime = 'edge'
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     GoogleProvider,
