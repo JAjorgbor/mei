@@ -1,7 +1,6 @@
 import ManageChapterSection from '@/components/admin/chapters/ManageChapterSection'
 import Container from '@/components/elements/Container'
 
-export const runtime = 'edge'
 export const dynamic = 'force-dynamic'
 export const dynamicParams = true
 
