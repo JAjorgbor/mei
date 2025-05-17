@@ -1,3 +1,5 @@
+export const runtime = 'edge'
+
 export default function Page({ params }: { params: { dummy: string } }) {
   return (
     <div>
