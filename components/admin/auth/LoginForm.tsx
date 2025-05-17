@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { BookOpenIcon } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, Resolver } from 'react-hook-form'
 import { z } from 'zod'
 
 const loginSchema = z.object({
@@ -22,7 +22,7 @@ const LoginForm = () => {
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get('callbackUrl') || '/admin/dashboard'
   const formMethods = useForm<LoginSchema>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(loginSchema) as Resolver<z.infer<typeof loginSchema>>,
   })
   const handleSubmit = async (data: LoginSchema) => {
     try {
