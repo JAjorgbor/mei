@@ -22,7 +22,7 @@ const LoginForm = () => {
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get('callbackUrl') || '/admin/dashboard'
   const formMethods = useForm<LoginSchema>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(loginSchema) as Resolver<LoginSchema>,
   })
   const handleSubmit = async (data: LoginSchema) => {
     try {
