@@ -1,5 +1,6 @@
 'use client'
 import { signIn } from 'next-auth/react'
+import Cookies from 'js-cookie'
 import InputField from '@/components/elements/InputField'
 import { addToast, Button, Card, CardBody } from '@heroui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -34,7 +35,8 @@ const LoginForm = () => {
         throw new Error(res.error)
       }
       console.log(res)
-      router.push(callbackUrl)
+      router.push(`/admin/verify-access?callbackUrl=${callbackUrl}`)
+      Cookies.set('verifyAdminAccess', 'verified')
       setKeepLoading(true)
     } catch (error: any) {
       addToast({ title: 'Invalid credentials', color: 'danger' })

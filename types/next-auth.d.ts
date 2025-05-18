@@ -6,6 +6,7 @@ declare module 'next-auth' {
     user: {
       role?: string
       id?: string
+      verifyAdminAccess?: 'not-verified' | 'verified'
     } & DefaultSession['user']
   }
 

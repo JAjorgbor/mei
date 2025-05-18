@@ -16,7 +16,7 @@ const roboto = Roboto({
 })
 
 export const metadata: Metadata = {
-  title: 'Dashboard | Admin | Mei',
+  title: { default: 'Admin | Mei', template: '%s | Admin | Mei' },
   description: 'Mei story app admin',
 }
 

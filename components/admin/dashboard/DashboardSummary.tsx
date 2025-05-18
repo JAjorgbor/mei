@@ -1,8 +1,6 @@
 'use client'
 import { Avatar, Button, Card, CardBody, CardHeader, Chip } from '@heroui/react'
 import { ArrowRight, BookOpen, Edit } from 'lucide-react'
-import { useSession } from 'next-auth/react'
-import React from 'react'
 
 const users = [
   {
@@ -40,8 +38,6 @@ const users = [
 ]
 
 const DashboardSummary = () => {
-  const { data } = useSession()
-  console.log(data)
   return (
     <div className='flex flex-col md:flex-row gap-4'>
       <Card className='flex-1'>

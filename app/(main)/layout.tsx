@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter, Roboto } from 'next/font/google'
 import '../globals.css'
+import { redirect } from 'next/navigation'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -22,6 +23,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  redirect('/admin')
   return (
     <html lang='en'>
       <body className={`${inter.className} ${roboto.className} antialiased`}>

@@ -22,8 +22,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 resolve({
                   id: 1,
                   name: 'Joshua Ajorgbor',
-                  email: 'joshua@example.com',
+                  email: credentials.email,
                   role: 'admin',
+                  verifyAdminAcess: 'not-verified',
                 })
               } else resolve(false)
             }, 500)
@@ -41,12 +42,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) token.user = user
+    async jwt({ token, user, trigger, session }) {
+      if (user) {
+        token.user = user
+      }
+      if (trigger == 'update' && session.verifyAdminAccess) {
+        token.verifyAdminAccess = session.verifyAdminAccess
+      }
       return token
     },
     async session({ session, token }: { session: any; token: any }) {
       session.user = token.user
+      session.user.verifyAdminAccess = token.verifyAdminAccess
       return session
     },
   },

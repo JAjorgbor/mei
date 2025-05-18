@@ -2,6 +2,7 @@
 import { useSession, SessionProvider } from 'next-auth/react'
 import { usePathname } from 'next/navigation'
 import { store, useAppSelector } from '@/features/store'
+import Cookies from 'js-cookie'
 import { HeroUIProvider } from '@heroui/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, Suspense, useState } from 'react'
@@ -44,16 +45,42 @@ const Content = ({ children }: ProvidersProps) => {
   }, [theme])
 
   const pathname = usePathname()
-  const { data: session } = useSession()
+  const { data: session, update: updateSession } = useSession()
 
   useEffect(() => {
+    const adminVerifyAccessRoutes = [
+      '/admin/verify-access',
+      '/admin/verify-email',
+    ]
+    const adminAuthRoutes = [
+      '/admin',
+      '/admin/verify-access',
+      '/admin/verify-email',
+    ]
     if (session) {
-      if (
-        pathname.startsWith('/admin') &&
-        pathname !== '/admin' &&
-        session?.user?.role !== 'admin'
-      ) {
-        router.push(`/admin?callbackUrl=${pathname}`)
+      if (pathname.startsWith('/admin')) {
+        if (
+          (session?.user?.role !== 'admin' &&
+            !adminAuthRoutes.includes(pathname)) ||
+          (session?.user?.verifyAdminAccess !== 'verified' &&
+            !adminAuthRoutes.includes(pathname))
+        ) {
+          console.log(
+            (session?.user?.role !== 'admin' &&
+              !adminAuthRoutes.includes(pathname)) ||
+              (session?.user?.verifyAdminAccess !== 'verified' &&
+                !adminAuthRoutes.includes(pathname))
+          )
+          Cookies.set('verifyAdminAccess', 'not-verified')
+          return router.push(`/admin?callbackUrl=${pathname}`)
+        } else if (
+          session?.user?.role == 'admin' &&
+          adminAuthRoutes.includes(pathname) &&
+          session?.user?.verifyAdminAccess == 'verified'
+        ) {
+          Cookies.set('verifyAdminAccess', 'verified')
+          return router.push(`/admin/dashboard`)
+        }
       }
     }
     setIsLoading(false)

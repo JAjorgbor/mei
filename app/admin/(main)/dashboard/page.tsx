@@ -1,9 +1,10 @@
-'use client'
 import DashboardStatsSection from '@/components/admin/dashboard/DashboardStatsSection'
 import DashboardSummary from '@/components/admin/dashboard/DashboardSummary'
 import Container from '@/components/elements/Container'
-import { Button } from '@heroui/react'
-import React from 'react'
+
+export const metadata = {
+  title: 'Dashboard',
+}
 
 const Page = () => {
   return (
