@@ -18,6 +18,10 @@ const Content = ({ children }: ProvidersProps) => {
   const { theme } = useAppSelector((state) => state.header)
   const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
+
+  const pathname = usePathname()
+  const { data: session, update: updateSession } = useSession()
+
   useEffect(() => {
     const handleSystemColorTheme = () => {
       const prefersDark = window.matchMedia(
@@ -43,9 +47,6 @@ const Content = ({ children }: ProvidersProps) => {
       document.documentElement.className = theme
     }
   }, [theme])
-
-  const pathname = usePathname()
-  const { data: session, update: updateSession } = useSession()
 
   useEffect(() => {
     const adminVerifyAccessRoutes = [

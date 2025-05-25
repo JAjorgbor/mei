@@ -10,7 +10,7 @@ export default function VerifyAccessPage() {
   return (
     <Container className=''>
       <div className='w-full h-screen grid place-items-center'>
-        <div className='max-w-sm w-full'>
+        <div className='max-w-min w-full'>
           <Suspense>
             <VerifyAccessForm />
           </Suspense>

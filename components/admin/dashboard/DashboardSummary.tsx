@@ -1,6 +1,8 @@
 'use client'
+import axiosInstance from '@/api/admin/request-adapter'
 import { Avatar, Button, Card, CardBody, CardHeader, Chip } from '@heroui/react'
 import { ArrowRight, BookOpen, Edit } from 'lucide-react'
+import { useEffect } from 'react'
 
 const users = [
   {
@@ -38,6 +40,16 @@ const users = [
 ]
 
 const DashboardSummary = () => {
+  useEffect(() => {
+    ;(async () => {
+      try {
+        const res = await axiosInstance.get('/book/get')
+        console.log(res)
+      } catch (error) {
+        console.error('Error fetching book data:', error)
+      }
+    })()
+  }, [])
   return (
     <div className='flex flex-col md:flex-row gap-4'>
       <Card className='flex-1'>

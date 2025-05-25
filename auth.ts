@@ -1,3 +1,4 @@
+import { login } from '@/api/admin/requests/auth.requests'
 import NextAuth from 'next-auth'
 import CredentialsProvideer from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
@@ -16,27 +17,37 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
       async authorize(credentials: any) {
         try {
-          const user = await new Promise((resolve) => {
-            setTimeout(() => {
-              if (credentials.email.includes('example.com')) {
-                resolve({
-                  id: 1,
-                  name: 'Joshua Ajorgbor',
-                  email: credentials.email,
-                  role: 'admin',
-                  verifyAdminAcess: 'not-verified',
-                })
-              } else resolve(false)
-            }, 500)
-          })
+          const { email, password, role, accessToken, refreshToken, userData } =
+            credentials
 
-          if (user) {
-            return user
+          if (email && password) {
+            const { data } = await login({ email, password })
+            if (data) {
+              return {
+                userId: data.userId,
+                role,
+                email,
+                password,
+                verifyAdminAccess: 'not-verified',
+                firstName: data.firstName,
+                lastName: data.lastName,
+                accessToken: data.accessToken,
+                refreshToken: data.refreshToken,
+              }
+            } else {
+              return null
+            }
           }
-          throw new Error('Invalid credentials')
-        } catch (error) {
-          console.log(error)
-          throw new Error((error as Error).message || 'Login failed')
+          // Refresh session logic which would be triggered in request adapter, when refreshing session the already gottend userData is based back with new access and refresh tokens
+          if (accessToken && refreshToken && userData) {
+            return { ...JSON.parse(userData), accessToken, refreshToken }
+          }
+
+          // Catch-all fallback
+          return null
+        } catch (error: any) {
+          console.log('see error', error)
+          return null
         }
       },
     }),
@@ -44,7 +55,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async jwt({ token, user, trigger, session }) {
       if (user) {
-        token.user = user
+        const { accessToken, refreshToken, ...rest } = user as any
+        token.user = rest
+        token.accessToken = accessToken
+        token.refreshToken = refreshToken
       }
       if (trigger == 'update' && session.verifyAdminAccess) {
         token.verifyAdminAccess = session.verifyAdminAccess
@@ -54,6 +68,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async session({ session, token }: { session: any; token: any }) {
       session.user = token.user
       session.user.verifyAdminAccess = token.verifyAdminAccess
+      session.accessToken = token.accessToken
+      session.refreshToken = token.refreshToken
       return session
     },
   },

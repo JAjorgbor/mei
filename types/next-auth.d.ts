@@ -8,6 +8,8 @@ declare module 'next-auth' {
       id?: string
       verifyAdminAccess?: 'not-verified' | 'verified'
     } & DefaultSession['user']
+    accessToken?: string
+    refreshToken?: string
   }
 
   interface User {

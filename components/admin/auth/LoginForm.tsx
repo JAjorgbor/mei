@@ -1,14 +1,16 @@
 'use client'
-import { signIn } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
 import Cookies from 'js-cookie'
 import InputField from '@/components/elements/InputField'
 import { addToast, Button, Card, CardBody } from '@heroui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { BookOpenIcon } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm, Resolver } from 'react-hook-form'
 import { z } from 'zod'
+import axios from 'axios'
+import { login } from '@/api/admin/requests/auth.requests'
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -21,25 +23,36 @@ const LoginForm = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get('callbackUrl') || '/admin/dashboard'
+
   const formMethods = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
   })
+  const { data: session } = useSession()
+  console.log(session)
   const handleSubmit = async (data: LoginSchema) => {
     try {
       const res: any = await signIn('credentials', {
         ...data,
+        authenticateCredentials: true,
         role: 'admin',
         redirect: false,
       })
-      if (res.error) {
-        throw new Error(res.error)
+      // const res = await axios.post(
+      //   `${process.env.NEXT_PUBLIC_API_URL}/admin/sign-in`,
+      //   data
+      // )
+      if (res?.error) {
+        throw new Error('Invalid credentials')
       }
       console.log(res)
       router.push(`/admin/verify-access?callbackUrl=${callbackUrl}`)
       Cookies.set('verifyAdminAccess', 'verified')
       setKeepLoading(true)
     } catch (error: any) {
-      addToast({ title: 'Invalid credentials', color: 'danger' })
+      addToast({
+        title: error?.message || 'Something went wrong. Please try again later',
+        color: 'danger',
+      })
       console.log(error)
     }
   }
