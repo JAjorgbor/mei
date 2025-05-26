@@ -6,6 +6,7 @@ import { Avatar, Button, Divider } from '@heroui/react'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
   BookOpenIcon,
+  Building2,
   Edit2Icon,
   LayoutDashboardIcon,
   UsersIcon,
@@ -39,6 +40,12 @@ const Sidebar: React.FC = () => {
       isNested: true,
     },
     { path: '/admin/users', label: 'Users', icon: <UsersIcon size={18} /> },
+    {
+      path: '/admin/team',
+      label: 'Team',
+      icon: <Building2 size={18} />,
+      isNested: true,
+    },
   ]
   useEffect(() => {
     dispatch(setOpenSidebar(false))

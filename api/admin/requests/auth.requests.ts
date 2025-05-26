@@ -1,4 +1,3 @@
-import axiosInstance from '@/api/admin/request-adapter'
 import axios from 'axios'
 
 // Login to admin
