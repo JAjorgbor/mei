@@ -29,28 +29,36 @@ const LoginForm = () => {
   })
   const { data: session } = useSession()
   console.log(session)
-  const handleSubmit = async (data: LoginSchema) => {
+  const handleSubmit = async (formData: LoginSchema) => {
     try {
-      const res: any = await signIn('credentials', {
-        ...data,
-        authenticateCredentials: true,
-        role: 'admin',
+      const { data } = await login(formData)
+
+      const { accessToken, refreshToken, ...userPayload } = data
+
+      const authJsRes: any = await signIn('credentials', {
         redirect: false,
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+        userData: JSON.stringify({ ...userPayload, ...formData }),
       })
+      console.log('authJsRes', authJsRes)
       // const res = await axios.post(
       //   `${process.env.NEXT_PUBLIC_API_URL}/admin/sign-in`,
       //   data
       // )
-      if (res?.error) {
-        throw new Error('Invalid credentials')
-      }
-      console.log(res)
+      // if (res?.error) {
+      //   throw new Error('Invalid credentials')
+      // }
+      // console.log(res)
       router.push(`/admin/verify-access?callbackUrl=${callbackUrl}`)
       Cookies.set('verifyAdminAccess', 'verified')
       setKeepLoading(true)
     } catch (error: any) {
       addToast({
-        title: error?.message || 'Something went wrong. Please try again later',
+        title:
+          error?.response?.data?.detail ||
+          error?.message ||
+          'Something went wrong. Please try again later',
         color: 'danger',
       })
       console.log(error)

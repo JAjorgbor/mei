@@ -19,27 +19,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
       async authorize(credentials: any) {
         try {
-          const { email, password, role, accessToken, refreshToken, userData } =
-            credentials
+          const { accessToken, refreshToken, userData } = credentials
 
-          if (email && password) {
-            const { data } = await login({ email, password })
-            if (data) {
-              return {
-                userId: data.userId,
-                role,
-                email,
-                password,
-                verifyAdminAccess: 'not-verified',
-                firstName: data.firstName,
-                lastName: data.lastName,
-                accessToken: data.accessToken,
-                refreshToken: data.refreshToken,
-              }
-            } else {
-              return null
-            }
-          }
           // Refresh session logic which would be triggered in request adapter, when refreshing session the already gottend userData is based back with new access and refresh tokens
           if (accessToken && refreshToken && userData) {
             return { ...JSON.parse(userData), accessToken, refreshToken }
