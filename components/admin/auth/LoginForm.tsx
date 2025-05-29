@@ -11,6 +11,7 @@ import { useForm, Resolver } from 'react-hook-form'
 import { z } from 'zod'
 import axios from 'axios'
 import { login } from '@/api/admin/requests/auth.requests'
+import { verify } from 'crypto'
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -39,7 +40,12 @@ const LoginForm = () => {
         redirect: false,
         accessToken: accessToken,
         refreshToken: refreshToken,
-        userData: JSON.stringify({ ...userPayload, ...formData }),
+        userData: JSON.stringify({
+          ...userPayload,
+          ...formData,
+          verifyAdminAccess: 'not-verified',
+          role: 'admin',
+        }),
       })
       console.log('authJsRes', authJsRes)
       // const res = await axios.post(
