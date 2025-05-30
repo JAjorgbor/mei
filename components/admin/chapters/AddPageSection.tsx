@@ -11,9 +11,11 @@ import {
 } from '@heroui/react'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
+import dynamicImport from 'next/dynamic'
 import { useForm } from 'react-hook-form'
-import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
+
+const ReactQuill = dynamicImport(() => import('react-quill'), { ssr: false })
 
 const AddPageSection = () => {
   const formMethods = useForm()

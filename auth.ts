@@ -1,4 +1,3 @@
-import { login } from '@/api/admin/requests/auth.requests'
 import NextAuth from 'next-auth'
 import CredentialsProvideer from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'

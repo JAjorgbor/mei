@@ -1,11 +1,5 @@
+import AddPageSection from '@/components/admin/chapters/AddPageSection'
 import Container from '@/components/elements/Container'
-
-import dynamicImport from 'next/dynamic'
-
-const AddPageSection = dynamicImport(
-  () => import('@/components/admin/chapters/AddPageSection'),
-  { ssr: false }
-)
 
 export const dynamic = 'force-dynamic'
 export const dynamicParams = true
