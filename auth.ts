@@ -4,10 +4,6 @@ import CredentialsProvideer from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  pages: {
-    error: '/admin/login', // Your login route
-  },
-
   providers: [
     GoogleProvider,
     CredentialsProvideer({

@@ -37,5 +37,5 @@ export default async (req: NextRequest) => {
 }
 
 export const config = {
-  matcher: '/admin/:path*',
+  matcher: ['/admin((?!/api|/_next|/favicon.ico).*)'],
 }
