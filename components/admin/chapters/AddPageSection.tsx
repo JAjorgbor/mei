@@ -20,6 +20,7 @@ const ReactQuill = dynamicImport(() => import('react-quill'), { ssr: false })
 const AddPageSection = () => {
   const formMethods = useForm()
   const [value, setValue] = useState('')
+  const [isHydrated, setIsHydrated] = useState(false)
 
   const modules = {
     toolbar: [
@@ -60,6 +61,11 @@ const AddPageSection = () => {
     const subscribe = formMethods.watch((values) => console.log(values))
     return () => subscribe.unsubscribe()
   }, [])
+
+  useEffect(() => {
+    setIsHydrated(true)
+  }, [])
+
   const { chapterId } = useParams()
   return (
     <div className='space-y-6'>
@@ -79,14 +85,16 @@ const AddPageSection = () => {
             <CardBody>
               {' '}
               <div className='min-h-96'>
-                <ReactQuill
-                  theme='snow'
-                  value={formMethods.watch('content')}
-                  onChange={(value) => formMethods.setValue('content', value)}
-                  modules={modules}
-                  formats={formats}
-                  className='h-80'
-                />
+                {isHydrated && (
+                  <ReactQuill
+                    theme='snow'
+                    value={formMethods.watch('content')}
+                    onChange={(value) => formMethods.setValue('content', value)}
+                    modules={modules}
+                    formats={formats}
+                    className='h-80'
+                  />
+                )}
               </div>
             </CardBody>
             <CardFooter>
