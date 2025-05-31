@@ -1,21 +1,52 @@
-import NextAuth from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
+import NextAuth from 'next-auth'
+import CredentialsProvider from 'next-auth/providers/credentials'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  providers: [GoogleProvider],
+  providers: [
+    CredentialsProvider({
+      name: 'credentials',
+      credentials: {
+        email: { label: 'Email', type: 'email' },
+        password: { label: 'Password', type: 'password' },
+        role: {},
+      },
+      async authorize(credentials: any) {
+        try {
+          const { accessToken, refreshToken, userData } = credentials
+
+          // Refresh session logic which would be triggered in request adapter, when refreshing session the already gottend userData is based back with new access and refresh tokens
+          if (accessToken && refreshToken && userData) {
+            return { ...JSON.parse(userData), accessToken, refreshToken }
+          }
+
+          // Catch-all fallback
+          return null
+        } catch (error: any) {
+          console.log('see error', error)
+          return null
+        }
+      },
+    }),
+  ],
   callbacks: {
-    async jwt({ token, account }) {
-      // Store the access token in the JWT on initial sign in
-      if (account) {
-        token.accessToken = account.access_token;
+    async jwt({ token, user, trigger, session }) {
+      if (user) {
+        const { accessToken, refreshToken, ...rest } = user as any
+        token.user = rest
+        token.accessToken = accessToken
+        token.refreshToken = refreshToken
       }
-      return token;
+      if (trigger == 'update' && session.verifyAdminAccess) {
+        token.verifyAdminAccess = session.verifyAdminAccess
+      }
+      return token
     },
     async session({ session, token }: { session: any; token: any }) {
-      // Make the access token available in the session
-
-      session.accessToken = token.accessToken;
-      return session;
+      session.user = token.user
+      session.user.verifyAdminAccess = token.verifyAdminAccess
+      session.accessToken = token.accessToken
+      session.refreshToken = token.refreshToken
+      return session
     },
   },
-});
+})

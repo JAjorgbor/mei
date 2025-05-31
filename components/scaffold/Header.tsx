@@ -1,25 +1,24 @@
 'use client'
-import React, { useEffect, useState } from 'react'
 import { Fade as Hamburger } from 'hamburger-react'
+import { signOut } from 'next-auth/react'
+import React, { useEffect, useState } from 'react'
 
-import {
-  Navbar,
-  NavbarBrand,
-  NavbarContent,
-  NavbarItem,
-  DropdownMenu,
-  DropdownItem,
-  Dropdown,
-  DropdownTrigger,
-  Avatar,
-  Button,
-  NavbarMenuToggle,
-} from '@heroui/react'
-import { MonitorIcon, MoonIcon, PlusIcon, SunIcon } from 'lucide-react'
-import { useAppDispatch, useAppSelector } from '@/features/store'
-import useMediaQuery from '@/hooks/useMediaQuery'
 import { setTheme } from '@/features/headerSlice'
 import { setOpenSidebar } from '@/features/sidebarSlice'
+import { useAppDispatch, useAppSelector } from '@/features/store'
+import useMediaQuery from '@/hooks/useMediaQuery'
+import {
+  Avatar,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Navbar,
+  NavbarContent,
+  NavbarItem,
+} from '@heroui/react'
+import { MonitorIcon, MoonIcon, SunIcon } from 'lucide-react'
+import useGetAdmin from '@/hooks/requests/useGetAdmin'
 
 const Header: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -27,6 +26,9 @@ const Header: React.FC = () => {
 
   const isMobile = useMediaQuery(1027)
   const { theme: reduxTheme } = useAppSelector((state) => state.header)
+
+  // const { admin } = useGetAdmin()
+  // console.log(admin)
 
   const [themeState, setThemeState] = useState('')
 
@@ -106,12 +108,12 @@ const Header: React.FC = () => {
 
           <DropdownMenu aria-label='Profile Actions' variant='flat'>
             <DropdownItem key='profile' className='h-14 gap-2'>
-              <p className='font-semibold'>Signed in as</p>
+              <p className='text-sm'>Signed in as</p>
               <p className='font-semibold'>admin@storyapp.com</p>
             </DropdownItem>
             <DropdownItem key='settings'>My Settings</DropdownItem>
             <DropdownItem key='help_and_feedback'>Help & Feedback</DropdownItem>
-            <DropdownItem key='logout' color='danger'>
+            <DropdownItem key='logout' color='danger' onPress={() => signOut()}>
               Log Out
             </DropdownItem>
           </DropdownMenu>

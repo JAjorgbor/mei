@@ -1,4 +1,5 @@
 'use clieint'
+import { currencyFormatter } from '@/app/utils/currencyFormatter'
 import { Card, CardBody } from '@heroui/react'
 import {
   BookOpen,
@@ -21,8 +22,8 @@ const DashboardStatsSection = () => {
         positive={true}
       />
       <StatsCard
-        title='Total Words'
-        value='78,254'
+        title='Total Pages'
+        value='78'
         icon={<FileText className='text-primary' />}
         change='+8.2%'
         positive={true}
@@ -36,8 +37,8 @@ const DashboardStatsSection = () => {
       />
       <StatsCard
         title='Revenue'
-        value='$12,845'
-        icon={<DollarSign className='text-primary' />}
+        value={currencyFormatter(15000)}
+        icon={<span className='text-primary !text-2xl'>₦</span>}
         change='-2.4%'
         positive={false}
       />

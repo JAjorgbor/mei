@@ -1,4 +1,4 @@
-import { heroui } from '@heroui/react'
+import { heroui, lightLayout } from '@heroui/react'
 
 module.exports = {
   content: [
@@ -36,7 +36,19 @@ module.exports = {
     heroui({
       themes: {
         dark: {
-          colors: { background: '#0a0a0a' }, // dark theme colors
+          colors: {
+            primary: '#BA274A',
+
+            secondary: '#ff9f1c',
+            background: '#0a0a0a',
+          }, // dark theme colors
+        },
+        light: {
+          colors: {
+            primary: '#BA274A',
+
+            secondary: '#ff9f1c',
+          },
         },
         // ... custom themes
       },

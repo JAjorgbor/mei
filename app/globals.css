@@ -5,3 +5,22 @@
 body {
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.content-renderer {
+  @apply space-y-3;
+}
+
+.content-renderer h1,
+h2,
+h3 {
+  @apply font-bold;
+}
+.content-renderer h1 {
+  @apply text-3xl;
+}
+.content-renderer h2 {
+  @apply text-2xl;
+}
+.content-renderer h3 {
+  @apply text-xl;
+}
