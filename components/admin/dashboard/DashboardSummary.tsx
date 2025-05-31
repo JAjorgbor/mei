@@ -1,5 +1,5 @@
 'use client'
-import axiosInstance from '@/api/admin/request-adapter'
+import axiosInstance from '@/api-utils/admin/request-adapter'
 import { Avatar, Button, Card, CardBody, CardHeader, Chip } from '@heroui/react'
 import { ArrowRight, BookOpen, Edit } from 'lucide-react'
 import { useEffect } from 'react'

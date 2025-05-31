@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react'
 import { useForm, Resolver } from 'react-hook-form'
 import { z } from 'zod'
 import axios from 'axios'
-import { login } from '@/api/admin/requests/auth.requests'
+import { login } from '@/api-utils/admin/requests/auth.requests'
 import { verify } from 'crypto'
 
 const loginSchema = z.object({

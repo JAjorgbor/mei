@@ -1,6 +1,6 @@
 'use client'
 
-import { getAdmin } from '@/api/admin/requests/user.requests'
+import { getAdmin } from '@/api-utils/admin/requests/user.requests'
 import useSWR from 'swr'
 
 export default function useGetAdmin() {

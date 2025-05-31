@@ -1,5 +1,5 @@
 'use client'
-import { login, verifyAccess } from '@/api/admin/requests/auth.requests'
+import { login, verifyAccess } from '@/api-utils/admin/requests/auth.requests'
 import TimerCountDown from '@/components/elements/TimerCountDown'
 import { addToast, Button, Card, CardBody, InputOtp } from '@heroui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
