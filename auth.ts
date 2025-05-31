@@ -1,11 +1,11 @@
 import NextAuth from 'next-auth'
-import CredentialsProvideer from 'next-auth/providers/credentials'
+import CredentialsProvider from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     GoogleProvider,
-    CredentialsProvideer({
+    CredentialsProvider({
       name: 'credentials',
       credentials: {
         email: { label: 'Email', type: 'email' },
