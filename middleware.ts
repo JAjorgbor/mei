@@ -23,9 +23,11 @@ export default async (req: NextRequest) => {
     if (
       (verifyAdminAccess !== 'verified' &&
         pathname !== '/admin' &&
+        pathname !== '/admin/accept-invite' &&
         !verifyAdminAccessRoutes.includes(pathname)) ||
       (!isLoggedIn &&
         pathname !== '/admin' &&
+        pathname !== '/admin/accept-invite' &&
         !verifyAdminAccessRoutes.includes(pathname))
     ) {
       return NextResponse.redirect(

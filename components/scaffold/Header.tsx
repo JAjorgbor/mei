@@ -27,8 +27,7 @@ const Header: React.FC = () => {
   const isMobile = useMediaQuery(1027)
   const { theme: reduxTheme } = useAppSelector((state) => state.header)
 
-  // const { admin } = useGetAdmin()
-  // console.log(admin)
+  const { admin } = useGetAdmin()
 
   const [themeState, setThemeState] = useState('')
 
@@ -102,7 +101,7 @@ const Header: React.FC = () => {
               color='primary'
               name='Admin User'
               size='sm'
-              src='https://img.heroui.chat/image/avatar?w=150&h=150&u=admin123'
+              src={admin?.avatar || ''}
             />
           </DropdownTrigger>
 

@@ -65,7 +65,7 @@ axiosInstance.interceptors.response.use(
           '/admin/verify-email',
         ]
 
-        // signOut()
+        signOut()
         return Promise.reject(error)
       }
     }

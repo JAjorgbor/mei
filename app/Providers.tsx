@@ -57,6 +57,7 @@ const Content = ({ children }: ProvidersProps) => {
       '/admin',
       '/admin/verify-access',
       '/admin/verify-email',
+      '/admin/accept-invite',
     ]
     if (session) {
       if (pathname.startsWith('/admin')) {
@@ -90,7 +91,7 @@ const Content = ({ children }: ProvidersProps) => {
   return (
     <>
       {' '}
-      <ToastProvider />
+      <ToastProvider toastProps={{ classNames: { wrapper: '!z-[999]' } }} />
       {isLoading ? (
         <div className='grid place-items-center h-screen w-screen'>
           <Spinner />

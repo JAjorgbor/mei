@@ -736,25 +736,13 @@ const InputField: FC<InputFieldProps> = ({
             )
           : renderLabelLeft
           ? label && (
-              <p
-                className={twMerge(
-                  `order-1 font-bold text-primary`,
-                  classNames.label
-                )}
-              >
+              <p className={twMerge(`order-1`, classNames.label)}>
                 {label} {isRequired && <span className='text-red-700'>*</span>}
               </p>
             )
           : label && (
               <p>
-                <span
-                  className={twMerge(
-                    `font-bold text-primary`,
-                    classNames.label
-                  )}
-                >
-                  {label}
-                </span>
+                <span className={twMerge(classNames.label)}>{label}</span>
                 {isRequired && <span className='text-red-700'>*</span>}
               </p>
             )}
