@@ -1,6 +1,7 @@
 'use client'
 
-import { getAdmin } from '@/api-utils/admin/requests/user.requests'
+import { IAdmin } from '@/api-utils/admin/interfaces/admin.interface'
+import { getAdmin } from '@/api-utils/admin/requests/admin.requests'
 import useSWR from 'swr'
 
 export default function useGetAdmin() {
@@ -8,7 +9,7 @@ export default function useGetAdmin() {
     const { data } = await getAdmin()
     return data
   }
-  const { data, error, mutate, isLoading } = useSWR(
+  const { data, error, mutate, isLoading } = useSWR<IAdmin>(
     `/api/admin/details`,
     fetcher
   )

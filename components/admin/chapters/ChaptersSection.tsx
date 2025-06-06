@@ -41,7 +41,6 @@ const ChaptersSection = () => {
     { id: 'status', value: 'all' },
   ])
   const { allChapters, allChaptersLoading } = useGetAllChapters()
-  console.log(allChapters)
 
   const [pagination, setPagination] = useState({
     pageIndex: 0, //initial page index
