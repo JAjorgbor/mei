@@ -1,18 +1,12 @@
 'use client'
-import InputField from '@/components/elements/InputField'
-import {
-  BreadcrumbItem,
-  Breadcrumbs,
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-} from '@heroui/react'
-import React from 'react'
+import PagesTable from '@/components/admin/chapters/PagesTable'
+import { BreadcrumbItem, Breadcrumbs, Button, Tab, Tabs } from '@heroui/react'
+import { zodResolver } from '@hookform/resolvers/zod'
+import Image from 'next/image'
+import { useParams } from 'next/navigation'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import PagesTable from '@/components/admin/chapters/PagesTable'
 
 const chapterDetailsSchema = z.object({
   title: z
@@ -29,6 +23,8 @@ const ManageChapterSection = () => {
     resolver: zodResolver(chapterDetailsSchema),
     defaultValues: { status: 'published' },
   })
+  const { chapterId } = useParams()
+  const [activeTab, setActiveTab] = useState('pages')
   return (
     <div className='space-y-6'>
       <Breadcrumbs>
@@ -37,49 +33,51 @@ const ManageChapterSection = () => {
         <BreadcrumbItem href='#'>Manage Chapter</BreadcrumbItem>
       </Breadcrumbs>
 
-      <div className='grid lg:grid-cols-5 gap-6'>
-        <div>
-          <Card>
-            <CardHeader>Chapter Details</CardHeader>
-            <CardBody>
-              <form>
-                <div className='space-y-4'>
-                  <InputField
-                    type='text'
-                    label='Title'
-                    placeholder='Chapter Title'
-                    register={formMethods.register('title')}
-                    errorMessage={formMethods.formState.errors.title?.message}
-                  />
-                  <InputField
-                    type='number'
-                    label='Chapter Number'
-                    register={formMethods.register('chapterNumber')}
-                    value={4}
-                  />
-                  <InputField
-                    type='select'
-                    label='Status'
-                    value={formMethods.watch('status')}
-                    onChange={(value) => formMethods.setValue('status', value)}
-                    options={[
-                      { value: 'published', label: 'Published' },
-                      { value: 'draft', label: 'Draft' },
-                    ]}
-                  />
-
-                  <Button type='submit' className='w-full' color='primary'>
-                    Update
-                  </Button>
-                </div>
-              </form>
-            </CardBody>
-          </Card>
-        </div>
-        <div className='lg:col-span-4 overflow-y-visible'>
-          <PagesTable />
-        </div>
+      <div className='gap-3 w-3/5 mx-auto flex flex-col items-center'>
+        <Image
+          src='https://dummyimage.com/300x500'
+          alt='chapter-thumbnail'
+          className='object-cover h-80'
+          height={500}
+          width={300}
+        />
+        <h3 className='text-xl'>Chapter {chapterId}: Chapter Name</h3>
+        <p className='text-sm'>
+          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolorum
+          harum magnam facilis nam? Dolore laborum commodi culpa enim odio a
+          mollitia temporibus praesentium quaerat!
+        </p>
       </div>
+      <div className='flex justify-center  w-4/5 mx-auto border-t'>
+        <Button
+          className={`p-3 py-5 text-center flex-1 bg-transparent ${
+            activeTab == 'pages' ? 'text-primary border-b border-b-primary' : ''
+          }`}
+          radius='none'
+          onPress={() => setActiveTab('pages')}
+        >
+          Pages
+        </Button>
+        <Button
+          radius='none'
+          className={`p-3 py-5 text-center flex-1 bg-transparent ${
+            activeTab == 'comments'
+              ? 'text-primary border-b border-b-primary'
+              : ''
+          }`}
+          onPress={() => setActiveTab('comments')}
+        >
+          Comments
+        </Button>
+      </div>
+      <Tabs classNames={{ tab: 'hidden' }} selectedKey={activeTab}>
+        <Tab key='pages' title='Pages'>
+          <PagesTable />
+        </Tab>
+        <Tab key='comments' title='Comments'>
+          Comments
+        </Tab>
+      </Tabs>
     </div>
   )
 }

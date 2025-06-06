@@ -28,7 +28,7 @@ const Header: React.FC = () => {
   const { theme: reduxTheme } = useAppSelector((state) => state.header)
 
   const { admin } = useGetAdmin()
-
+  console.log(admin)
   const [themeState, setThemeState] = useState('')
 
   useEffect(() => {
