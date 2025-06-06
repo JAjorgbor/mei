@@ -20,8 +20,7 @@ const InviteTeamMemberModal: FC<BaseModalProps> = ({ isOpen, setIsOpen }) => {
 
   const handleSubmit = async (formData: FormFields) => {
     try {
-      const res = await inviteTeamMember(formData)
-      console.log(res)
+      await inviteTeamMember(formData)
       console.log(formData)
       //   formMethods.reset()
       addToast({ color: 'success', title: 'Team member invited successfully' })
