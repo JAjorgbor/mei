@@ -79,11 +79,11 @@ const LoginForm = () => {
             <div className='space-y-4'>
               <div className='flex flex-col gap items-center'>
                 <BookOpenIcon className='text-primary text-2xl' />
-                <h1 className='text-2xl font-bold'>Mei Admin</h1>
+                <h1 className='text-2xl font-bold'>Mie Admin</h1>
               </div>
               <InputField
                 label='Email Address'
-                placeholder='admin@mei.com'
+                placeholder='admin@mie.com'
                 type='email'
                 register={formMethods.register('email')}
                 errorMessage={formMethods.formState.errors.email?.message}

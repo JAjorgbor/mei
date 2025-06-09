@@ -78,7 +78,7 @@ const Sidebar: React.FC = () => {
                   <div className='bg-content2 border-r border-divider h-screen flex flex-col'>
                     <div className='px-4 py-[1.11rem] flex items-center gap-2 '>
                       <BookOpenIcon className='text-primary text-2xl' />
-                      <h1 className='text-xl font-bold'>Mei Admin</h1>
+                      <h1 className='text-xl font-bold'>Mie Admin</h1>
                     </div>
                     <Divider />
                     <div className='flex-1 p-2'>

@@ -12,6 +12,7 @@ import {
   Dropdown,
   DropdownItem,
   DropdownMenu,
+  DropdownSection,
   DropdownTrigger,
   Navbar,
   NavbarContent,
@@ -36,7 +37,6 @@ const Header: React.FC = () => {
   const { theme: reduxTheme } = useAppSelector((state) => state.header)
 
   const { admin } = useGetAdmin()
-  console.log(admin)
   const [themeState, setThemeState] = useState('')
   const [showUpdateAdminDetailsModal, setShowUpdateAdminDetailsModal] =
     useState(false)
@@ -119,13 +119,14 @@ const Header: React.FC = () => {
             </DropdownTrigger>
 
             <DropdownMenu aria-label='Profile Actions' variant='flat'>
-              <DropdownItem key='profile' className='h-14 gap-2'>
-                <p className='text-sm'>Signed in as</p>
-                <p className='text-sm'>
-                  {admin?.firstName} {admin?.lastName}
-                </p>
-                <p className='font-semibold'>{admin?.email}</p>
-              </DropdownItem>
+              <DropdownSection showDivider>
+                <DropdownItem key='profile' className='h-14 gap-2'>
+                  <p className='text-sm'>
+                    {admin?.firstName} {admin?.lastName}
+                  </p>
+                  <p className='font-semibold'>{admin?.email}</p>
+                </DropdownItem>
+              </DropdownSection>
               <DropdownItem
                 key='settings'
                 startContent={<Edit size={15} />}

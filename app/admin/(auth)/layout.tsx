@@ -16,8 +16,8 @@ const roboto = Roboto({
 })
 
 export const metadata: Metadata = {
-  title: { default: 'Admin | Mei', template: '%s | Admin | Mei' },
-  description: 'Mei story app admin',
+  title: { default: 'Admin | Mie', template: '%s | Admin | Mie' },
+  description: 'Mie story app admin',
 }
 
 export default function RootLayout({

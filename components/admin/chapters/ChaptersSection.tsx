@@ -1,11 +1,18 @@
 'use client'
-import Link from 'next/link'
+import { IChapter } from '@/api-utils/admin/interfaces/chapter.interfaces'
+import CreateChapterModal from '@/components/admin/chapters/CreateChapterModal'
+import DeleteChapterModal from '@/components/admin/chapters/DeleteChapterModal'
 import InputField from '@/components/elements/InputField'
+import useGetAllChapters from '@/hooks/requests/useGetAllChapters'
 import {
   BreadcrumbItem,
   Breadcrumbs,
   Button,
   Chip,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
   Pagination,
   Selection,
   Spinner,
@@ -28,11 +35,9 @@ import {
   Table as TableType,
   useReactTable,
 } from '@tanstack/react-table'
-import React, { useCallback, useMemo, useState } from 'react'
-import CreateChapterModal from '@/components/admin/chapters/CreateChapterModal'
-import useGetAllChapters from '@/hooks/requests/useGetAllChapters'
-import { IChapter } from '@/api-utils/admin/interfaces/chapter.interfaces'
+import { MoreVertical } from 'lucide-react'
 import moment from 'moment'
+import React, { useCallback, useMemo, useState } from 'react'
 
 const columnHelper = createColumnHelper<IChapter>()
 const ChaptersSection = () => {
@@ -41,6 +46,8 @@ const ChaptersSection = () => {
     { id: 'status', value: 'all' },
   ])
   const { allChapters, allChaptersLoading } = useGetAllChapters()
+  const [selectedChapter, setSelectedChapter] = useState<IChapter>()
+  const [showDeleteChapterModal, setShowDeleteChapterModal] = useState(false)
 
   const [pagination, setPagination] = useState({
     pageIndex: 0, //initial page index
@@ -109,16 +116,31 @@ const ChaptersSection = () => {
         header: 'Actions',
         enableHiding: false, // disable hiding for this column
         cell: (info) => (
-          <Button
-            size='sm'
-            color='primary'
-            variant='ghost'
-            as={Link}
-            href={`/admin/chapters/${info.row.original.number}`}
-            className='py-1 px-2'
-          >
-            Manage Chapter
-          </Button>
+          <Dropdown className='min-w-max'>
+            <DropdownTrigger>
+              <button type='button'>
+                <MoreVertical size={18} />
+              </button>
+            </DropdownTrigger>
+            <DropdownMenu>
+              <DropdownItem
+                key='view'
+                href={`/admin/chapters/${info.row.original.id}`}
+              >
+                View Chapter
+              </DropdownItem>
+              <DropdownItem
+                color='danger'
+                key='delete'
+                onPress={() => {
+                  setShowDeleteChapterModal(true)
+                  setSelectedChapter(info.row.original)
+                }}
+              >
+                Delete Chapter
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
         ),
       }),
     ],
@@ -221,6 +243,11 @@ const ChaptersSection = () => {
             )) as any)}
         </TableBody>
       </Table>
+      <DeleteChapterModal
+        isOpen={showDeleteChapterModal}
+        setIsOpen={setShowDeleteChapterModal}
+        selectedChapter={selectedChapter as IChapter}
+      />
     </div>
   )
 }

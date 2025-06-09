@@ -2,6 +2,7 @@
 import { addNewPage } from '@/api-utils/admin/requests/page.requests'
 import InputField from '@/components/elements/InputField'
 import useGetBook from '@/hooks/requests/useGetBook'
+import useGetChapter from '@/hooks/requests/useGetChapter'
 import {
   addToast,
   BreadcrumbItem,
@@ -14,7 +15,7 @@ import {
 } from '@heroui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import dynamicImport from 'next/dynamic'
-import { useParams } from 'next/navigation'
+import { useRouter, useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import 'react-quill/dist/quill.snow.css'
@@ -29,6 +30,7 @@ const schema = z.object({
   status: z
     .string({ required_error: 'Status is required' })
     .min(1, 'Status is required'),
+  createMore: z.boolean(),
 })
 
 type FormFields = z.infer<typeof schema>
@@ -37,6 +39,7 @@ const AddPageSection = () => {
   const defaultValues = {
     status: 'published',
     textContent: '<h1>Story content goes here</h1>',
+    createMore: false,
   }
   const formMethods = useForm<FormFields>({
     resolver: zodResolver(schema),
@@ -92,17 +95,29 @@ const AddPageSection = () => {
   const { chapterId } = useParams()
   const [activeTab, setActiveTab] = useState('content')
   const { book } = useGetBook()
+  const { chapter } = useGetChapter(chapterId as string)
+  const [keepLoading, setKeepLoading] = useState(false)
+  const router = useRouter()
 
   const handleSubmit = async (formData: FormFields) => {
     try {
-      const res = await addNewPage(book?.id as string, formData)
+      const { createMore, ...payload } = formData
+      const res = await addNewPage(book?.id as string, {
+        ...payload,
+        chapterId,
+      })
       console.log(res)
       addToast({
         title: 'Page created succesfully',
         color: 'success',
         severity: 'success',
       })
-      formMethods.reset(defaultValues)
+      if (createMore) {
+        setKeepLoading(true)
+        router.push(`/admin/chapters/${chapterId}`)
+      } else {
+        formMethods.reset(defaultValues)
+      }
     } catch (error: any) {
       console.error(error)
       addToast({
@@ -124,7 +139,7 @@ const AddPageSection = () => {
           <BreadcrumbItem href='/admin/dashboard'>Dashboard</BreadcrumbItem>
           <BreadcrumbItem href='/admin/chapters'>Chapters</BreadcrumbItem>
           <BreadcrumbItem href={`/admin/chapters/${chapterId}/`}>
-            Chapter Name
+            Chapter {chapter?.number}: {chapter?.chapterLabel}
           </BreadcrumbItem>
           <BreadcrumbItem href={`/admin/chapters/${chapterId}/add-page`}>
             Add Page
@@ -206,17 +221,24 @@ const AddPageSection = () => {
                 </Card>
               </Tab>
             </Tabs>
-            <div className='flex gap-4 justify-end w-full mt-6'>
+            <div className='flex gap-4 justify-end items-center w-full mt-6'>
+              <InputField
+                type='checkbox'
+                value={formMethods.watch('createMore')}
+                onChange={(value) => formMethods.setValue('createMore', value)}
+                label='Create More'
+              />
               <Button
                 color='danger'
-                disabled={formMethods.formState.isSubmitting}
+                isLoading={formMethods.formState.isSubmitting || keepLoading}
+                href={`/admin/chapters/${chapterId}`}
               >
                 Cancel
               </Button>
               <Button
                 color='primary'
                 type='submit'
-                isLoading={formMethods.formState.isSubmitting}
+                isLoading={formMethods.formState.isSubmitting || keepLoading}
               >
                 Save
               </Button>

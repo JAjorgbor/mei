@@ -7,6 +7,7 @@ export interface IChapter {
   lastAccessed: Date
   dateCreated: Date
   dateUpdated: Date
+  coverImage: string
   pageCount: number
   pages: null
 }
