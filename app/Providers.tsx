@@ -67,14 +67,10 @@ const Content = ({ children }: ProvidersProps) => {
           (session?.user?.verifyAdminAccess !== 'verified' &&
             !adminAuthRoutes.includes(pathname))
         ) {
-          console.log(
-            (session?.user?.role !== 'admin' &&
-              !adminAuthRoutes.includes(pathname)) ||
-              (session?.user?.verifyAdminAccess !== 'verified' &&
-                !adminAuthRoutes.includes(pathname))
-          )
-          Cookies.set('verifyAdminAccess', 'not-verified')
-          return router.push(`/admin?callbackUrl=${pathname}`)
+          console.log(session)
+          // Cookies.set('verifyAdminAccess', 'not-verified')
+
+          // return router.push(`/admin?callbackUrl=${pathname}`)
         } else if (
           session?.user?.role == 'admin' &&
           adminAuthRoutes.includes(pathname) &&

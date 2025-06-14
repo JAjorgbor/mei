@@ -1,6 +1,7 @@
-'use clieint'
+'use client'
 import { currencyFormatter } from '@/app/utils/currencyFormatter'
-import { Card, CardBody } from '@heroui/react'
+import useGetDashboardStats from '@/hooks/requests/useGetDashboardStats'
+import { Card, CardBody, Skeleton } from '@heroui/react'
 import {
   BookOpen,
   DollarSign,
@@ -12,36 +13,60 @@ import {
 import React, { ReactNode } from 'react'
 
 const DashboardStatsSection = () => {
+  const { dashboardStats } = useGetDashboardStats()
   return (
     <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
-      <StatsCard
-        title='Total Chapters'
-        value='24'
-        icon={<BookOpen className='text-primary' />}
-        change='+3'
-        positive={true}
-      />
-      <StatsCard
-        title='Total Pages'
-        value='78'
-        icon={<FileText className='text-primary' />}
-        change='+8.2%'
-        positive={true}
-      />
-      <StatsCard
-        title='Readers'
-        value='842'
-        icon={<Users className='text-primary' />}
-        change='+5.1%'
-        positive={true}
-      />
-      <StatsCard
-        title='Revenue'
-        value={currencyFormatter(15000)}
-        icon={<span className='text-primary !text-2xl'>₦</span>}
-        change='-2.4%'
-        positive={false}
-      />
+      {dashboardStats ? (
+        <>
+          <StatsCard
+            title='Total Chapters'
+            value={`${dashboardStats?.chapterAnalytics?.totalChapters}`}
+            icon={<BookOpen className='text-primary' />}
+            change={`${dashboardStats?.chapterAnalytics?.chapterChange}%`}
+            changeType={dashboardStats?.chapterAnalytics?.changeType!}
+          />
+          <StatsCard
+            title='Total Pages'
+            value={`${dashboardStats?.pageAnalytics?.totalpages}`}
+            icon={<FileText className='text-primary' />}
+            change={`${dashboardStats?.pageAnalytics?.pageChange}%`}
+            changeType={dashboardStats?.pageAnalytics?.changeType!}
+          />
+          <StatsCard
+            title='Total Readers'
+            value={`${dashboardStats?.readerAnalytics?.totalReaders}`}
+            icon={<Users className='text-primary' />}
+            change={`${dashboardStats?.readerAnalytics?.readerChange}%`}
+            changeType={dashboardStats?.readerAnalytics?.changeType!}
+          />
+          <StatsCard
+            title='Total Revenue'
+            value={`${currencyFormatter(
+              Number(dashboardStats?.revenueAnalytics?.totalRevenue)
+            )}`}
+            icon={<span className='text-primary !text-2xl'>₦</span>}
+            change={`${dashboardStats?.revenueAnalytics?.revenueChange}%`}
+            changeType={dashboardStats?.revenueAnalytics?.changeType!}
+          />
+        </>
+      ) : (
+        Array(4)
+          .fill(null)
+          .map((_, index) => (
+            <Card key={index}>
+              <CardBody>
+                <div className='flex gap-3 items-center'>
+                  <Skeleton className='size-14 rounded' />
+
+                  <div className='space-y-3'>
+                    <Skeleton className='w-32 h-5 rounded' />
+                    <Skeleton className='w-28 h-3 rounded' />
+                  </div>
+                </div>
+              </CardBody>
+            </Card>
+          ))
+      )}
     </div>
   )
 }
@@ -53,7 +78,7 @@ interface StatsCardProps {
   value: string
   icon: ReactNode
   change: string
-  positive: boolean
+  changeType: string
 }
 
 const StatsCard: React.FC<StatsCardProps> = ({
@@ -61,8 +86,13 @@ const StatsCard: React.FC<StatsCardProps> = ({
   value,
   icon,
   change,
-  positive,
+  changeType,
 }) => {
+  const changeTypeMap: Record<string, string> = {
+    increase: '+',
+    decrease: '-',
+    'no change': '',
+  }
   return (
     <Card>
       <CardBody>
@@ -76,14 +106,18 @@ const StatsCard: React.FC<StatsCardProps> = ({
           </div>
         </div>
         <div className='mt-4 flex items-center'>
-          {positive ? (
+          {changeType == 'increase' ? (
             <TrendingUp className={'text-success'} />
-          ) : (
+          ) : changeType == 'decrease' ? (
             <TrendingDown className={'text-danger'} />
-          )}
+          ) : null}
           <span
             className={`ml-1 text-sm ${
-              positive ? 'text-success' : 'text-danger'
+              changeType == 'increase'
+                ? 'text-success'
+                : changeType == 'decrease'
+                ? 'text-danger'
+                : 'text-warning'
             }`}
           >
             {change}

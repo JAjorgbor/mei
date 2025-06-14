@@ -11,9 +11,11 @@ const axiosInstance = axios.create({
   },
 })
 
+let currentAccessToken: string | null = null
+
 axiosInstance.interceptors.request.use(async (config) => {
   const session: any = await getSession()
-  const accessToken = session?.accessToken
+  const accessToken = currentAccessToken || session?.accessToken
 
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`
@@ -41,13 +43,21 @@ axiosInstance.interceptors.response.use(
         const { data } = await axiosInstance.post('admin/refresh', {
           refreshToken,
         })
+        console.log(data)
+        // TEMPORARILY store the new token for retry
 
+        currentAccessToken = data.accessToken
         // Update Auth.js session with new token
+
         await signIn('credentials', {
           redirect: false,
           accessToken: data.accessToken,
           refreshToken: data.refreshToken,
-          userData: JSON.stringify(session?.user),
+          userData: JSON.stringify(
+            session?.user?.verifyAdminAccess
+              ? session?.user
+              : { ...session?.user, verifyAdminAccess: 'verified' }
+          ),
         })
         axiosInstance.defaults.headers.Authorization = `Bearer ${data?.accessToken}`
 

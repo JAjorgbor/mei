@@ -1,6 +1,7 @@
 'use client'
 import { updateAdmin } from '@/api-utils/admin/requests/admin.requests'
 import { uploadToCloudinary } from '@/api-utils/general.requests'
+import extractPublicId from '@/app/utils/extractCloudinaryPublicId'
 import { urlToFile } from '@/app/utils/urlToFile'
 import ModalWrapper, {
   BaseModalProps,
@@ -61,12 +62,12 @@ const UpdateAdminDetailsModal: FC<BaseModalProps> = ({ isOpen, setIsOpen }) => {
 
   const handleSubmit = async (formData: FormFields) => {
     try {
+      const public_id = extractPublicId(String(admin?.avatar)) as string
       const { data } = await uploadToCloudinary({
         file: formData.avatar,
-        public_id: `mie-novel/admin/avatars/${formData.firstName}_${formData.lastName}`,
+        public_id,
       })
       const res = await updateAdmin({ ...formData, avatar: data.secure_url })
-      console.log(res)
       addToast({
         title: 'Admin details updated succesfully',
         severity: 'success',

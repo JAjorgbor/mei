@@ -83,7 +83,7 @@ const AcceptInviteSection = () => {
       // Upload avatar to cloudinary
       const { data } = await uploadToCloudinary({
         file: payload.avatar,
-        public_id: `mie-novel/admin/avatars/${payload.firstName}_${payload.lastName}`,
+        folder: `mie-novel/admin/avatars/`,
       })
       payload.avatar = data.secure_url
       // Accept admin invite

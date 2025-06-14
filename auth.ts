@@ -36,9 +36,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.accessToken = accessToken
         token.refreshToken = refreshToken
       }
-      if (trigger == 'update' && session.verifyAdminAccess) {
-        token.verifyAdminAccess = session.verifyAdminAccess
-      }
+      token.verifyAdminAccess = session?.verifyAdminAccess
       return token
     },
     async session({ session, token }: { session: any; token: any }) {
