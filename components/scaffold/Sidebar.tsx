@@ -108,20 +108,6 @@ const Sidebar: React.FC = () => {
                         ))}
                       </nav>
                     </div>
-                    <div className='p-4 border-t border-divider'>
-                      <div className='flex items-center gap-2'>
-                        <Avatar
-                          src='https://img.heroui.chat/image/avatar?w=40&h=40&u=admin123'
-                          size='sm'
-                        />
-                        <div>
-                          <p className='text-sm font-medium'>Admin User</p>
-                          <p className='text-xs text-default-500'>
-                            admin@storyapp.com
-                          </p>
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 </motion.div>
               </>

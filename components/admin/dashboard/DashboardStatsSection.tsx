@@ -19,6 +19,15 @@ const DashboardStatsSection = () => {
       {dashboardStats ? (
         <>
           <StatsCard
+            title='Total Revenue'
+            value={`${currencyFormatter(
+              Number(dashboardStats?.revenueAnalytics?.totalRevenue)
+            )}`}
+            icon={<span className='text-primary !text-2xl'>₦</span>}
+            change={`${dashboardStats?.revenueAnalytics?.revenueChange}%`}
+            changeType={dashboardStats?.revenueAnalytics?.changeType!}
+          />
+          <StatsCard
             title='Total Chapters'
             value={`${dashboardStats?.chapterAnalytics?.totalChapters}`}
             icon={<BookOpen className='text-primary' />}
@@ -38,15 +47,6 @@ const DashboardStatsSection = () => {
             icon={<Users className='text-primary' />}
             change={`${dashboardStats?.readerAnalytics?.readerChange}%`}
             changeType={dashboardStats?.readerAnalytics?.changeType!}
-          />
-          <StatsCard
-            title='Total Revenue'
-            value={`${currencyFormatter(
-              Number(dashboardStats?.revenueAnalytics?.totalRevenue)
-            )}`}
-            icon={<span className='text-primary !text-2xl'>₦</span>}
-            change={`${dashboardStats?.revenueAnalytics?.revenueChange}%`}
-            changeType={dashboardStats?.revenueAnalytics?.changeType!}
           />
         </>
       ) : (

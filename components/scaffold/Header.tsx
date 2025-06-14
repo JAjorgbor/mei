@@ -120,7 +120,7 @@ const Header: React.FC = () => {
 
             <DropdownMenu aria-label='Profile Actions' variant='flat'>
               <DropdownSection showDivider>
-                <DropdownItem key='profile' className='h-14 gap-2'>
+                <DropdownItem key='profile' className='h-14 gap-2' isReadOnly>
                   <p className='text-sm'>
                     {admin?.firstName} {admin?.lastName}
                   </p>

@@ -12,6 +12,7 @@ const axiosInstance = axios.create({
 })
 
 let currentAccessToken: string | null = null
+let currentRefreshToken: string | null = null
 
 axiosInstance.interceptors.request.use(async (config) => {
   const session: any = await getSession()
@@ -37,7 +38,7 @@ axiosInstance.interceptors.response.use(
     ) {
       originalConfig._retry = true // Mark as retried
 
-      const refreshToken = session?.refreshToken
+      const refreshToken = currentRefreshToken || session?.refreshToken
 
       try {
         const { data } = await axiosInstance.post('admin/refresh', {
@@ -47,6 +48,7 @@ axiosInstance.interceptors.response.use(
         // TEMPORARILY store the new token for retry
 
         currentAccessToken = data.accessToken
+        currentRefreshToken = data.refreshToken
         // Update Auth.js session with new token
 
         await signIn('credentials', {
