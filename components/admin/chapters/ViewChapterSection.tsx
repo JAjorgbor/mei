@@ -36,7 +36,6 @@ const ViewChapterSection = () => {
   })
   const { chapterId } = useParams()
   const { chapter } = useGetChapter(chapterId as string)
-  console.log(chapter)
   const [activeTab, setActiveTab] = useState('pages')
   return (
     <div className='space-y-4'>
@@ -62,7 +61,7 @@ const ViewChapterSection = () => {
         <div className='gap-3 w-3/5 mx-auto flex flex-col items-center'>
           {chapter ? (
             <Image
-              src='https://dummyimage.com/300x500'
+              src={chapter?.coverImage || 'https://dummyimage.com/300x500'}
               alt='chapter-cover-image'
               className='object-cover h-80'
               height={500}

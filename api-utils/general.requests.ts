@@ -2,14 +2,15 @@ import axios from 'axios'
 
 export const uploadToCloudinary = async (data: {
   file: any
-  public_id: string
+  public_id?: string
+  folder?: string
 }) => {
   try {
-    const { file, public_id } = data
+    const { file, public_id, folder } = data
     const res = await axios.post('/api/upload-signature', {
       public_id,
+      folder,
     })
-    console.log(res.data)
     const { api_key, timestamp, signature } = res.data
     return axios.post(
       String(process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_URL),
@@ -19,6 +20,7 @@ export const uploadToCloudinary = async (data: {
         signature,
         timestamp,
         public_id,
+        folder,
         // upload_preset: 'mie-novel',
       },
       {

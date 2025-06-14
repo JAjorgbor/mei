@@ -1,8 +1,12 @@
 'use client'
-import { addNewPage } from '@/api-utils/admin/requests/page.requests'
+import {
+  addNewPage,
+  updatePage,
+} from '@/api-utils/admin/requests/page.requests'
 import InputField from '@/components/elements/InputField'
 import useGetBook from '@/hooks/requests/useGetBook'
 import useGetChapter from '@/hooks/requests/useGetChapter'
+import useGetPage from '@/hooks/requests/useGetPage'
 import {
   addToast,
   BreadcrumbItem,
@@ -10,6 +14,7 @@ import {
   Button,
   Card,
   CardBody,
+  Skeleton,
   Tab,
   Tabs,
 } from '@heroui/react'
@@ -30,20 +35,13 @@ const schema = z.object({
   status: z
     .string({ required_error: 'Status is required' })
     .min(1, 'Status is required'),
-  createMore: z.boolean(),
 })
 
 type FormFields = z.infer<typeof schema>
 
-const AddPageSection = () => {
-  const defaultValues = {
-    status: 'published',
-    textContent: '<h1>Story content goes here</h1>',
-    createMore: false,
-  }
+const ManagePageSection = () => {
   const formMethods = useForm<FormFields>({
     resolver: zodResolver(schema),
-    defaultValues,
   })
 
   const [isHydrated, setIsHydrated] = useState(false)
@@ -83,41 +81,35 @@ const AddPageSection = () => {
     'image',
     'video',
   ]
-  useEffect(() => {
-    const subscribe = formMethods.watch((values) => console.log(values))
-    return () => subscribe.unsubscribe()
-  }, [])
 
   useEffect(() => {
     setIsHydrated(true)
   }, [])
 
-  const { chapterId } = useParams()
+  const { chapterId, pageId } = useParams()
   const [activeTab, setActiveTab] = useState('content')
-  const { book } = useGetBook()
   const { chapter } = useGetChapter(chapterId as string)
+  const { page } = useGetPage(pageId as string)
   const [keepLoading, setKeepLoading] = useState(false)
   const router = useRouter()
 
+  useEffect(() => {
+    if (page) {
+      formMethods.reset({ status: page.status, textContent: page.textContent })
+    }
+  }, [page])
+
   const handleSubmit = async (formData: FormFields) => {
     try {
-      const { createMore, ...payload } = formData
-      const res = await addNewPage(book?.id as string, {
-        ...payload,
-        chapterId,
-      })
+      const res = await updatePage(pageId as string, formData)
       console.log(res)
       addToast({
-        title: 'Page created succesfully',
+        title: 'Page updated succesfully',
         color: 'success',
         severity: 'success',
       })
-      if (createMore) {
-        formMethods.reset(defaultValues)
-      } else {
-        setKeepLoading(true)
-        router.push(`/admin/chapters/${chapterId}`)
-      }
+      setKeepLoading(true)
+      router.push(`/admin/chapters/${chapterId}`)
     } catch (error: any) {
       console.error(error)
       addToast({
@@ -142,7 +134,7 @@ const AddPageSection = () => {
             Chapter {chapter?.number}: {chapter?.chapterLabel}
           </BreadcrumbItem>
           <BreadcrumbItem href={`/admin/chapters/${chapterId}/add-page`}>
-            Add Page
+            Manage Page
           </BreadcrumbItem>
         </Breadcrumbs>
 
@@ -190,17 +182,21 @@ const AddPageSection = () => {
                   <CardBody>
                     {' '}
                     <div className='min-h-96'>
-                      {isHydrated && (
-                        <ReactQuill
-                          theme='snow'
-                          value={formMethods.watch('textContent')}
-                          onChange={(value) =>
-                            formMethods.setValue('textContent', value)
-                          }
-                          modules={modules}
-                          formats={formats}
-                          className='h-80'
-                        />
+                      {page ? (
+                        isHydrated && (
+                          <ReactQuill
+                            theme='snow'
+                            value={formMethods.watch('textContent')}
+                            onChange={(value) =>
+                              formMethods.setValue('textContent', value)
+                            }
+                            modules={modules}
+                            formats={formats}
+                            className='h-80'
+                          />
+                        )
+                      ) : (
+                        <Skeleton className='h-80' />
                       )}
                     </div>
                   </CardBody>
@@ -222,12 +218,6 @@ const AddPageSection = () => {
               </Tab>
             </Tabs>
             <div className='flex gap-4 justify-end items-center w-full mt-6'>
-              <InputField
-                type='checkbox'
-                value={formMethods.watch('createMore')}
-                onChange={(value) => formMethods.setValue('createMore', value)}
-                label='Create More'
-              />
               <Button
                 color='danger'
                 disabled={formMethods.formState.isSubmitting || keepLoading}
@@ -253,4 +243,4 @@ const AddPageSection = () => {
   )
 }
 
-export default AddPageSection
+export default ManagePageSection

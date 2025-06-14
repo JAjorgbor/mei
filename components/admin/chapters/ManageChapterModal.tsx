@@ -1,10 +1,8 @@
 'use client'
 import { IChapter } from '@/api-utils/admin/interfaces/chapter.interfaces'
-import {
-  createChapter,
-  updateChapter,
-} from '@/api-utils/admin/requests/chapter.requests'
+import { updateChapter } from '@/api-utils/admin/requests/chapter.requests'
 import { uploadToCloudinary } from '@/api-utils/general.requests'
+import extractPublicId from '@/app/utils/extractCloudinaryPublicId'
 import { urlToFile } from '@/app/utils/urlToFile'
 import ModalWrapper, {
   BaseModalProps,
@@ -44,7 +42,7 @@ const ManageChapterModal: FC<BaseModalProps & { chapter: IChapter }> = ({
   const formMethods = useForm<FormFields>({ resolver: zodResolver(schema) })
   const { book } = useGetBook()
   const { mutateAllChapters } = useGetAllChapters()
-  const { mutateChapter } = useGetChapter(chapter.id)
+  const { mutateChapter } = useGetChapter(chapter?.id)
 
   const fileInputRef = useRef<any>(null)
   const watchAvatar = formMethods.watch('coverImage')
@@ -61,9 +59,11 @@ const ManageChapterModal: FC<BaseModalProps & { chapter: IChapter }> = ({
 
   const handleSubmit = async (formData: FormFields) => {
     try {
+      const public_id = extractPublicId(chapter?.coverImage) as string
+
       const { data } = await uploadToCloudinary({
         file: formData.coverImage,
-        public_id: `mie-novel/admin/chapters/cover-images/${chapter.id}`,
+        public_id,
       })
 
       formData.bookId = book?.id
@@ -73,7 +73,11 @@ const ManageChapterModal: FC<BaseModalProps & { chapter: IChapter }> = ({
       setIsOpen(false)
       mutateAllChapters()
       mutateChapter()
-      addToast({ title: 'Chapter updated successfully', severity: 'success' })
+      addToast({
+        title: 'Chapter updated successfully',
+        severity: 'success',
+        color: 'success',
+      })
       formMethods.reset()
     } catch (error: any) {
       addToast({
@@ -202,7 +206,7 @@ const ManageChapterModal: FC<BaseModalProps & { chapter: IChapter }> = ({
             label='Chapter Number'
             isRequired
             disabled
-            register={{ value: chapter.number }}
+            register={{ value: chapter?.number }}
           />
         </div>
       </form>

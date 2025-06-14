@@ -1,17 +1,15 @@
 'use client'
-import { signIn, useSession } from 'next-auth/react'
-import Cookies from 'js-cookie'
+import { login } from '@/api-utils/admin/requests/auth.requests'
 import InputField from '@/components/elements/InputField'
 import { addToast, Button, Card, CardBody } from '@heroui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
+import Cookies from 'js-cookie'
 import { BookOpenIcon } from 'lucide-react'
+import { signIn, useSession } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
-import { useForm, Resolver } from 'react-hook-form'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import axios from 'axios'
-import { login } from '@/api-utils/admin/requests/auth.requests'
-import { verify } from 'crypto'
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -35,7 +33,7 @@ const LoginForm = () => {
       const { data } = await login(formData)
 
       const { accessToken, refreshToken, ...userPayload } = data
-
+      console.log(refreshToken)
       const authJsRes: any = await signIn('credentials', {
         redirect: false,
         accessToken: accessToken,
@@ -48,14 +46,6 @@ const LoginForm = () => {
         }),
       })
       console.log('authJsRes', authJsRes)
-      // const res = await axios.post(
-      //   `${process.env.NEXT_PUBLIC_API_URL}/admin/sign-in`,
-      //   data
-      // )
-      // if (res?.error) {
-      //   throw new Error('Invalid credentials')
-      // }
-      // console.log(res)
       router.push(`/admin/verify-access?callbackUrl=${callbackUrl}`)
       Cookies.set('verifyAdminAccess', 'verified')
       setKeepLoading(true)

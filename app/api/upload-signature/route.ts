@@ -3,14 +3,14 @@ import { NextResponse } from 'next/server'
 
 export async function POST(req: Request) {
   try {
-    const { public_id } = await req.json()
+    const { public_id, folder } = await req.json()
 
     const timestamp = Math.floor(Date.now() / 1000)
 
     const paramsToSign = {
       timestamp,
       public_id,
-      // folder: 'your_folder', // optional
+      folder,
     }
 
     const signature = cloudinary.utils.api_sign_request(

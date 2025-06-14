@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { getSession, signIn, signOut } from 'next-auth/react'
+import { getSession, signIn } from 'next-auth/react'
 
 const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -41,7 +41,6 @@ axiosInstance.interceptors.response.use(
         const { data } = await axiosInstance.post('admin/refresh', {
           refreshToken,
         })
-        const newRefreshToken = data.refresh.token
 
         // Update Auth.js session with new token
         await signIn('credentials', {
@@ -50,7 +49,6 @@ axiosInstance.interceptors.response.use(
           refreshToken: data.refreshToken,
           userData: JSON.stringify(session?.user),
         })
-
         axiosInstance.defaults.headers.Authorization = `Bearer ${data?.accessToken}`
 
         originalConfig.headers.Authorization = `Bearer ${data?.accessToken}`
@@ -65,7 +63,7 @@ axiosInstance.interceptors.response.use(
           '/admin/verify-email',
         ]
 
-        signOut()
+        // await signOut({ redirect: true, callbackUrl: '/admin' })
         return Promise.reject(error)
       }
     }

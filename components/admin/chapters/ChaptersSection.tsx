@@ -127,7 +127,7 @@ const ChaptersSection = () => {
                 key='view'
                 href={`/admin/chapters/${info.row.original.id}`}
               >
-                View Chapter
+                View
               </DropdownItem>
               <DropdownItem
                 color='danger'
@@ -137,7 +137,7 @@ const ChaptersSection = () => {
                   setSelectedChapter(info.row.original)
                 }}
               >
-                Delete Chapter
+                Delete
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>

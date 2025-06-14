@@ -4,7 +4,7 @@ export const createChapter = (data: any) =>
   axiosInstance.post('/chapter/create', data)
 
 export const updateChapter = (chapterId: string, data: any) =>
-  axiosInstance.put(`/chapter/update/${chapterId}`, data)
+  axiosInstance.patch(`/chapter/update/${chapterId}`, data)
 
 export const getAllChapters = (bookId: string) =>
   axiosInstance.get(`chapter/get/allChapters/${bookId}`)

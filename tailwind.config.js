@@ -37,17 +37,17 @@ module.exports = {
       themes: {
         dark: {
           colors: {
-            primary: '#BA274A',
+            primary: '#084b83',
 
-            secondary: '#ff9f1c',
+            secondary: '#F7A278',
             background: '#0a0a0a',
           }, // dark theme colors
         },
         light: {
           colors: {
-            primary: '#BA274A',
+            primary: '#084b83',
 
-            secondary: '#ff9f1c',
+            secondary: '#F7A278',
           },
         },
         // ... custom themes
