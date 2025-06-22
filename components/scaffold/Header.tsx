@@ -137,9 +137,10 @@ const Header: React.FC = () => {
               <DropdownItem
                 key='logout'
                 color='danger'
-                onPress={async () =>
+                onPress={async () => {
                   await signOut({ redirect: true, callbackUrl: '/admin' })
-                }
+                  sessionStorage.clear()
+                }}
                 startContent={<LogOut size={15} />}
               >
                 Log Out

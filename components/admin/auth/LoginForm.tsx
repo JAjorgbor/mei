@@ -33,8 +33,7 @@ const LoginForm = () => {
       const { data } = await login(formData)
 
       const { accessToken, refreshToken, ...userPayload } = data
-      console.log(refreshToken)
-      const authJsRes: any = await signIn('credentials', {
+      await signIn('credentials', {
         redirect: false,
         accessToken: accessToken,
         refreshToken: refreshToken,
@@ -45,9 +44,8 @@ const LoginForm = () => {
           role: 'admin',
         }),
       })
-      console.log('authJsRes', authJsRes)
       router.push(`/admin/verify-access?callbackUrl=${callbackUrl}`)
-      Cookies.set('verifyAdminAccess', 'verified')
+      Cookies.set('verifyAdminAccess', 'not-verified')
       setKeepLoading(true)
     } catch (error: any) {
       addToast({

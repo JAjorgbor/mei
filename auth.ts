@@ -31,12 +31,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async jwt({ token, user, trigger, session }) {
       if (user) {
-        const { accessToken, refreshToken, ...rest } = user as any
+        const { accessToken, refreshToken, verifyAdminAccess, ...rest } =
+          user as any
         token.user = rest
         token.accessToken = accessToken
         token.refreshToken = refreshToken
+        token.verifyAdminAccess = verifyAdminAccess
       }
-      token.verifyAdminAccess = session?.verifyAdminAccess
+      if (trigger == 'update' && session.verifyAdminAccess) {
+        token.verifyAdminAccess = session.verifyAdminAccess
+      }
       return token
     },
     async session({ session, token }: { session: any; token: any }) {

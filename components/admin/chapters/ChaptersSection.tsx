@@ -65,7 +65,7 @@ const ChaptersSection = () => {
           enableHiding: false, // disable hiding for this column
 
           cell: ({ row: { original }, getValue }) => (
-            <div className='flex flex-col text-cloudburst'>
+            <div className='flex flex-col text-cloudburst min-w-max'>
               <p className='text-bold text-small capitalize'>{getValue()}</p>
             </div>
           ),
@@ -192,6 +192,7 @@ const ChaptersSection = () => {
         }
         classNames={{
           th: 'bg-default-200 text-md capitalize text-foreground font-normal',
+          td: 'w-max',
           thead: '[&>tr]:first:shadow-none',
           tbody: 'divide-y',
         }}

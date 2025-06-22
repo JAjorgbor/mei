@@ -51,7 +51,6 @@ const users = [
 
 const DashboardSummary = () => {
   const { dashboardStats } = useGetDashboardStats()
-  console.log(dashboardStats)
   return (
     <div className='flex flex-col md:flex-row gap-4'>
       <Card className='flex-1'>

@@ -48,6 +48,8 @@ const Content = ({ children }: ProvidersProps) => {
     }
   }, [theme])
 
+  console.log(session)
+
   useEffect(() => {
     const adminVerifyAccessRoutes = [
       '/admin/verify-access',

@@ -1,5 +1,6 @@
 'use client'
 import { login, verifyAccess } from '@/api-utils/admin/requests/auth.requests'
+import Cookies from 'js-cookie'
 import TimerCountDown from '@/components/elements/TimerCountDown'
 import { addToast, Button, Card, CardBody, InputOtp } from '@heroui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -70,6 +71,7 @@ const VerifyAccessForm = () => {
       })
       await updateSession({ verifyAdminAccess: 'verified' })
       setkeepLoading(true)
+      Cookies.set('verifyAdminAccess', 'verified')
       router.push(callbackUrl)
     } catch (error: any) {
       addToast({
@@ -98,7 +100,7 @@ const VerifyAccessForm = () => {
             <div className='gap-4 flex flex-col items-center'>
               <InputOtp
                 length={6}
-                variant='underlined'
+                variant='bordered'
                 value={formMethods.watch('otp')}
                 onValueChange={(value) => formMethods.setValue('otp', value)}
                 size='lg'

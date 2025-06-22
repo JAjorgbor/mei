@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { getSession, signIn } from 'next-auth/react'
+import { getSession, signIn, signOut } from 'next-auth/react'
 
 const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -11,12 +11,10 @@ const axiosInstance = axios.create({
   },
 })
 
-let currentAccessToken: string | null = null
-let currentRefreshToken: string | null = null
-
 axiosInstance.interceptors.request.use(async (config) => {
   const session: any = await getSession()
-  const accessToken = currentAccessToken || session?.accessToken
+  const accessToken =
+    sessionStorage.getItem('accessToken') || session?.accessToken
 
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`
@@ -38,7 +36,10 @@ axiosInstance.interceptors.response.use(
     ) {
       originalConfig._retry = true // Mark as retried
 
-      const refreshToken = currentRefreshToken || session?.refreshToken
+      const refreshToken =
+        sessionStorage.getItem('refreshToken') || session?.refreshToken
+
+      console.log('refreshing token', refreshToken)
 
       try {
         const { data } = await axiosInstance.post('admin/refresh', {
@@ -47,19 +48,18 @@ axiosInstance.interceptors.response.use(
         console.log(data)
         // TEMPORARILY store the new token for retry
 
-        currentAccessToken = data.accessToken
-        currentRefreshToken = data.refreshToken
+        sessionStorage.setItem('accessToken', data.accessToken)
+        sessionStorage.setItem('refreshToken', data.refreshToken)
         // Update Auth.js session with new token
 
         await signIn('credentials', {
           redirect: false,
           accessToken: data.accessToken,
           refreshToken: data.refreshToken,
-          userData: JSON.stringify(
-            session?.user?.verifyAdminAccess
-              ? session?.user
-              : { ...session?.user, verifyAdminAccess: 'verified' }
-          ),
+          userData: JSON.stringify({
+            ...session?.user,
+            verifyAdminAccess: session?.user?.verifyAdminAccess || 'verified',
+          }),
         })
         axiosInstance.defaults.headers.Authorization = `Bearer ${data?.accessToken}`
 
@@ -74,8 +74,10 @@ axiosInstance.interceptors.response.use(
           '/admin/verify-access',
           '/admin/verify-email',
         ]
+        console.log(error)
+        sessionStorage.clear()
+        await signOut({ redirect: true, callbackUrl: '/admin' })
 
-        // await signOut({ redirect: true, callbackUrl: '/admin' })
         return Promise.reject(error)
       }
     }
