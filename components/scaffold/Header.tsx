@@ -3,9 +3,11 @@ import { Fade as Hamburger } from 'hamburger-react'
 import { signOut } from 'next-auth/react'
 import React, { useEffect, useState } from 'react'
 
+import UpdateAdminDetailsModal from '@/components/admin/team/UpdateAdminDetailsModal'
 import { setTheme } from '@/features/headerSlice'
 import { setOpenSidebar } from '@/features/sidebarSlice'
 import { useAppDispatch, useAppSelector } from '@/features/store'
+import useGetAdmin from '@/hooks/requests/useGetAdmin'
 import useMediaQuery from '@/hooks/useMediaQuery'
 import {
   Avatar,
@@ -18,16 +20,7 @@ import {
   NavbarContent,
   NavbarItem,
 } from '@heroui/react'
-import {
-  Edit,
-  Edit2,
-  LogOut,
-  MonitorIcon,
-  MoonIcon,
-  SunIcon,
-} from 'lucide-react'
-import useGetAdmin from '@/hooks/requests/useGetAdmin'
-import UpdateAdminDetailsModal from '@/components/admin/team/UpdateAdminDetailsModal'
+import { Edit, LogOut, MonitorIcon, MoonIcon, SunIcon } from 'lucide-react'
 
 const Header: React.FC = () => {
   const dispatch = useAppDispatch()

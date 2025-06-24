@@ -20,8 +20,10 @@ const Content = ({ children }: ProvidersProps) => {
   const router = useRouter()
 
   const pathname = usePathname()
-  const { data: session, update: updateSession } = useSession()
-
+  const { data: session, update: updateSession, status } = useSession()
+  useEffect(() => {
+    console.log('Session updated:', session, status)
+  }, [session, status])
   useEffect(() => {
     const handleSystemColorTheme = () => {
       const prefersDark = window.matchMedia(
@@ -48,8 +50,6 @@ const Content = ({ children }: ProvidersProps) => {
     }
   }, [theme])
 
-  console.log(session)
-
   useEffect(() => {
     const adminVerifyAccessRoutes = [
       '/admin/verify-access',
@@ -70,16 +70,16 @@ const Content = ({ children }: ProvidersProps) => {
             !adminAuthRoutes.includes(pathname))
         ) {
           console.log(session)
-          // Cookies.set('verifyAdminAccess', 'not-verified')
+          Cookies.set('verifyAdminAccess', 'not-verified')
 
-          // return router.push(`/admin?callbackUrl=${pathname}`)
+          return router.push(`/admin?callbackUrl=${pathname}`)
         } else if (
           session?.user?.role == 'admin' &&
           adminAuthRoutes.includes(pathname) &&
           session?.user?.verifyAdminAccess == 'verified'
         ) {
           Cookies.set('verifyAdminAccess', 'verified')
-          return router.push(`/admin/dashboard`)
+          // return router.push(`/admin/dashboard`)
         }
       }
     }

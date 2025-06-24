@@ -67,7 +67,7 @@ const DashboardSummary = () => {
             View All
           </Button>
         </CardHeader>
-        <CardBody>
+        <CardBody className='max-h-[400px] overflow-y-auto'>
           <div className='space-y-4'>
             {dashboardStats ? (
               dashboardStats?.recentChapters.length > 0 ? (
@@ -78,13 +78,16 @@ const DashboardSummary = () => {
                   >
                     <div className='flex items-center gap-3'>
                       <div className='w-12 h-12 rounded bg-primary/20 flex items-center justify-center'>
-                        <Image
-                          src={chapter?.coverImage}
+                        {/* <Image
+                          src={
+                            chapter?.coverImage ||
+                            'https://dummyimage.com/80x80'
+                          }
                           alt='chapter cover image'
                           width={80}
                           height={80}
                           className='size-12 rounded'
-                        />
+                        /> */}
                       </div>
                       <div>
                         <p className='font-medium'>
@@ -168,8 +171,8 @@ const DashboardSummary = () => {
             View All
           </Button>
         </CardHeader>
-        <CardBody>
-          <div className='space-y-4'>
+        <CardBody className='max-h-[500px]'>
+          <div className='space-y-4 overflow-y-auto'>
             {dashboardStats ? (
               dashboardStats?.recentUsers?.length > 0 ? (
                 dashboardStats?.recentUsers.map((user, index) => (

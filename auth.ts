@@ -1,6 +1,8 @@
 import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 
+const isDev = process.env.NODE_ENV !== 'production'
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     CredentialsProvider({
@@ -13,13 +15,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       async authorize(credentials: any) {
         try {
           const { accessToken, refreshToken, userData } = credentials
-
           // Refresh session logic which would be triggered in request adapter, when refreshing session the already gottend userData is based back with new access and refresh tokens
+
           if (accessToken && refreshToken && userData) {
             return { ...JSON.parse(userData), accessToken, refreshToken }
           }
 
-          // Catch-all fallback
           return null
         } catch (error: any) {
           console.log('see error', error)
@@ -28,6 +29,20 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
+  session: {
+    strategy: 'jwt',
+  },
+  cookies: {
+    sessionToken: {
+      name: `next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: !isDev, // ✅ Important for localhost
+      },
+    },
+  },
   callbacks: {
     async jwt({ token, user, trigger, session }) {
       if (user) {
@@ -38,7 +53,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.refreshToken = refreshToken
         token.verifyAdminAccess = verifyAdminAccess
       }
-      if (trigger == 'update' && session.verifyAdminAccess) {
+      if (trigger === 'update' && session.verifyAdminAccess) {
         token.verifyAdminAccess = session.verifyAdminAccess
       }
       return token

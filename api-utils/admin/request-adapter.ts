@@ -15,7 +15,11 @@ axiosInstance.interceptors.request.use(async (config) => {
   const session: any = await getSession()
   const accessToken =
     sessionStorage.getItem('accessToken') || session?.accessToken
+  const refreshToken =
+    sessionStorage.getItem('refreshToken') || session?.refreshToken
 
+  sessionStorage.setItem('refreshToken', refreshToken)
+  sessionStorage.setItem('accessToken', accessToken)
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`
   }
@@ -77,7 +81,6 @@ axiosInstance.interceptors.response.use(
         console.log(error)
         sessionStorage.clear()
         await signOut({ redirect: true, callbackUrl: '/admin' })
-
         return Promise.reject(error)
       }
     }
