@@ -21,9 +21,7 @@ const Content = ({ children }: ProvidersProps) => {
 
   const pathname = usePathname()
   const { data: session, update: updateSession, status } = useSession()
-  useEffect(() => {
-    console.log('Session updated:', session, status)
-  }, [session, status])
+  useEffect(() => {}, [session, status])
   useEffect(() => {
     const handleSystemColorTheme = () => {
       const prefersDark = window.matchMedia(
@@ -69,7 +67,6 @@ const Content = ({ children }: ProvidersProps) => {
           (session?.user?.verifyAdminAccess !== 'verified' &&
             !adminAuthRoutes.includes(pathname))
         ) {
-          console.log(session)
           Cookies.set('verifyAdminAccess', 'not-verified')
 
           return router.push(`/admin?callbackUrl=${pathname}`)
@@ -79,7 +76,7 @@ const Content = ({ children }: ProvidersProps) => {
           session?.user?.verifyAdminAccess == 'verified'
         ) {
           Cookies.set('verifyAdminAccess', 'verified')
-          // return router.push(`/admin/dashboard`)
+          return router.push(`/admin/dashboard`)
         }
       }
     }
