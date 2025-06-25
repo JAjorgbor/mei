@@ -1,13 +1,12 @@
 'use client'
 import { Fade as Hamburger } from 'hamburger-react'
+import Cookies from 'js-cookie'
 import { signOut } from 'next-auth/react'
 import React, { useEffect, useState } from 'react'
 
-import UpdateAdminDetailsModal from '@/components/admin/team/UpdateAdminDetailsModal'
 import { setTheme } from '@/features/headerSlice'
 import { setOpenSidebar } from '@/features/sidebarSlice'
 import { useAppDispatch, useAppSelector } from '@/features/store'
-import useGetAdmin from '@/hooks/requests/useGetAdmin'
 import useMediaQuery from '@/hooks/useMediaQuery'
 import {
   Avatar,
@@ -20,7 +19,16 @@ import {
   NavbarContent,
   NavbarItem,
 } from '@heroui/react'
-import { Edit, LogOut, MonitorIcon, MoonIcon, SunIcon } from 'lucide-react'
+import {
+  Edit,
+  Edit2,
+  LogOut,
+  MonitorIcon,
+  MoonIcon,
+  SunIcon,
+} from 'lucide-react'
+import useGetAdmin from '@/hooks/requests/useGetAdmin'
+import UpdateAdminDetailsModal from '@/components/admin/team/UpdateAdminDetailsModal'
 
 const Header: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -131,8 +139,14 @@ const Header: React.FC = () => {
                 key='logout'
                 color='danger'
                 onPress={async () => {
-                  await signOut({ redirect: true, callbackUrl: '/admin' })
+                  await signOut({ redirect: false })
+                  const cookieJar = Cookies.get() // Get all existing cookies
+                  console.log('Logging out and clearing cookies', cookieJar)
+                  for (const cookieName in cookieJar) {
+                    Cookies.remove(cookieName) // Remove each cookie
+                  }
                   sessionStorage.clear()
+                  window.location.href = '/admin'
                 }}
                 startContent={<LogOut size={15} />}
               >

@@ -71,7 +71,6 @@ const VerifyAccessForm = () => {
       })
       await updateSession({ verifyAdminAccess: 'verified' })
       setkeepLoading(true)
-      Cookies.set('verifyAdminAccess', 'verified')
       router.push(callbackUrl)
     } catch (error: any) {
       addToast({

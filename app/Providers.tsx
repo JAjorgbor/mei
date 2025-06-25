@@ -16,12 +16,9 @@ interface ProvidersProps {
 
 const Content = ({ children }: ProvidersProps) => {
   const { theme } = useAppSelector((state) => state.header)
-  const [isLoading, setIsLoading] = useState(true)
-  const router = useRouter()
+  const [isLoading, setIsLoading] = useState(false)
 
   const pathname = usePathname()
-  const { data: session, update: updateSession, status } = useSession()
-  useEffect(() => {}, [session, status])
   useEffect(() => {
     const handleSystemColorTheme = () => {
       const prefersDark = window.matchMedia(
@@ -47,41 +44,6 @@ const Content = ({ children }: ProvidersProps) => {
       document.documentElement.className = theme
     }
   }, [theme])
-
-  useEffect(() => {
-    const adminVerifyAccessRoutes = [
-      '/admin/verify-access',
-      '/admin/verify-email',
-    ]
-    const adminAuthRoutes = [
-      '/admin',
-      '/admin/verify-access',
-      '/admin/verify-email',
-      '/admin/accept-invite',
-    ]
-    if (session) {
-      if (pathname.startsWith('/admin')) {
-        if (
-          (session?.user?.role !== 'admin' &&
-            !adminAuthRoutes.includes(pathname)) ||
-          (session?.user?.verifyAdminAccess !== 'verified' &&
-            !adminAuthRoutes.includes(pathname))
-        ) {
-          Cookies.set('verifyAdminAccess', 'not-verified')
-
-          return router.push(`/admin?callbackUrl=${pathname}`)
-        } else if (
-          session?.user?.role == 'admin' &&
-          adminAuthRoutes.includes(pathname) &&
-          session?.user?.verifyAdminAccess == 'verified'
-        ) {
-          Cookies.set('verifyAdminAccess', 'verified')
-          return router.push(`/admin/dashboard`)
-        }
-      }
-    }
-    setIsLoading(false)
-  }, [pathname, session])
 
   return (
     <>

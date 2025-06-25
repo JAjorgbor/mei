@@ -1,4 +1,5 @@
 import axios from 'axios'
+import Cookies from 'js-cookie'
 import { getSession, signIn, signOut } from 'next-auth/react'
 
 const axiosInstance = axios.create({
@@ -13,13 +14,18 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(async (config) => {
   const session: any = await getSession()
-  const accessToken =
-    sessionStorage.getItem('accessToken') || session?.accessToken
-  const refreshToken =
-    sessionStorage.getItem('refreshToken') || session?.refreshToken
+  const storedAccessToken = sessionStorage.getItem('accessToken')
+  const storedRefreshToken = sessionStorage.getItem('refreshToken')
+  const accessToken = storedAccessToken || session?.accessToken
+  const refreshToken = storedRefreshToken || session?.refreshToken
 
-  sessionStorage.setItem('refreshToken', refreshToken)
-  sessionStorage.setItem('accessToken', accessToken)
+  if (!storedAccessToken) {
+    sessionStorage.setItem('accessToken', accessToken)
+  }
+  if (!storedRefreshToken) {
+    sessionStorage.setItem('refreshToken', refreshToken)
+  }
+
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`
   }
@@ -62,7 +68,6 @@ axiosInstance.interceptors.response.use(
           refreshToken: data.refreshToken,
           userData: JSON.stringify({
             ...session?.user,
-            verifyAdminAccess: session?.user?.verifyAdminAccess || 'verified',
           }),
         })
         axiosInstance.defaults.headers.Authorization = `Bearer ${data?.accessToken}`
@@ -71,6 +76,7 @@ axiosInstance.interceptors.response.use(
 
         return axiosInstance(originalConfig) // Retry original request with new token
       } catch (error) {
+        Promise.reject(error)
         const whiteListedAdminRoutes = [
           '/admin',
           '/admin/verify-access',
@@ -80,8 +86,12 @@ axiosInstance.interceptors.response.use(
         ]
         console.log(error)
         sessionStorage.clear()
-        await signOut({ redirect: true, callbackUrl: '/admin' })
-        return Promise.reject(error)
+        await signOut({ redirect: false })
+        const cookieJar = Cookies.get() // Get all existing cookies
+        for (const cookieName in cookieJar) {
+          Cookies.remove(cookieName) // Remove each cookie
+        }
+        window.location.href = '/admin'
       }
     }
 

@@ -5,7 +5,7 @@ export const getAdmin = async () => {
 }
 
 export const getAdminTeam = async () => {
-  return axiosInstance.get('/admin/all/details/')
+  return axiosInstance.get('/admin/all/details')
 }
 export const updateAdmin = async (data: any) => {
   return axiosInstance.patch('/admin/update', data)

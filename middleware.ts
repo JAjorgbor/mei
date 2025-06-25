@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { auth } from '@/auth'
 
 export default async (req: NextRequest) => {
-  const token =
-    req.cookies.get('__Secure-authjs.session-token')?.value ||
-    req.cookies.get('authjs.session-token')?.value
-  const verifyAdminAccess = req.cookies.get('verifyAdminAccess')?.value
+  const session = await auth()
+  const verifyAdminAccess = session?.user?.verifyAdminAccess || 'not-verified'
   const { searchParams } = new URL(req.url)
-  const isLoggedIn = !!token
+  const isLoggedIn = session?.user?.role == 'admin'
   const callbackUrl = searchParams.get('callbackUrl') || '/admin/dashboard'
   const verifyAdminAccessRoutes = [
     '/admin/verify-access',

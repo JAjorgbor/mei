@@ -34,9 +34,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
   cookies: {
     sessionToken: {
-      name: `next-auth.session-token`,
+      name: `authjs.session-token`,
       options: {
-        httpOnly: true,
+        httpOnly: false,
         sameSite: 'lax',
         path: '/',
         secure: !isDev, // ✅ Important for localhost
