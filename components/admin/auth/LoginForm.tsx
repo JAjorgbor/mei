@@ -33,6 +33,8 @@ const LoginForm = () => {
       const { data } = await login(formData)
 
       const { accessToken, refreshToken, ...userPayload } = data
+      sessionStorage.setItem('accessToken', accessToken)
+      sessionStorage.setItem('refreshToken', refreshToken)
       await signIn('credentials', {
         redirect: false,
         accessToken: accessToken,

@@ -283,7 +283,7 @@ const TopContent = ({
         <div className='flex gap-6 flex-wrap justify-between'>
           <div className='flex gap-4 flex-wrap'>
             <Button
-              color='secondary'
+              //color='secondary'
               variant='shadow'
               onPress={() => setShowCreateChapterModal(true)}
             >

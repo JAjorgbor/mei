@@ -1,5 +1,7 @@
-import { heroui, lightLayout } from '@heroui/react'
+// tailwind.config.js
+const { heroui } = require('@heroui/theme') // ✅ import from @heroui/theme not @heroui/react
 
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
@@ -35,22 +37,40 @@ module.exports = {
   plugins: [
     heroui({
       themes: {
-        dark: {
-          colors: {
-            primary: '#084b83',
-
-            secondary: '#F7A278',
-            background: '#0a0a0a',
-          }, // dark theme colors
-        },
         light: {
           colors: {
-            primary: '#084b83',
-
-            secondary: '#F7A278',
+            primary: {
+              90: '#000000',
+              100: '#000000',
+              200: '#000000',
+              300: '#000000',
+              400: '#000000',
+              600: '#000000',
+              500: '#000000',
+              foreground: '#ffffff',
+              DEFAULT: '#000000',
+            },
+            background: '#ffffff',
+            foreground: '#000000',
           },
         },
-        // ... custom themes
+        dark: {
+          colors: {
+            primary: {
+              90: '#ffffff',
+              100: '#ffffff',
+              200: '#ffffff',
+              300: '#ffffff',
+              400: '#ffffff',
+              600: '#ffffff',
+              500: '#ffffff',
+              DEFAULT: '#ffffff',
+              foreground: '#000000',
+            },
+            background: '#0a0a0a',
+            foreground: '#ffffff',
+          },
+        },
       },
     }),
   ],

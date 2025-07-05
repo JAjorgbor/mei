@@ -1,5 +1,7 @@
 'use client'
+import { IUser } from '@/api-utils/admin/interfaces/user.interfaces'
 import InputField from '@/components/elements/InputField'
+import useGetAllUsers from '@/hooks/requests/useGetAllUsers'
 import {
   BreadcrumbItem,
   Breadcrumbs,
@@ -28,257 +30,112 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import moment from 'moment'
-import React, { useCallback, useState } from 'react'
-
-interface IUser {
-  id: number
-  name: string
-  email: string
-  status: 'active' | 'inactive' | 'pending'
-  plan: 'Basic' | 'Pro'
-  paymentMethod: 'Credit Card' | 'PayPal' | 'Bank Transfer'
-  lastPayment: string
-  amount: string
-  avatar: string
-}
+import Link from 'next/link'
+import React, { useCallback, useMemo, useState } from 'react'
 
 const columnHelper = createColumnHelper<IUser>()
 
-const users: IUser[] = [
-  {
-    id: 1,
-    name: 'Emma Wilson',
-    email: 'emma@example.com',
-    status: 'active',
-    plan: 'Pro',
-    paymentMethod: 'Credit Card',
-    lastPayment: '2023-05-12',
-    amount: '$19.99',
-    avatar: 'https://img.heroui.chat/image/avatar?w=40&h=40&u=user1',
-  },
-  {
-    id: 2,
-    name: 'James Rodriguez',
-    email: 'james@example.com',
-    status: 'active',
-    plan: 'Basic',
-    paymentMethod: 'PayPal',
-    lastPayment: '2023-05-10',
-    amount: '$9.99',
-    avatar: 'https://img.heroui.chat/image/avatar?w=40&h=40&u=user2',
-  },
-  {
-    id: 3,
-    name: 'Olivia Martinez',
-    email: 'olivia@example.com',
-    status: 'inactive',
-    plan: 'Pro',
-    paymentMethod: 'Credit Card',
-    lastPayment: '2023-04-28',
-    amount: '$19.99',
-    avatar: 'https://img.heroui.chat/image/avatar?w=40&h=40&u=user3',
-  },
-  {
-    id: 4,
-    name: 'William Chen',
-    email: 'william@example.com',
-    status: 'active',
-    plan: 'Pro',
-    paymentMethod: 'Bank Transfer',
-    lastPayment: '2023-05-15',
-    amount: '$19.99',
-    avatar: 'https://img.heroui.chat/image/avatar?w=40&h=40&u=user4',
-  },
-  {
-    id: 5,
-    name: 'Sophia Kim',
-    email: 'sophia@example.com',
-    status: 'active',
-    plan: 'Pro',
-    paymentMethod: 'Credit Card',
-    lastPayment: '2023-05-14',
-    amount: '$29.99',
-    avatar: 'https://img.heroui.chat/image/avatar?w=40&h=40&u=user5',
-  },
-  {
-    id: 6,
-    name: 'Ethan Brown',
-    email: 'ethan@example.com',
-    status: 'pending',
-    plan: 'Basic',
-    paymentMethod: 'PayPal',
-    lastPayment: '2023-05-08',
-    amount: '$9.99',
-    avatar: 'https://img.heroui.chat/image/avatar?w=40&h=40&u=user6',
-  },
-  {
-    id: 7,
-    name: 'Isabella Garcia',
-    email: 'isabella@example.com',
-    status: 'active',
-    plan: 'Pro',
-    paymentMethod: 'Credit Card',
-    lastPayment: '2023-05-11',
-    amount: '$19.99',
-    avatar: 'https://img.heroui.chat/image/avatar?w=40&h=40&u=user7',
-  },
-  {
-    id: 8,
-    name: 'Mason Taylor',
-    email: 'mason@example.com',
-    status: 'inactive',
-    plan: 'Basic',
-    paymentMethod: 'Bank Transfer',
-    lastPayment: '2023-04-25',
-    amount: '$9.99',
-    avatar: 'https://img.heroui.chat/image/avatar?w=40&h=40&u=user8',
-  },
-  {
-    id: 9,
-    name: 'Ava Johnson',
-    email: 'ava@example.com',
-    status: 'active',
-    plan: 'Pro',
-    paymentMethod: 'Credit Card',
-    lastPayment: '2023-05-13',
-    amount: '$29.99',
-    avatar: 'https://img.heroui.chat/image/avatar?w=40&h=40&u=user9',
-  },
-  {
-    id: 10,
-    name: 'Noah Williams',
-    email: 'noah@example.com',
-    status: 'active',
-    plan: 'Pro',
-    paymentMethod: 'PayPal',
-    lastPayment: '2023-05-09',
-    amount: '$19.99',
-    avatar: 'https://img.heroui.chat/image/avatar?w=40&h=40&u=user10',
-  },
-  {
-    id: 11,
-    name: 'Mia Davis',
-    email: 'mia@example.com',
-    status: 'pending',
-    plan: 'Basic',
-    paymentMethod: 'Credit Card',
-    lastPayment: '2023-05-07',
-    amount: '$9.99',
-    avatar: 'https://img.heroui.chat/image/avatar?w=40&h=40&u=user11',
-  },
-  {
-    id: 12,
-    name: 'Liam Miller',
-    email: 'liam@example.com',
-    status: 'active',
-    plan: 'Pro',
-    paymentMethod: 'Bank Transfer',
-    lastPayment: '2023-05-16',
-    amount: '$29.99',
-    avatar: 'https://img.heroui.chat/image/avatar?w=40&h=40&u=user12',
-  },
-]
 const UsersSection = () => {
   const [globalFilter, setGlobalFilter] = useState<any>('')
   const [usersLoading, setUsersLoading] = useState(false)
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
     { id: 'status', value: 'all' },
-    { id: 'plan', value: 'all' },
   ])
 
   const [pagination, setPagination] = useState({
     pageIndex: 0, //initial page index
     pageSize: 10, //default page size
   })
-
+  const { allUsers, allUsersLoading } = useGetAllUsers()
   const [sorting, setSorting] = useState<SortingState>([])
-  const columns = [
-    columnHelper.accessor((row) => `${row.name} ${row.email}`, {
-      id: 'name',
-      header: 'User',
-      enableHiding: false, // disable hiding for this column
+  const columns = useMemo(
+    () => [
+      columnHelper.accessor(
+        (row) => `${row.firstName} ${row.lastName} ${row.email}`,
+        {
+          id: 'name',
+          header: 'User',
+          enableHiding: false, // disable hiding for this column
 
-      cell: ({ row: { original }, getValue }) => (
-        <div className='flex flex-col text-cloudburst'>
-          <p className='text-bold capitalize'>{original.name}</p>
-          <p className='text-foreground-400 text-xs'>{original.email}</p>
-        </div>
+          cell: ({ row: { original }, getValue }) => (
+            <div className='flex flex-col text-cloudburst'>
+              <p className='text-bold capitalize'>
+                {original.firstName} {original.lastName}
+              </p>
+              <p className='text-foreground-400 text-xs'>{original.email}</p>
+            </div>
+          ),
+        }
       ),
-    }),
-    columnHelper.accessor(`status`, {
-      header: 'Status',
-      filterFn: 'statusFilter' as any,
-      cell: ({ getValue }) => (
-        <div className='inline-block'>
-          <Chip
-            size='sm'
-            variant='flat'
-            className='capitalize'
-            radius='sm'
-            color={
-              getValue() == 'active'
-                ? 'success'
-                : getValue() == 'inactive'
-                ? 'warning'
-                : 'danger'
-            }
-          >
-            {getValue()}
-          </Chip>
-        </div>
-      ),
-    }),
-    columnHelper.accessor(`plan`, {
-      header: 'Plan',
-      filterFn: 'planFilter' as any,
-      cell: ({ getValue }) => (
-        <div className='inline-block'>
-          <Chip
-            size='sm'
-            variant='flat'
-            className='capitalize'
-            radius='sm'
-            color={getValue() == 'Basic' ? 'warning' : 'success'}
-          >
-            {getValue()}
-          </Chip>
-        </div>
-      ),
-    }),
-    columnHelper.accessor('lastPayment', {
-      header: 'Last Payment',
-      enableHiding: false, // disable hiding for this column
-      cell: (info) => (
-        <div className='flex flex-col '>
-          <p className='text-bold text-small '>
-            {moment(info.getValue()).format('MMMM Do, YYYY')}
-          </p>
-        </div>
-      ),
-    }),
+      columnHelper.accessor(`status`, {
+        header: 'Status',
+        filterFn: 'statusFilter' as any,
+        cell: ({ getValue }) => (
+          <div className='inline-block'>
+            <Chip
+              size='sm'
+              variant='flat'
+              className='capitalize'
+              radius='sm'
+              color={
+                getValue() == 'active'
+                  ? 'success'
+                  : getValue() == 'inactive'
+                  ? 'warning'
+                  : 'danger'
+              }
+            >
+              {getValue()}
+            </Chip>
+          </div>
+        ),
+      }),
+      columnHelper.accessor('unlockedChapters', {
+        header: 'Unlocked Chapters',
+        enableHiding: false, // disable hiding for this column
+        cell: (info) => (
+          <div className='flex flex-col '>
+            <p className='text-bold text-small '>{info.getValue().length}</p>
+          </div>
+        ),
+      }),
+      columnHelper.accessor('dateCreated', {
+        header: 'Date Joined',
+        enableHiding: false, // disable hiding for this column
+        cell: (info) => (
+          <div className='flex flex-col '>
+            <p className='text-bold text-small '>
+              {moment(info.getValue()).format('MMMM Do, YYYY')}
+            </p>
+          </div>
+        ),
+      }),
 
-    columnHelper.display({
-      id: 'actions',
-      header: 'Actions',
-      enableHiding: false, // disable hiding for this column
-      cell: (info) => (
-        <Button
-          size='sm'
-          color='primary'
-          variant='ghost'
-          href={`/users/${info.row.original.id}`}
-          className='py-1 px-2'
-        >
-          Manage User
-        </Button>
-      ),
-    }),
-  ]
+      columnHelper.display({
+        id: 'actions',
+        header: 'Actions',
+        enableHiding: false, // disable hiding for this column
+        cell: (info) => (
+          <Button
+            size='sm'
+            as={Link}
+            color='primary'
+            variant='ghost'
+            href={`/admin/users/${info.row.original.userId}`}
+            className='py-1 px-2'
+          >
+            Manage User
+          </Button>
+        ),
+      }),
+    ],
+    []
+  )
   // const { allAgencyContacts, allAgencyContactsLoading } =
   //   useGetAllAgencyContacts()
 
   const table = useReactTable({
-    data: users || [],
+    data: allUsers || [],
     columns,
     state: {
       globalFilter,
@@ -298,11 +155,7 @@ const UsersSection = () => {
     filterFns: {
       statusFilter: (row, columnId, filterValue) => {
         if (filterValue == 'all') return true
-        return row.original.status.toLowerCase() == filterValue
-      },
-      planFilter: (row, columnId, filterValue) => {
-        if (filterValue == 'all') return true
-        return row.original.plan.toLowerCase() == filterValue
+        return row.original?.status?.toLowerCase() == filterValue
       },
     },
   })
@@ -342,7 +195,9 @@ const UsersSection = () => {
                 <TableColumn
                   key={header.id}
                   align={header.id === 'actions' ? 'center' : 'start'}
-                  allowsSorting={['title', 'pages'].includes(header.id)}
+                  allowsSorting={['unlockedChapters', 'dateCreated'].includes(
+                    header.id
+                  )}
                   onClick={header.column.getToggleSortingHandler()}
                 >
                   {flexRender(
@@ -356,9 +211,9 @@ const UsersSection = () => {
         }
         <TableBody
           loadingContent={<Spinner label={'Loading, Please wait...' as any} />}
-          isLoading={usersLoading}
+          isLoading={allUsersLoading}
           emptyContent={
-            users && users?.length > 0
+            allUsers && allUsers?.length > 0
               ? 'No users found. Try adjusting your filters.'
               : 'No users available at the moment.'
           }
@@ -388,18 +243,19 @@ const TopContent = ({
   table: TableType<IUser>
   setGlobalFilter: any
 }) => {
-  //   const { allAgencyContacts } = useGetAllAgencyContacts()
+  const { allUsers } = useGetAllUsers()
   const getFieldCount = useCallback(
     (status: string, key: string) => {
-      if (users) {
-        if (status == 'all') return users.length
+      if (allUsers) {
+        if (status == 'all') return allUsers.length
         else
-          return users.filter(
+          return allUsers.filter(
             (each: any) => each?.[key]?.toLocaleLowerCase() == status
           ).length
       }
+      return '-'
     },
-    [users, table.getColumn('status')?.getFilterValue()]
+    [allUsers, table.getColumn('status')?.getFilterValue()]
   )
   return (
     <div className='flex flex-col gap-4'>
@@ -424,28 +280,6 @@ const TopContent = ({
               {
                 value: 'inactive',
                 label: `Inactive (${getFieldCount('inactive', 'status')})`,
-              },
-            ]}
-          />
-          <InputField
-            type='select'
-            className='w-36'
-            value={table.getColumn('plan')?.getFilterValue() as string}
-            onChange={(value) => {
-              table.getColumn('plan')?.setFilterValue(value)
-            }}
-            options={[
-              {
-                value: 'all',
-                label: `All Plans (${getFieldCount('all', 'plan')})`,
-              },
-              {
-                value: 'basic',
-                label: `Basic (${getFieldCount('basic', 'plan')})`,
-              },
-              {
-                value: 'pro',
-                label: `Pro (${getFieldCount('pro', 'plan')})`,
               },
             ]}
           />
@@ -478,9 +312,9 @@ const TopContent = ({
 }
 
 const BottomContent = ({ table }: { table: TableType<IUser> }) => {
-  //   const { allAgencyContacts } = useGetAllAgencyContacts()
+  const { allUsers } = useGetAllUsers()
   return (
-    users && (
+    allUsers && (
       <div className='py-2 px-2 flex justify-between items-center'>
         <div className='flex-grow flex justify-center'>
           <Pagination

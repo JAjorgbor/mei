@@ -27,7 +27,7 @@ const TeamSection = () => {
             <BreadcrumbItem href='/admin/dashboard/team'>Team</BreadcrumbItem>
           </Breadcrumbs>
           <Button
-            color='secondary'
+            //color='secondary'
             endContent={<PlusCircleIcon size={15} />}
             size='sm'
             onPress={() => setShowInviteModal(true)}

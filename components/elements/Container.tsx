@@ -38,7 +38,7 @@ const Container: FC<ContainerProps> = ({
 
   return (
     <Component
-      className={`max-w-[98vw] ${widthClass} ${
+      className={`max-w-[100dvw] ${widthClass} ${
         width !== 'full' ? 'p-3 sm:p-5 md:px-7' : ''
       } mx-auto ${className}`}
     >

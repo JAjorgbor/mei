@@ -1,8 +1,9 @@
 'use client'
-import { IPage } from '@/api-utils/admin/interfaces/page.interface'
-import DeletePageModal from '@/components/admin/chapters/DeletePageModal'
+import { IChapter } from '@/api-utils/admin/interfaces/chapter.interfaces'
+import CreateChapterModal from '@/components/admin/chapters/CreateChapterModal'
+import DeleteChapterModal from '@/components/admin/chapters/DeleteChapterModal'
 import InputField from '@/components/elements/InputField'
-import useGetPagesForChapter from '@/hooks/requests/useGetPagesForChapter'
+import useGetAllChapters from '@/hooks/requests/useGetAllChapters'
 import {
   BreadcrumbItem,
   Breadcrumbs,
@@ -35,17 +36,18 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { MoreVertical } from 'lucide-react'
-import Link from 'next/link'
-import { useParams } from 'next/navigation'
+import moment from 'moment'
 import React, { useCallback, useMemo, useState } from 'react'
 
-const columnHelper = createColumnHelper<IPage>()
-
-const PagesTable = () => {
+const columnHelper = createColumnHelper<IChapter>()
+const UserUnlockedChapters = () => {
   const [globalFilter, setGlobalFilter] = useState<any>('')
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
     { id: 'status', value: 'all' },
   ])
+  const { allChapters, allChaptersLoading } = useGetAllChapters()
+  const [selectedChapter, setSelectedChapter] = useState<IChapter>()
+  const [showDeleteChapterModal, setShowDeleteChapterModal] = useState(false)
 
   const [pagination, setPagination] = useState({
     pageIndex: 0, //initial page index
@@ -53,35 +55,24 @@ const PagesTable = () => {
   })
 
   const [sorting, setSorting] = useState<SortingState>([])
-  const { chapterId } = useParams()
-  const [showDeletePageModal, setShowDeletePageModal] = useState(false)
-  const [selectedPage, setSelectedPage] = useState<IPage>()
-  const { pages, pagesLoading } = useGetPagesForChapter(chapterId as string)
   const columns = useMemo(
     () => [
-      columnHelper.accessor(`textContent`, {
-        id: 'textContent',
-        header: 'Preview',
-        enableHiding: false, // disable hiding for this column
+      columnHelper.accessor(
+        (row) => `Chapter ${row.number}: ${row.chapterLabel}`,
+        {
+          id: 'title',
+          header: 'Title',
+          enableHiding: false, // disable hiding for this column
 
-        cell: ({ row: { original }, getValue }) => {
-          const parser = new DOMParser()
-          const doc = parser.parseFromString(getValue(), 'text/html')
-
-          // Step 2: Extract raw text (no tags)
-          const rawText = doc.body.textContent
-
-          return (
-            <div className='flex flex-col text-cloudburst'>
-              <p className='text-bold text-small capitalize'>
-                {rawText?.slice(0, 40)}
-              </p>
+          cell: ({ row: { original }, getValue }) => (
+            <div className='flex flex-col text-cloudburst min-w-max'>
+              <p className='text-bold text-small capitalize'>{getValue()}</p>
             </div>
-          )
-        },
-      }),
-      columnHelper.accessor('textCount', {
-        header: 'Words',
+          ),
+        }
+      ),
+      columnHelper.accessor('pageCount', {
+        header: 'Pages',
         enableHiding: false, // disable hiding for this column
         cell: (info) => (
           <div className='flex flex-col '>
@@ -91,7 +82,7 @@ const PagesTable = () => {
       }),
       columnHelper.accessor(`status`, {
         header: 'Status',
-        filterFn: 'statusFilter' as any,
+        filterFn: 'contactStatusFilter' as any,
         cell: ({ getValue }) => (
           <div className='inline-block'>
             <Chip
@@ -120,22 +111,22 @@ const PagesTable = () => {
           <Dropdown className='min-w-max'>
             <DropdownTrigger>
               <button type='button'>
-                <MoreVertical />
+                <MoreVertical size={18} />
               </button>
             </DropdownTrigger>
             <DropdownMenu>
               <DropdownItem
-                key='manage'
-                href={`/admin/chapters/${chapterId}/pages/${info.row.original.id}`}
+                key='view'
+                href={`/admin/chapters/${info.row.original.id}`}
               >
-                Manage
+                View
               </DropdownItem>
               <DropdownItem
-                key='delete'
                 color='danger'
+                key='delete'
                 onPress={() => {
-                  setShowDeletePageModal(true)
-                  setSelectedPage(info.row.original)
+                  setShowDeleteChapterModal(true)
+                  setSelectedChapter(info.row.original)
                 }}
               >
                 Delete
@@ -145,13 +136,11 @@ const PagesTable = () => {
         ),
       }),
     ],
-    [pages]
+    [allChapters]
   )
-  // const { allAgencyContacts, allAgencyContactsLoading } =
-  //   useGetAllAgencyContacts()
 
   const table = useReactTable({
-    data: pages || [],
+    data: allChapters || [],
     columns,
     state: {
       globalFilter,
@@ -169,7 +158,7 @@ const PagesTable = () => {
     onColumnFiltersChange: setColumnFilters,
     onSortingChange: setSorting,
     filterFns: {
-      statusFilter: (row, columnId, filterValue) => {
+      contactStatusFilter: (row, columnId, filterValue) => {
         if (filterValue == 'all') return true
         return row.original.status.toLowerCase() == filterValue
       },
@@ -179,7 +168,7 @@ const PagesTable = () => {
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set([]))
 
   return (
-    <div className='space-y-6 overflow-x-auto'>
+    <>
       <Table
         aria-label='Recent Contacts'
         isHeaderSticky
@@ -190,12 +179,11 @@ const PagesTable = () => {
           <TopContent table={table} setGlobalFilter={setGlobalFilter} />
         }
         classNames={{
+          base: 'max-w-[100dvw] overflow-x-auto overflow-y-hidden',
           th: 'bg-default-200 text-md capitalize text-foreground font-normal',
+          td: 'w-max',
           thead: '[&>tr]:first:shadow-none',
           tbody: 'divide-y',
-          table: 'min-w-max',
-          wrapper: 'overflow-x-auto',
-          base: 'overflow-hidden p-1 min-h-min',
         }}
         topContentPlacement='outside'
         onSelectionChange={setSelectedKeys}
@@ -210,7 +198,9 @@ const PagesTable = () => {
                 <TableColumn
                   key={header.id}
                   align={header.id === 'actions' ? 'center' : 'start'}
-                  allowsSorting={['preview', 'pages'].includes(header.id)}
+                  allowsSorting={['title', 'pageCount', 'dateCreated'].includes(
+                    header.id
+                  )}
                   onClick={header.column.getToggleSortingHandler()}
                 >
                   {flexRender(
@@ -224,14 +214,14 @@ const PagesTable = () => {
         }
         <TableBody
           loadingContent={<Spinner label={'Loading, Please wait...' as any} />}
-          isLoading={pagesLoading}
+          isLoading={allChaptersLoading}
           emptyContent={
-            pages && pages?.length > 0
-              ? 'No pages found. Try adjusting your filters.'
-              : 'No pages available at the moment.'
+            allChapters && allChapters?.length > 0
+              ? 'No chapters found. Try adjusting your filters.'
+              : 'No chapters available at the moment.'
           }
         >
-          {!pagesLoading &&
+          {!allChaptersLoading &&
             (table.getRowModel().rows.map((row) => (
               <TableRow key={row.id}>
                 {row.getVisibleCells().map((cell) => (
@@ -243,107 +233,70 @@ const PagesTable = () => {
             )) as any)}
         </TableBody>
       </Table>
-      <DeletePageModal
-        selectedPage={selectedPage!}
-        isOpen={showDeletePageModal}
-        setIsOpen={setShowDeletePageModal}
+      <DeleteChapterModal
+        isOpen={showDeleteChapterModal}
+        setIsOpen={setShowDeleteChapterModal}
+        selectedChapter={selectedChapter as IChapter}
       />
-    </div>
+    </>
   )
 }
 
-export default PagesTable
+export default UserUnlockedChapters
 
 const TopContent = ({
   table,
   setGlobalFilter,
 }: {
-  table: TableType<IPage>
+  table: TableType<IChapter>
   setGlobalFilter: any
 }) => {
-  const { chapterId } = useParams()
-  const { pages } = useGetPagesForChapter(chapterId as string)
+  const [showCreateChapterModal, setShowCreateChapterModal] = useState(false)
 
-  const getStatusCount = useCallback(
-    (status: string) => {
-      if (pages) {
-        if (status == 'all') return pages.length
-        else
-          return pages.filter(
-            (each) => each.status.toLocaleLowerCase() == status
-          ).length
-      }
-    },
-    [pages, table.getColumn('status')?.getFilterValue()]
-  )
+  const { allChapters } = useGetAllChapters()
   return (
-    <div className='flex flex-col gap-4'>
-      <div className='flex gap-6 flex-wrap justify-between'>
-        <div className='flex gap-4 flex-wrap'>
-          <Button
-            as={Link}
-            //color='secondary'
-            variant='shadow'
-            href={`/admin/chapters/${chapterId}/add-page`}
-          >
-            Add Page
-          </Button>
+    <>
+      <div className='flex flex-col gap-4'>
+        <div className='flex gap-6 flex-wrap justify-between'>
+          <h3 className='text-2xl font-semibold'>Unlocked Chapters</h3>
           <InputField
-            type='select'
-            className='w-36'
-            value={table.getColumn('status')?.getFilterValue() as string}
-            onChange={(value) => {
-              table.getColumn('status')?.setFilterValue(value)
-            }}
-            options={[
-              { value: 'all', label: `All (${getStatusCount('all')})` },
-              {
-                value: 'published',
-                label: `Published (${getStatusCount('published')})`,
-              },
-              { value: 'draft', label: `Draft (${getStatusCount('draft')})` },
-              {
-                value: 'review',
-                label: `Review (${getStatusCount('review')})`,
-              },
-            ]}
+            type='search'
+            placeholder='Search chapters'
+            register={{ onChange: (e: any) => setGlobalFilter(e.target.value) }}
           />
         </div>
-        <InputField
-          type='search'
-          placeholder='Search pages'
-          register={{ onChange: (e: any) => setGlobalFilter(e.target.value) }}
-        />
+        <div className='flex justify-between items-center'>
+          <span className='text-default-400 text-small'>
+            <span className='capitalize'>
+              {String(table.getColumn('status')?.getFilterValue())}
+            </span>{' '}
+            chapters ({table.getFilteredRowModel().rows.length || 0})
+          </span>
+          <label className='flex items-center text-default-400 text-small'>
+            Rows per page:
+            <select
+              className='bg-transparent outline-none text-default-400 text-small'
+              onChange={(e) => table.setPageSize(Number(e.target.value))}
+            >
+              <option value='10'>10</option>
+              <option value='20'>20</option>
+              <option value='30'>30</option>
+            </select>
+          </label>
+        </div>
       </div>
-      <div className='flex justify-between items-center'>
-        <span className='text-default-400 text-small'>
-          <span className='capitalize'>
-            {String(table.getColumn('status')?.getFilterValue())}
-          </span>{' '}
-          pages ({table.getFilteredRowModel().rows.length || 0})
-        </span>
-        <label className='flex items-center text-default-400 text-small'>
-          Rows per page:
-          <select
-            className='bg-transparent outline-none text-default-400 text-small'
-            onChange={(e) => table.setPageSize(Number(e.target.value))}
-          >
-            <option value='10'>10</option>
-            <option value='20'>20</option>
-            <option value='30'>30</option>
-          </select>
-        </label>
-      </div>
-    </div>
+      <CreateChapterModal
+        isOpen={showCreateChapterModal}
+        setIsOpen={setShowCreateChapterModal}
+      />
+    </>
   )
 }
 
-const BottomContent = ({ table }: { table: TableType<IPage> }) => {
-  const { chapterId } = useParams()
-  const { pages } = useGetPagesForChapter(chapterId as string)
-
+const BottomContent = ({ table }: { table: TableType<IChapter> }) => {
+  const { allChapters } = useGetAllChapters()
   return (
-    pages && (
+    allChapters && (
       <div className='py-2 px-2 flex justify-between items-center'>
         <div className='flex-grow flex justify-center'>
           <Pagination
@@ -356,24 +309,6 @@ const BottomContent = ({ table }: { table: TableType<IPage> }) => {
             onChange={(value) => table.setPageIndex(value - 1)}
             className='text-white'
           />
-        </div>
-        <div className='hidden sm:flex  justify-end gap-2'>
-          <Button
-            size='sm'
-            color='primary'
-            onPress={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          <Button
-            size='sm'
-            color='primary'
-            onPress={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
         </div>
       </div>
     )

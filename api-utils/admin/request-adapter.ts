@@ -12,6 +12,22 @@ const axiosInstance = axios.create({
   },
 })
 
+// === Refresh Token Lock Logic ===
+let isRefreshing = false
+let failedQueue: any[] = []
+
+const processQueue = (error: any, token: string | null = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error)
+    } else {
+      prom.resolve(token)
+    }
+  })
+  failedQueue = []
+}
+
+// === Request Interceptor ===
 axiosInstance.interceptors.request.use(async (config) => {
   const session: any = await getSession()
   const storedAccessToken = sessionStorage.getItem('accessToken')
@@ -19,48 +35,55 @@ axiosInstance.interceptors.request.use(async (config) => {
   const accessToken = storedAccessToken || session?.accessToken
   const refreshToken = storedRefreshToken || session?.refreshToken
 
-  if (!storedAccessToken) {
-    sessionStorage.setItem('accessToken', accessToken)
-  }
-  if (!storedRefreshToken) {
-    sessionStorage.setItem('refreshToken', refreshToken)
-  }
+  sessionStorage.setItem('accessToken', accessToken)
+  sessionStorage.setItem('refreshToken', refreshToken)
 
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`
   }
+
   return config
 })
+
+// === Response Interceptor ===
 axiosInstance.interceptors.response.use(
-  (response) => {
-    return response
-  },
+  (response) => response,
   async (error) => {
     const session: any = await getSession()
     const originalConfig = error.config
 
-    if (
-      error.response &&
-      error.response.status === 401 &&
-      !originalConfig._retry
-    ) {
-      originalConfig._retry = true // Mark as retried
+    if (error?.response?.status === 401 && !originalConfig._retry) {
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({
+            resolve: (token: string) => {
+              originalConfig.headers.Authorization = `Bearer ${token}`
+              resolve(axiosInstance(originalConfig))
+            },
+            reject: (err: any) => {
+              reject(err)
+            },
+          })
+        })
+      }
 
-      const refreshToken =
-        sessionStorage.getItem('refreshToken') || session?.refreshToken
-
-      console.log('refreshing token', refreshToken)
+      originalConfig._retry = true
+      isRefreshing = true
 
       try {
-        const { data } = await axiosInstance.post('admin/refresh', {
-          refreshToken,
-        })
-        console.log(data)
-        // TEMPORARILY store the new token for retry
+        const refreshToken =
+          sessionStorage.getItem('refreshToken') || session?.refreshToken
+
+        console.log('refreshing token', refreshToken)
+
+        const { data } = await axiosInstance.post(
+          'admin/refresh',
+          { refreshToken },
+          { headers: { Authorization: null } } // prevent stale token usage
+        )
 
         sessionStorage.setItem('accessToken', data.accessToken)
         sessionStorage.setItem('refreshToken', data.refreshToken)
-        // Update Auth.js session with new token
 
         await signIn('credentials', {
           redirect: false,
@@ -70,13 +93,14 @@ axiosInstance.interceptors.response.use(
             ...session?.user,
           }),
         })
-        axiosInstance.defaults.headers.Authorization = `Bearer ${data?.accessToken}`
 
-        originalConfig.headers.Authorization = `Bearer ${data?.accessToken}`
+        axiosInstance.defaults.headers.Authorization = `Bearer ${data.accessToken}`
+        processQueue(null, data.accessToken)
 
-        return axiosInstance(originalConfig) // Retry original request with new token
-      } catch (error) {
-        Promise.reject(error)
+        originalConfig.headers.Authorization = `Bearer ${data.accessToken}`
+        return axiosInstance(originalConfig)
+      } catch (err) {
+        processQueue(err, null)
         const whiteListedAdminRoutes = [
           '/admin',
           '/admin/verify-access',
@@ -92,10 +116,13 @@ axiosInstance.interceptors.response.use(
           Cookies.remove(cookieName) // Remove each cookie
         }
         window.location.href = '/admin'
+        return Promise.reject(err)
+      } finally {
+        isRefreshing = false
       }
     }
 
-    return Promise.reject(error.response)
+    return Promise.reject(error)
   }
 )
 

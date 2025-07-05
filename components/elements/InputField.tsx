@@ -210,7 +210,7 @@ const InputField: FC<InputFieldProps> = ({
     className,
     classNames.input,
     disabled && 'cursor-not-allowed',
-    'focus:outline-secondary disabled:bg-gray-50/20 bg-default-100',
+    'focus:outline-primary disabled:bg-gray-50/20 bg-default-100',
     `${selectSize == 'sm' && type == 'select' ? 'h-7 min-h-7' : ''}`
   )
 
@@ -342,7 +342,7 @@ const InputField: FC<InputFieldProps> = ({
       case 'color':
         return (
           <div className='flex relative gap-2 group w-full'>
-            <span className='group-focus:text-secondary absolute left-2 top-1/2 transform -translate-y-1/2'>
+            <span className='group-focus:text-primary absolute left-2 top-1/2 transform -translate-y-1/2'>
               <HashIcon size={15} />
             </span>
             <input
@@ -359,7 +359,7 @@ const InputField: FC<InputFieldProps> = ({
             <button
               type='button'
               onClick={() => setShowDropdown(!showDropdown)}
-              className='p-2 rounded-md focus:border-secondary'
+              className='p-2 rounded-md focus:border-primary'
               style={{
                 backgroundColor: `#${value}`,
                 color: 'white',
@@ -502,7 +502,7 @@ const InputField: FC<InputFieldProps> = ({
             defaultSelected={defaultChecked}
             className='p-0 ml-0'
             disabled={disabled}
-            color='secondary'
+            //color='primary'
             size='sm'
             radius={'none'}
             isSelected={Boolean(value)}
@@ -524,7 +524,7 @@ const InputField: FC<InputFieldProps> = ({
               ((<XIcon size={switchSize == 'sm' ? 10 : 12} />) as any)
             }
             size={switchSize}
-            color='secondary'
+            //color='primary'
             defaultSelected={defaultChecked}
             className='p-0'
             classNames={{
@@ -798,7 +798,7 @@ export const RadioCard: FC<RadioCardProps> = ({
       className={cn(
         'group inline-flex items-center hover:opacity-70 active:opacity-50 justify-between flex-row-reverse tap-highlight-transparent',
         'cursor-pointer border-[1px] border-default rounded-lg gap-4 p-2 py-2.5',
-        'data-[selected=true]:border-secondary '
+        'data-[selected=true]:border-primary '
       )}
     >
       <VisuallyHidden>

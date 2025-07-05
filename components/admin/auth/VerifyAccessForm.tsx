@@ -47,6 +47,8 @@ const VerifyAccessForm = () => {
         refreshToken: data.refreshToken,
         userData: JSON.stringify(session?.user),
       })
+      sessionStorage.setItem('accessToken', data.accessToken)
+      sessionStorage.setItem('refreshToken', data.accessToken)
       addToast({
         title: 'OTP has been resent. Please check your email!',
         color: 'success',

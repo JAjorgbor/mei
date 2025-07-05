@@ -1,6 +1,8 @@
 import UsersSection from '@/components/admin/users/UsersSection'
 import Container from '@/components/elements/Container'
 
+export const metadata = { title: 'Users' }
+
 export default function UsersPage() {
   return (
     <Container className='space-y-4'>

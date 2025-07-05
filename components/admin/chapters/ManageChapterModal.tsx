@@ -129,7 +129,7 @@ const ManageChapterModal: FC<BaseModalProps & { chapter: IChapter }> = ({
             size='sm'
             type='submit'
             form='create-chapter-form'
-            color='secondary'
+            //color='secondary'
             isLoading={formMethods.formState.isSubmitting}
           >
             Update

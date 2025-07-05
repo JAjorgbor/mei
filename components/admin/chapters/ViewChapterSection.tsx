@@ -50,7 +50,7 @@ const ViewChapterSection = () => {
             <BreadcrumbItem href='#'>View Chapter</BreadcrumbItem>
           </Breadcrumbs>
           <Button
-            color='secondary'
+            //color='secondary'
             startContent={<Edit size={15} />}
             onPress={() => setShowManageChapterModal(true)}
           >
