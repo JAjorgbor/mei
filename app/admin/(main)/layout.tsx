@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 
 import Providers from '@/app/Providers'
-import Header from '@/components/scaffold/Header'
-import Sidebar from '@/components/scaffold/Sidebar'
+import Header from '@/components/scaffold/admin/Header'
+import Sidebar from '@/components/scaffold/admin/Sidebar'
 import '../../globals.css'
 
 import { Inter, Roboto } from 'next/font/google'
