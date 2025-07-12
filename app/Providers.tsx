@@ -9,6 +9,7 @@ import { useEffect, Suspense, useState } from 'react'
 import { Provider } from 'react-redux'
 import { Spinner } from '@heroui/react'
 import { ToastProvider } from '@heroui/toast'
+import Footer from '@/components/scaffold/footer'
 
 interface ProvidersProps {
   children: any
@@ -69,6 +70,7 @@ const Providers = ({ children }: ProvidersProps) => {
           {/* <Suspense> */}
           <Content>{children}</Content>
           {/* </Suspense> */}
+          <Footer />
         </HeroUIProvider>
       </Provider>
     </SessionProvider>
