@@ -2,6 +2,7 @@
 import { IChapter } from '@/api-utils/admin/interfaces/chapter.interfaces'
 import CreateChapterModal from '@/components/admin/chapters/CreateChapterModal'
 import DeleteChapterModal from '@/components/admin/chapters/DeleteChapterModal'
+import Container from '@/components/elements/Container'
 import InputField from '@/components/elements/InputField'
 import useGetAllChapters from '@/hooks/requests/useGetAllChapters'
 import {
@@ -278,7 +279,7 @@ const TopContent = ({
     [allChapters, table.getColumn('status')?.getFilterValue()]
   )
   return (
-    <>
+    <Container>
       <div className='flex flex-col gap-4'>
         <div className='flex gap-6 flex-wrap justify-between'>
           <div className='flex gap-4 flex-wrap'>
@@ -340,7 +341,7 @@ const TopContent = ({
         isOpen={showCreateChapterModal}
         setIsOpen={setShowCreateChapterModal}
       />
-    </>
+    </Container>
   )
 }
 

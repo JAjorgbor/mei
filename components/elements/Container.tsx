@@ -19,7 +19,7 @@ interface ContainerProps {
 
 const Container: FC<ContainerProps> = ({
   children,
-  width = '7xl',
+  width = '6xl',
   className = '',
   as: Component = 'section',
 }) => {

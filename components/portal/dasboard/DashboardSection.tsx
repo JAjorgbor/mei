@@ -1,12 +1,23 @@
 'use client'
 import { currencyFormatter } from '@/app/utils/currencyFormatter'
 import Container from '@/components/elements/Container'
-import { Card, CardBody, CardHeader, Progress, Tab, Tabs } from '@heroui/react'
 import {
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Progress,
+  Tab,
+  Tabs,
+} from '@heroui/react'
+import {
+  ArrowRight,
   Bookmark,
   MinusCircle,
   Moon,
   Sparkle,
+  Star,
   Sun,
   Sunrise,
   ThumbsUp,
@@ -23,40 +34,48 @@ const DashboardSection = () => {
       ? { icon: <Sun className='inline-block' />, greeting: 'afternoon' }
       : { icon: <Moon className='inline-block' />, greeting: 'evening' }
   return (
-    <>
-      <Container className='space-y-10'>
-        <div className='space-y-8'>
+    <div className='relative'>
+      <div className='bg-gradient-radial from-secondary via-transparent to-transparent h-screen absolute top-0 left-0 w-full' />
+      <Container className='space-y-12 relative z-10'>
+        <div className='space-y-10 '>
+          <div className='flex justify-between items-center'>
+            Logo
+            <span className='bg-default-100 inline-flex rounded-3xl p-1.5 px-2 gap-2 items-center '>
+              <Star className='text-yellow-400' size={20} /> 100{' '}
+              <span className='text-secondary text-lg'>+</span>
+            </span>
+          </div>
           <div className='text-xl flex items-start gap-3'>
             {timeOfDay?.icon} Good {timeOfDay.greeting}, Joshua
           </div>
           <Progress
             value={30}
-            aria-label='Reading progress'
-            label='Reading Progress'
+            aria-label='Stage 1'
+            color='secondary'
+            label='Stage 1'
             showValueLabel
             formatOptions={{ style: 'percent' }}
             maxValue={100}
           />
 
-          <div className='py-4 px-3 bg-default-50 '>
-            <div className='flex items-center gap-6'>
-              <Sparkle size={35} className='text-yellow-500' />
-              <div className='space-y-4'>
-                <p>
-                  Get Unlimited access to the best of Mie for less than{' '}
-                  {currencyFormatter(10000)}
-                </p>
-                <p>
-                  <Link
-                    href='#'
-                    className='border-b-2 border-dashed border-foreground'
-                  >
-                    Become a Member
-                  </Link>
-                </p>
-              </div>
-            </div>
-          </div>
+          <Card className='md:w-1/2 lg:w-1/3 mx-auto'>
+            <CardHeader className='text-2xl'>Chapter 1</CardHeader>
+            <CardBody>
+              Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+              Inventore aliquid ad facilis voluptate omnis consequuntur harum ea
+              voluptas libero, assumenda aliquam, tenetur temporibus. A,
+              debitis.
+            </CardBody>
+            <CardFooter>
+              <Button
+                color='secondary'
+                endContent={<ArrowRight size={15} />}
+                className='w-full'
+              >
+                Continue Reading
+              </Button>
+            </CardFooter>
+          </Card>
         </div>
 
         <div>
@@ -131,7 +150,7 @@ const DashboardSection = () => {
           </Tabs>
         </div>
       </Container>
-    </>
+    </div>
   )
 }
 
