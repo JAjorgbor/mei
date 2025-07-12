@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { cookies } from 'next/headers'
 import Providers from '@/app/Providers'
-import '@/public/globals.css'
+import '@/app/globals.css'
 
 import { Inter, Roboto } from 'next/font/google'
 
