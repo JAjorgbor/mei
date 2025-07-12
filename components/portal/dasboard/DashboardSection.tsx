@@ -30,7 +30,7 @@ const DashboardSection = () => {
       : { icon: <Moon className='inline-block' />, greeting: 'evening' }
   return (
     <div className='relative'>
-      <div className='bg-gradient-radial from-secondary to-transparent to-60% h-screen absolute top-0 left-0 w-full' />
+      <div className='bg-gradient-radial from-secondary to-transparent to-50% h-screen absolute top-0 left-0 w-full' />
       <Container className='space-y-12 relative z-10'>
         <div className='space-y-10 '>
           <div className='text-xl flex items-start gap-3'>

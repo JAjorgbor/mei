@@ -20,7 +20,7 @@ const ChaptersSection = () => {
                   src='https://dummyimage.com/300x300'
                   height={300}
                   width={300}
-                  className='w-full object-cover'
+                  className='w-full object-cover h-56'
                 />
               </CardBody>
               <CardBody className='w-2/3 md:w-full  space-y-3'>
