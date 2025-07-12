@@ -1,5 +1,4 @@
 'use client'
-import { currencyFormatter } from '@/app/utils/currencyFormatter'
 import Container from '@/components/elements/Container'
 import {
   Button,
@@ -16,15 +15,11 @@ import {
   Bookmark,
   MinusCircle,
   Moon,
-  Sparkle,
-  Star,
   Sun,
   Sunrise,
   ThumbsUp,
 } from 'lucide-react'
 import moment from 'moment'
-import Link from 'next/link'
-import React from 'react'
 
 const DashboardSection = () => {
   const timeOfDay =
@@ -35,16 +30,9 @@ const DashboardSection = () => {
       : { icon: <Moon className='inline-block' />, greeting: 'evening' }
   return (
     <div className='relative'>
-      <div className='bg-gradient-radial from-secondary via-transparent to-transparent h-screen absolute top-0 left-0 w-full' />
+      <div className='bg-gradient-radial from-secondary to-transparent to-60% h-screen absolute top-0 left-0 w-full' />
       <Container className='space-y-12 relative z-10'>
         <div className='space-y-10 '>
-          <div className='flex justify-between items-center'>
-            Logo
-            <span className='bg-default-100 inline-flex rounded-3xl p-1.5 px-2 gap-2 items-center '>
-              <Star className='text-yellow-400' size={20} /> 100{' '}
-              <span className='text-secondary text-lg'>+</span>
-            </span>
-          </div>
           <div className='text-xl flex items-start gap-3'>
             {timeOfDay?.icon} Good {timeOfDay.greeting}, Joshua
           </div>
@@ -69,7 +57,7 @@ const DashboardSection = () => {
             <CardFooter>
               <Button
                 color='secondary'
-                endContent={<ArrowRight size={15} />}
+                endContent={<ArrowRight size={20} />}
                 className='w-full'
               >
                 Continue Reading

@@ -1,10 +1,13 @@
+import BottomNavigation from '@/components/scaffold/main/portal/BottomNavigation'
+import { ReactNode } from 'react'
+
+import Providers from '@/app/Providers'
 import type { Metadata } from 'next'
 import { Inter, Roboto } from 'next/font/google'
-import '../globals.css'
-import Providers from '@/app/Providers'
-import Header from '@/components/scaffold/main/Header'
+import '@/app/globals.css'
 
 import { Playfair_Display } from 'next/font/google'
+import Header from '@/components/scaffold/main/portal/Header'
 
 const playfair = Playfair_Display({
   subsets: ['latin'], // or ['latin-ext'] depending on your needs
@@ -29,11 +32,7 @@ export const metadata: Metadata = {
   description: 'Mie story app admin',
 }
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <html lang='en'>
       <body
@@ -42,8 +41,11 @@ export default function RootLayout({
         <Providers>
           <Header />
           {children}
+          <BottomNavigation />
         </Providers>
       </body>
     </html>
   )
 }
+
+export default Layout
