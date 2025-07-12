@@ -62,7 +62,7 @@ const Header = () => {
   return (
     <>
       <Navbar
-        className='border-b border-b-foreground-300 z-20'
+        className='border-b border-b-default-100 z-20'
         maxWidth='xl'
         onMenuOpenChange={setIsMobileMenuOpen}
       >
