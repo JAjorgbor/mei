@@ -10,6 +10,7 @@ import { Provider } from 'react-redux'
 import { Spinner } from '@heroui/react'
 import { ToastProvider } from '@heroui/toast'
 import Footer from '@/components/scaffold/footer'
+import handleScreenshot from '@/utils/handleScreenshot'
 
 interface ProvidersProps {
   children: any
@@ -28,9 +29,11 @@ const Content = ({ children }: ProvidersProps) => {
       if (prefersDark) {
         document.documentElement.classList.remove('light')
         document.documentElement.classList.add('dark')
+        Cookies.set('theme', 'dark')
       } else {
         document.documentElement.classList.remove('dark')
         document.documentElement.classList.add('light')
+        Cookies.set('theme', 'light')
       }
     }
 
@@ -43,6 +46,7 @@ const Content = ({ children }: ProvidersProps) => {
       }
     } else {
       document.documentElement.className = theme
+      Cookies.set('theme', theme)
     }
   }, [theme])
 
@@ -63,6 +67,12 @@ const Content = ({ children }: ProvidersProps) => {
 
 const Providers = ({ children }: ProvidersProps) => {
   const router = useRouter()
+  const pathname = usePathname()
+  useEffect(() => {
+    if (pathname.startsWith('/portal')) {
+      handleScreenshot()
+    }
+  }, [pathname])
   return (
     <SessionProvider>
       <Provider store={store}>
@@ -71,6 +81,10 @@ const Providers = ({ children }: ProvidersProps) => {
           <Content>{children}</Content>
           {/* </Suspense> */}
           <Footer />
+          <div
+            className='w-screen h-screen fixed top-0 left-0 bg-transparent backdrop-blur-xl z-[999] hidden'
+            id='screenshot-blur-overlay'
+          />
         </HeroUIProvider>
       </Provider>
     </SessionProvider>

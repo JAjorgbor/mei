@@ -1,8 +1,8 @@
 'use client'
 import { updateAdmin } from '@/api-utils/admin/requests/admin.requests'
 import { uploadToCloudinary } from '@/api-utils/general.requests'
-import extractPublicId from '@/app/utils/extractCloudinaryPublicId'
-import { urlToFile } from '@/app/utils/urlToFile'
+import extractPublicId from '@/utils/extractCloudinaryPublicId'
+import { urlToFile } from '@/utils/urlToFile'
 import ModalWrapper, {
   BaseModalProps,
 } from '@/components/admin/elements/ModalWrapper'

@@ -1,3 +1,4 @@
+import { cookies } from 'next/headers'
 import BottomNavigation from '@/components/scaffold/main/portal/BottomNavigation'
 import { ReactNode } from 'react'
 
@@ -33,8 +34,10 @@ export const metadata: Metadata = {
 }
 
 const Layout = ({ children }: { children: ReactNode }) => {
+  const cookieJar = cookies()
+  const storedTheme = cookieJar.get('theme')?.value
   return (
-    <html lang='en'>
+    <html lang='en' className={`${storedTheme || ''}`}>
       <body
         className={`${playfair.variable} ${inter.className} ${roboto.className} antialiased`}
       >

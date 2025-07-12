@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
-
+import { cookies } from 'next/headers'
 import Providers from '@/app/Providers'
-import '../../globals.css'
+import '@/public/globals.css'
 
 import { Inter, Roboto } from 'next/font/google'
 
@@ -25,8 +25,10 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const cookieJar = cookies()
+  const storedTheme = cookieJar.get('theme')?.value
   return (
-    <html lang='en'>
+    <html lang='en' className={`${storedTheme || ''}`}>
       <body className={`${inter.className} ${roboto.className}  antialiased`}>
         <Providers>
           <main>{children}</main>

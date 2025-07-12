@@ -1,5 +1,5 @@
 'use client'
-import { currencyFormatter } from '@/app/utils/currencyFormatter'
+import { currencyFormatter } from '@/utils/currencyFormatter'
 import useGetDashboardStats from '@/hooks/requests/useGetDashboardStats'
 import { Card, CardBody, Skeleton } from '@heroui/react'
 import {

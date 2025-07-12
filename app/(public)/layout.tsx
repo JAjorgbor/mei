@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter, Roboto } from 'next/font/google'
+import { cookies } from 'next/headers'
 import '@/app/globals.css'
 import Providers from '@/app/Providers'
 import Header from '@/components/scaffold/main/Header'
@@ -34,10 +35,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const cookieJar = cookies()
+  const storedTheme = cookieJar.get('theme')?.value
   return (
-    <html lang='en'>
+    <html lang='en' className={`${storedTheme || ''}`}>
       <body
-        className={`${playfair.variable} ${inter.className} ${roboto.className} antialiased`}
+        className={`${playfair.variable} ${inter.className} ${roboto.className}  antialiased`}
       >
         <Providers>
           <Header />
