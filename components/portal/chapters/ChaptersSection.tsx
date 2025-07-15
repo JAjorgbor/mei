@@ -2,6 +2,7 @@ import Container from '@/components/elements/Container'
 import { Card, CardBody } from '@heroui/react'
 import { Lock } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
 
 const ChaptersSection = () => {
   return (
@@ -13,6 +14,8 @@ const ChaptersSection = () => {
             <Card
               className='flex flex-row md:flex-col items-stretch h-36 md:h-auto'
               key={index}
+              as={Link}
+              href={`/portal/chapters/${index + 1}`}
             >
               <CardBody className='p-0 w-1/3 sm:w-1/2 md:w-full'>
                 <Image
@@ -25,7 +28,9 @@ const ChaptersSection = () => {
               </CardBody>
               <CardBody className='w-2/3 sm:w-1/2 md:w-full  space-y-3'>
                 <div className='flex flex-row justify-between items-center'>
-                  <h3 className='md:text-xl'>Chapter 1: The rising star</h3>
+                  <h3 className='md:text-xl'>
+                    Chapter {index + 1}: The rising star
+                  </h3>
                   <button>
                     <Lock size={18} />
                   </button>

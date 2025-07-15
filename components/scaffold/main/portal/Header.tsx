@@ -22,7 +22,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const Header = () => {
   const [themeState, setThemeState] = useState('')
@@ -59,28 +59,33 @@ const Header = () => {
               <p className='font-bold text-inherit'>Mie</p>
             </>
           )}
+          {navigationState && (
+            <NavbarItem className='md:hidden'>
+              {navigationState?.title}
+            </NavbarItem>
+          )}
         </NavbarBrand>
       </NavbarContent>
       {navigationState && (
-        <NavbarContent justify='center'>
+        <NavbarContent justify='center' className='hidden md:flex'>
           <NavbarItem>{navigationState?.title}</NavbarItem>
         </NavbarContent>
       )}
       <NavbarContent justify='end'>
-        <NavbarItem>
+        <NavbarItem className='flex items-center'>
           <Dropdown className='min-w-max text-foreground'>
             <DropdownTrigger>
               {themeState && (
                 <button
                   aria-label='switch theme'
-                  className='switcher group relative h-9 w-9 rounded-full before:absolute before:inset-0 before:rounded-full before:border before:border-gray-200 before:bg-gray-50 before:bg-gradient-to-b before:transition-transform before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 dark:before:border-gray-700 dark:before:bg-gray-800 lg:flex'
+                  className='switcher group relative p-1 rounded-full before:absolute before:inset-0 before:rounded-full before:border before:border-gray-200 before:bg-gray-50 before:bg-gradient-to-b before:transition-transform before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 dark:before:border-gray-700 dark:before:bg-gray-800 lg:flex'
                 >
                   {themeState == 'light' ? (
-                    <SunIcon className='transistion relative m-auto h-5 w-5  duration-300 group-hover:rotate-180 group-hover:fill-yellow-400 fill-gray-300' />
+                    <SunIcon className='transistion relative m-auto size-4 md:size-5  duration-300 group-hover:rotate-180 group-hover:fill-yellow-400 fill-gray-300' />
                   ) : themeState == 'dark' ? (
-                    <MoonIcon className='transistion relative m-auto h-5 w-5 fill-gray-500 duration-300 group-hover:-rotate-90 group-hover:fill-blue-900 ' />
+                    <MoonIcon className='transistion relative m-auto size-4 md:size-5 fill-gray-500 duration-300 group-hover:-rotate-90 group-hover:fill-blue-900 ' />
                   ) : (
-                    <MonitorIcon className='transistion relative m-auto h-5 w-5 fill-gray-500 duration-300 group-hover:fill-secondary  ' />
+                    <MonitorIcon className='transistion relative m-auto size-4 md:size-5 fill-gray-500 duration-300 group-hover:fill-secondary  ' />
                   )}
                 </button>
               )}
@@ -114,9 +119,9 @@ const Header = () => {
           </Dropdown>
         </NavbarItem>
         <NavbarItem>
-          <button className='bg-default-300 inline-flex rounded-3xl p-1.5 px-2 gap-2 items-center '>
-            <Star className='text-yellow-400' size={18} /> 100{' '}
-            <Plus className='text-secondary' size={18} />
+          <button className='bg-default-300 inline-flex rounded-3xl p-1.5 px-2 gap-2 items-center text-sm'>
+            <Star className='text-yellow-400 size-4 fill-yellow-500' /> 100{' '}
+            <Plus className='text-secondary size-4' />
           </button>
         </NavbarItem>
       </NavbarContent>

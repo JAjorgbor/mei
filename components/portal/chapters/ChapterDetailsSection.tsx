@@ -2,6 +2,7 @@
 import Container from '@/components/elements/Container'
 import { setHeaderNavigation } from '@/features/headerSlice'
 import { useAppDispatch } from '@/features/store'
+import useSetHeaderNavigation from '@/hooks/useSetHeaderNavigation'
 import { Button } from '@heroui/react'
 import {
   MessageSquare,
@@ -11,18 +12,16 @@ import {
   Eye,
   LockOpen,
 } from 'lucide-react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import React, { useEffect } from 'react'
 
 const ChapterDetailsSection = () => {
-  const dispatch = useAppDispatch()
-  useEffect(() => {
-    dispatch(
-      setHeaderNavigation({
-        title: 'Chapter Label',
-        backLink: '/portal/chapters',
-      })
-    )
-  }, [])
+  useSetHeaderNavigation({
+    title: 'Chapter Label',
+    backLink: '/portal/chapters',
+  })
+  const pathname = usePathname()
   return (
     <div className='space-y-8'>
       <div
@@ -72,17 +71,24 @@ const ChapterDetailsSection = () => {
           </span>
         </div>
         <div className='max-w-md mx-auto'>
-          <Button fullWidth color='primary' variant='ghost'>
+          <Button
+            fullWidth
+            color='primary'
+            variant='ghost'
+            radius='none'
+            as={Link}
+            href={`${pathname}/read`}
+          >
             Start Reading Now
           </Button>
         </div>
         <div className='space-y-6 max-w-3xl mx-auto'>
           <LockOpen size={25} className='text-foreground-500' />
-          <div className='space-y-6 divide-y divide-foreground-300 '>
+          <div className='divide-y divide-foreground-600 '>
             {Array(5)
               .fill(null)
               .map((_, index) => (
-                <div className='space-y-3'>
+                <div className='space-y-3 py-4'>
                   <h5 className='font-semibold'>Page {index + 1}</h5>
                   <p className='text-sm'>
                     Lorem ipsum dolor sit amet consectetur adipisicing elit.
