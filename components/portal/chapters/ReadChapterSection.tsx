@@ -1,5 +1,6 @@
 'use client'
 import Container from '@/components/elements/Container'
+import CommentSection from '@/components/portal/chapters/CommentSection'
 import useSetHeaderNavigation from '@/hooks/useSetHeaderNavigation'
 import {
   Button,
@@ -12,33 +13,35 @@ import {
 } from '@heroui/react'
 import { Eye, Heart, MessageSquareText } from 'lucide-react'
 import { useParams } from 'next/navigation'
-import React from 'react'
+import React, { useState } from 'react'
 
 const ReadChapterSection = () => {
   const { chapterId } = useParams()
+  const [showComments, setShowComments] = useState(false)
   useSetHeaderNavigation({
     title: 'Chapter Label',
     backLink: `/portal/chapters/${chapterId}`,
   })
   return (
     <Container>
-      <div className='max-w-2xl mx-auto space-y-6'>
-        <Navbar
-          shouldHideOnScroll
-          classNames={{
-            base: 'bg-transparent top-[4.3rem] !backdrop-blur-0 z-10',
-            wrapper: 'h-[45px]',
-          }}
-        >
-          <NavbarContent
-            justify='center'
-            className='flex justify-center w-full'
-          >
-            <NavbarItem className='w-full'>
-              <ChapterStats />
-            </NavbarItem>
-          </NavbarContent>
-        </Navbar>
+      <Navbar
+        shouldHideOnScroll
+        classNames={{
+          base: 'bg-transparent top-[4.3rem] !backdrop-blur-0 z-10',
+          wrapper: 'h-[45px]',
+        }}
+      >
+        <NavbarContent justify='center' className='flex justify-center w-full'>
+          <NavbarItem className='w-full'>
+            <ChapterStats setShowComments={setShowComments} />
+          </NavbarItem>
+        </NavbarContent>
+      </Navbar>
+      <div className='max-w-2xl mx-auto space-y-6 relative'>
+        <CommentSection
+          showComments={showComments}
+          setShowComments={setShowComments}
+        />
         <div className='space-y-6'>
           {Array(7)
             .fill(null)
@@ -95,7 +98,7 @@ const ReadChapterSection = () => {
               </Card>
             ))}
         </div>
-        <ChapterStats />
+        <ChapterStats setShowComments={setShowComments} />
       </div>
     </Container>
   )
@@ -103,7 +106,11 @@ const ReadChapterSection = () => {
 
 export default ReadChapterSection
 
-const ChapterStats = () => {
+const ChapterStats = ({
+  setShowComments,
+}: {
+  setShowComments: (showComment: boolean) => void
+}) => {
   return (
     <div className='flex justify-center gap-4 w-full'>
       <Button
@@ -113,6 +120,7 @@ const ChapterStats = () => {
         className='bg-background'
         color='primary'
         radius='full'
+        onPress={() => setShowComments(true)}
       >
         40
       </Button>

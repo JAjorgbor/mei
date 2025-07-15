@@ -78,14 +78,14 @@ const Header = () => {
               {themeState && (
                 <button
                   aria-label='switch theme'
-                  className='switcher group relative p-1 rounded-full before:absolute before:inset-0 before:rounded-full before:border before:border-gray-200 before:bg-gray-50 before:bg-gradient-to-b before:transition-transform before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 dark:before:border-gray-700 dark:before:bg-gray-800 lg:flex'
+                  className='switcher group relative p-1.5 rounded-full before:absolute before:inset-0 before:rounded-full before:border before:border-gray-200 before:bg-gray-50 before:bg-gradient-to-b before:transition-transform before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 dark:before:border-gray-700 dark:before:bg-gray-800 lg:flex'
                 >
                   {themeState == 'light' ? (
-                    <SunIcon className='transistion relative m-auto size-4 md:size-5  duration-300 group-hover:rotate-180 group-hover:fill-yellow-400 fill-gray-300' />
+                    <SunIcon className='transistion relative m-auto size-[1rem]  duration-300 group-hover:rotate-180 group-hover:fill-yellow-400 fill-gray-300' />
                   ) : themeState == 'dark' ? (
-                    <MoonIcon className='transistion relative m-auto size-4 md:size-5 fill-gray-500 duration-300 group-hover:-rotate-90 group-hover:fill-blue-900 ' />
+                    <MoonIcon className='transistion relative m-auto size-[1rem] fill-gray-500 duration-300 group-hover:-rotate-90 group-hover:fill-blue-900 ' />
                   ) : (
-                    <MonitorIcon className='transistion relative m-auto size-4 md:size-5 fill-gray-500 duration-300 group-hover:fill-secondary  ' />
+                    <MonitorIcon className='transistion relative m-auto size-[1rem] fill-gray-500 duration-300 group-hover:fill-secondary  ' />
                   )}
                 </button>
               )}
