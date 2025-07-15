@@ -7,4 +7,5 @@ export interface CurrencyState {
 
 export interface HeaderState {
   theme: 'light' | 'dark' | 'system'
+  navigation?: { title: string; backLink: string }
 }

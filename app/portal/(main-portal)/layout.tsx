@@ -43,7 +43,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
       >
         <Providers>
           <Header />
-          {children}
+          <main className='min-h-[80vh]'>{children}</main>
           <BottomNavigation />
         </Providers>
       </body>

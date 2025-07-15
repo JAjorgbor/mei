@@ -69,7 +69,10 @@ const Providers = ({ children }: ProvidersProps) => {
   const router = useRouter()
   const pathname = usePathname()
   useEffect(() => {
-    if (pathname.startsWith('/portal')) {
+    if (
+      pathname.startsWith('/portal') &&
+      process.env.NODE_ENV == 'production'
+    ) {
       handleScreenshot()
     }
   }, [pathname])

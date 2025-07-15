@@ -12,10 +12,13 @@ export const headerSlice = createSlice({
     setTheme: (state, action) => {
       state.theme = action.payload
     },
+    setHeaderNavigation: (state, action) => {
+      state.navigation = action.payload
+    },
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { setTheme } = headerSlice.actions
+export const { setTheme, setHeaderNavigation } = headerSlice.actions
 
 export default headerSlice.reducer

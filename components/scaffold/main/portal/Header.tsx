@@ -13,30 +13,59 @@ import {
 } from '@heroui/react'
 import {
   BookOpen,
+  CircleChevronLeft,
   MonitorIcon,
   MoonIcon,
   Plus,
   Star,
   SunIcon,
 } from 'lucide-react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
 const Header = () => {
   const [themeState, setThemeState] = useState('')
-  const { theme: reduxTheme } = useAppSelector((state) => state.header)
+  const { theme: reduxTheme, navigation } = useAppSelector(
+    (state) => state.header
+  )
+  const [navigationState, setNavigationState] = useState<
+    { title: string; backLink: string } | undefined
+  >()
+
+  const pathname = usePathname()
+
+  useEffect(() => {
+    setNavigationState(undefined)
+  }, [pathname])
+
   useEffect(() => {
     setThemeState(reduxTheme)
-  }, [reduxTheme])
+    setNavigationState(navigation)
+  }, [reduxTheme, navigation])
 
   const dispatch = useAppDispatch()
   return (
     <Navbar className='z-20' classNames={{ wrapper: 'max-w-6xl' }}>
       <NavbarContent>
         <NavbarBrand className='gap-3'>
-          <BookOpen />
-          <p className='font-bold text-inherit'>Mie</p>
+          {navigationState ? (
+            <Link href={navigationState?.backLink || '#'}>
+              <CircleChevronLeft size={25} />
+            </Link>
+          ) : (
+            <>
+              <BookOpen />
+              <p className='font-bold text-inherit'>Mie</p>
+            </>
+          )}
         </NavbarBrand>
       </NavbarContent>
+      {navigationState && (
+        <NavbarContent justify='center'>
+          <NavbarItem>{navigationState?.title}</NavbarItem>
+        </NavbarContent>
+      )}
       <NavbarContent justify='end'>
         <NavbarItem>
           <Dropdown className='min-w-max text-foreground'>
@@ -85,7 +114,7 @@ const Header = () => {
           </Dropdown>
         </NavbarItem>
         <NavbarItem>
-          <button className='bg-default-100 inline-flex rounded-3xl p-1.5 px-2 gap-2 items-center '>
+          <button className='bg-default-300 inline-flex rounded-3xl p-1.5 px-2 gap-2 items-center '>
             <Star className='text-yellow-400' size={18} /> 100{' '}
             <Plus className='text-secondary' size={18} />
           </button>

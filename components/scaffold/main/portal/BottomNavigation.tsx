@@ -4,26 +4,26 @@ import React from 'react'
 
 const BottomNavigation = () => {
   return (
-    <div className='sticky bottom-5 w-full z-[300]'>
+    <div className='sticky bottom-3 w-full z-[300] mt-8'>
       <div className=' max-w-lg px-5 mx-auto'>
-        <div className='w-full rounded-lg px-5 py-3 bg-gray-500/50 text-white backdrop-blur  flex gap-3 items-center justify-between'>
+        <div className='w-full rounded-lg px-5 py-2 bg-gray-500/50 text-white backdrop-blur  flex gap-3 items-center justify-between'>
           <Link
-            className='flex flex-col items-center gap-2  flex-1 text-xs'
+            className='flex flex-col items-center gap-1 flex-1'
             href='/portal/dashboard'
           >
-            <Home size={20} /> Home
+            <Home size={15} /> <span className='text-xs'>Home</span>
           </Link>
           <Link
-            className='flex flex-col items-center gap-2 flex-1 text-xs'
+            className='flex flex-col items-center gap-1 flex-1'
             href='/portal/chapters'
           >
-            <Book size={20} /> Read
+            <Book size={15} /> <span className='text-xs'>Read</span>
           </Link>
           <Link
-            className='flex flex-col items-center gap-2 flex-1 text-xs'
+            className='flex flex-col items-center gap-1 flex-1'
             href='/portal/dashboard'
           >
-            <UserCircle size={20} /> Profile
+            <UserCircle size={15} /> <span className='text-xs'>Profile</span>
           </Link>
         </div>
       </div>

@@ -7,7 +7,7 @@ const Footer = () => {
   return (
     <footer>
       <Container>
-        <div className='flex justify-between items-center py-8 text-sm'>
+        <div className='flex justify-between items-center py-8 text-sm text-foreground-400'>
           <div>&copy; {moment().year()} Mie</div>
           <div className='flex gap-4'>
             <Link href='#'>Privacy Policy</Link>
