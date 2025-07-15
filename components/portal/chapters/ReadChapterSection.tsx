@@ -25,7 +25,10 @@ const ReadChapterSection = () => {
       <div className='max-w-2xl mx-auto space-y-6'>
         <Navbar
           shouldHideOnScroll
-          classNames={{ base: 'bg-transparent top-16 backdrop-blur-0 z-10' }}
+          classNames={{
+            base: 'bg-transparent top-[4.3rem] !backdrop-blur-0 z-10',
+            wrapper: 'h-[45px]',
+          }}
         >
           <NavbarContent
             justify='center'
