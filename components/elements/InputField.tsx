@@ -205,12 +205,13 @@ const InputField: FC<InputFieldProps> = ({
   const baseClass = twMerge(
     'w-full p-2 py-2 block text-nevada rounded-md border border-gray-200 ',
     startContent && 'rounded-l-none border-gray-200 border-l-none',
-    !!errorMessage ? 'bg-red-100 border-red-500' : 'bg-background',
-    'dark:border-gray-700 dark:text-gray-300',
+    !!errorMessage
+      ? 'bg-red-100 dark:bg-red-900/40 border-red-500'
+      : 'bg-default dark:border-gray-700 dark:text-gray-300 ',
     className,
     classNames.input,
     disabled && 'cursor-not-allowed',
-    'focus:outline-primary disabled:bg-gray-50/20 bg-default-100',
+    'focus:outline-primary disabled:bg-gray-50/20',
     `${selectSize == 'sm' && type == 'select' ? 'h-7 min-h-7' : ''}`
   )
 

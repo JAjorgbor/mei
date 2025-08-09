@@ -1,10 +1,16 @@
+'use client'
 import Container from '@/components/elements/Container'
+import useSetHeaderNavigation from '@/hooks/useSetHeaderNavigation'
 import { Card, CardBody } from '@heroui/react'
 import { Lock } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
 const ChaptersSection = () => {
+  useSetHeaderNavigation({
+    title: 'Chapters',
+    backLink: '/portal/dashboard',
+  })
   return (
     <Container>
       <div className='grid md:grid-cols-3 gap-4'>

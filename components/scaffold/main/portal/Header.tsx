@@ -120,7 +120,7 @@ const Header = () => {
         </NavbarItem>
         <NavbarItem>
           <button className='bg-default-300 inline-flex rounded-3xl p-1.5 px-2 gap-2 items-center text-sm'>
-            <Star className='text-yellow-400 size-4 fill-yellow-500' /> 100{' '}
+            <Star className='text-yellow-500 size-4 fill-yellow-500' /> 100{' '}
             <Plus className='text-secondary size-4' />
           </button>
         </NavbarItem>

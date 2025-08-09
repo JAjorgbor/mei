@@ -1,6 +1,7 @@
 'use client'
 import Container from '@/components/elements/Container'
 import { Button } from '@heroui/react'
+import Link from 'next/link'
 
 export default function Home() {
   return (
@@ -11,7 +12,12 @@ export default function Home() {
           <p className='text-lg'>
             A place to read, Learn and deepen your understanding of conviction
           </p>
-          <Button radius='full' color='primary'>
+          <Button
+            radius='full'
+            color='primary'
+            as={Link}
+            href='/portal/dashboard'
+          >
             Start Reading
           </Button>
         </div>
