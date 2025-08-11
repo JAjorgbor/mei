@@ -6,6 +6,7 @@ import Sidebar from '@/components/scaffold/admin/Sidebar'
 import '../../globals.css'
 
 import { Inter, Roboto } from 'next/font/google'
+import { cookies } from 'next/headers'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -27,8 +28,10 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const cookieJar = cookies()
+  const storedTheme = cookieJar.get('theme')?.value
   return (
-    <html lang='en'>
+    <html lang='en' className={`${storedTheme || ''}`}>
       <body className={`${inter.className} ${roboto.className}  antialiased`}>
         <Providers>
           <div className='flex w-full min-h-screen relative' id='page-wrapper'>
