@@ -5,6 +5,7 @@ import ModalWrapper, {
 import Container from '@/components/elements/Container'
 import { setFontSize, setTheme } from '@/features/headerSlice'
 import { useAppDispatch, useAppSelector } from '@/features/store'
+import useSetHeaderNavigation from '@/hooks/useSetHeaderNavigation'
 import {
   Button,
   Card,
@@ -14,9 +15,13 @@ import {
   Switch,
 } from '@heroui/react'
 import { ALargeSmallIcon, MonitorIcon, MoonIcon, SunIcon } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const ThemeSection = () => {
+  useSetHeaderNavigation({
+    title: 'Theme Settings',
+    backLink: '/portal/settings',
+  })
   const { theme: reduxTheme, fontSize } = useAppSelector(
     (state) => state.header
   )
@@ -39,7 +44,10 @@ const ThemeSection = () => {
   }
   const [showThemeSwitchModal, setShowThemeSwitchModal] = useState(false)
   const dispatch = useAppDispatch()
-  console.log(fontSize)
+  const [fontIsLarge, setFontIsLarge] = useState(true)
+  useEffect(() => {
+    setFontIsLarge(fontSize == 'large')
+  }, [fontSize])
   return (
     <Container>
       <div className='grid md:grid-cols-3 gap-5'>
@@ -78,10 +86,11 @@ const ThemeSection = () => {
               </div>
               <Switch
                 color='secondary'
-                onValueChange={(value) =>
+                isSelected={fontIsLarge}
+                onValueChange={(value) => {
+                  setFontIsLarge(value)
                   dispatch(setFontSize(value ? 'large' : 'normal'))
-                }
-                isSelected={fontSize == 'large'}
+                }}
               />
             </div>
           </CardBody>
