@@ -17,7 +17,7 @@ interface ProvidersProps {
 }
 
 const Content = ({ children }: ProvidersProps) => {
-  const { theme } = useAppSelector((state) => state.header)
+  const { theme, fontSize } = useAppSelector((state) => state.header)
   const [isLoading, setIsLoading] = useState(false)
 
   const pathname = usePathname()
@@ -49,6 +49,17 @@ const Content = ({ children }: ProvidersProps) => {
       Cookies.set('theme', theme)
     }
   }, [theme])
+
+  useEffect(() => {
+    if (pathname.startsWith('/portal')) {
+      document.documentElement.style.setProperty(
+        '--app-font-size',
+        fontSize == 'large' ? '1.3rem' : '1rem'
+      )
+      Cookies.set('fontSize', fontSize)
+      console.log(fontSize)
+    }
+  }, [fontSize])
 
   return (
     <>

@@ -106,7 +106,6 @@ axiosInstance.interceptors.response.use(
           '/admin/verify-access',
           '/admin/verify-email',
           '/admin/verify-access',
-          '/admin/verify-email',
         ]
         console.log(error)
         sessionStorage.clear()
