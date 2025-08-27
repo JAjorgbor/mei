@@ -1,6 +1,7 @@
-'use client'
 import ChaptersSection from '@/components/admin/chapters/ChaptersSection'
 import Container from '@/components/elements/Container'
+
+export const metadata = { title: 'Chapters' }
 
 export default function ChaptersPage() {
   return (

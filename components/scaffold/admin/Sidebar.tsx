@@ -7,6 +7,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import {
   BookOpenIcon,
   Building2,
+  CreditCard,
   Edit2Icon,
   LayoutDashboardIcon,
   UsersIcon,
@@ -40,6 +41,12 @@ const Sidebar: React.FC = () => {
       isNested: true,
     },
     { path: '/admin/users', label: 'Users', icon: <UsersIcon size={18} /> },
+    {
+      path: '/admin/payment-bundles',
+      label: 'Payment Bundles',
+      icon: <CreditCard size={18} />,
+      isNested: true,
+    },
     {
       path: '/admin/team',
       label: 'Team',

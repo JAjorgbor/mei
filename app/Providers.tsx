@@ -1,16 +1,13 @@
 'use client'
-import { useSession, SessionProvider } from 'next-auth/react'
-import { usePathname } from 'next/navigation'
 import { store, useAppSelector } from '@/features/store'
-import Cookies from 'js-cookie'
-import { HeroUIProvider } from '@heroui/react'
-import { useRouter } from 'next/navigation'
-import { useEffect, Suspense, useState } from 'react'
-import { Provider } from 'react-redux'
-import { Spinner } from '@heroui/react'
-import { ToastProvider } from '@heroui/toast'
-import Footer from '@/components/scaffold/footer'
 import handleScreenshot from '@/utils/handleScreenshot'
+import { HeroUIProvider, Spinner } from '@heroui/react'
+import { ToastProvider } from '@heroui/toast'
+import Cookies from 'js-cookie'
+import { SessionProvider } from 'next-auth/react'
+import { usePathname, useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { Provider } from 'react-redux'
 
 interface ProvidersProps {
   children: any
@@ -94,7 +91,7 @@ const Providers = ({ children }: ProvidersProps) => {
           {/* <Suspense> */}
           <Content>{children}</Content>
           {/* </Suspense> */}
-          <Footer />
+
           <div
             className='w-screen h-screen fixed top-0 left-0 bg-transparent backdrop-blur-xl z-[999] hidden'
             id='screenshot-blur-overlay'

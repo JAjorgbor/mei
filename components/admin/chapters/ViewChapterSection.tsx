@@ -84,7 +84,7 @@ const ViewChapterSection = () => {
           <Button
             className={`p-3 py-5 text-center flex-1 bg-transparent ${
               activeTab == 'pages'
-                ? 'text-primary border-b border-b-primary'
+                ? 'text-background border-b border-b-foreground bg-primary'
                 : ''
             }`}
             radius='none'
@@ -96,7 +96,7 @@ const ViewChapterSection = () => {
             radius='none'
             className={`p-3 py-5 text-center flex-1 bg-transparent ${
               activeTab == 'comments'
-                ? 'text-primary border-b border-b-primary'
+                ? 'text-background border-b border-b-foreground bg-primary'
                 : ''
             }`}
             onPress={() => setActiveTab('comments')}

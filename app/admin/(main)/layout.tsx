@@ -7,6 +7,7 @@ import '../../globals.css'
 
 import { Inter, Roboto } from 'next/font/google'
 import { cookies } from 'next/headers'
+import Footer from '@/components/scaffold/footer'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -38,7 +39,8 @@ export default function RootLayout({
             <Sidebar />
             <div className='flex-grow'>
               <Header />
-              <main>{children}</main>
+              <main className='min-h-screen'>{children}</main>
+              <Footer />
             </div>
           </div>
         </Providers>

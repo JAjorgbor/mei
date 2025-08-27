@@ -1,10 +1,8 @@
 'use client'
-import { IChapter } from '@/api-utils/admin/interfaces/chapter.interfaces'
+import { IPaymentBundle } from '@/api-utils/admin/interfaces/payment-bundles.interfaces'
 import CreateChapterModal from '@/components/admin/chapters/CreateChapterModal'
-import DeleteChapterModal from '@/components/admin/chapters/DeleteChapterModal'
-import Container from '@/components/elements/Container'
 import InputField from '@/components/elements/InputField'
-import useGetAllChapters from '@/hooks/requests/useGetAllChapters'
+import { currencyFormatter } from '@/utils/currencyFormatter'
 import {
   BreadcrumbItem,
   Breadcrumbs,
@@ -37,17 +35,59 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { MoreVertical } from 'lucide-react'
-import moment from 'moment'
 import React, { useCallback, useMemo, useState } from 'react'
 
-const columnHelper = createColumnHelper<IChapter>()
-const ChaptersSection = () => {
+const columnHelper = createColumnHelper<IPaymentBundle>()
+const dummyData: IPaymentBundle[] = [
+  {
+    id: 'txn_001',
+    amount: 49.99,
+    numberOfstars: 5,
+    bundleType: 'cash',
+    description: 'Starter pack purchase',
+    dateCreated: 1693507200,
+  },
+  {
+    id: 'txn_002',
+    amount: 99.95,
+    numberOfstars: 10,
+    bundleType: 'Purchase Of Books',
+    description: 'Monthly premium subscription',
+    dateCreated: 1696099200,
+  },
+  {
+    id: 'txn_003',
+    amount: 0,
+    numberOfstars: 1,
+    bundleType: 'Book Promo',
+    description: 'Daily login reward',
+    dateCreated: 1698777600,
+  },
+  {
+    id: 'txn_004',
+    amount: 299.0,
+    numberOfstars: 20,
+    bundleType: 'cash',
+    description: 'Mega bundle offer',
+    dateCreated: 1701456000,
+  },
+  {
+    id: 'txn_005',
+    amount: 15.5,
+    numberOfstars: 3,
+    bundleType: 'Cash Promo',
+    description: 'Special promotion reward',
+    dateCreated: 1704048000,
+  },
+]
+
+const PaymentBundlesSection = () => {
   const [globalFilter, setGlobalFilter] = useState<any>('')
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
-    { id: 'status', value: 'all' },
+    { id: 'bundleType', value: 'all' },
   ])
-  const { allChapters, allChaptersLoading } = useGetAllChapters()
-  const [selectedChapter, setSelectedChapter] = useState<IChapter>()
+
+  const [selectedChapter, setSelectedChapter] = useState<IPaymentBundle>()
   const [showDeleteChapterModal, setShowDeleteChapterModal] = useState(false)
 
   const [pagination, setPagination] = useState({
@@ -58,58 +98,65 @@ const ChaptersSection = () => {
   const [sorting, setSorting] = useState<SortingState>([])
   const columns = useMemo(
     () => [
-      columnHelper.accessor(
-        (row) => `Chapter ${row.number}: ${row.chapterLabel}`,
-        {
-          id: 'title',
-          header: 'Title',
-          enableHiding: false, // disable hiding for this column
+      columnHelper.accessor((row) => `Bundle Name`, {
+        header: 'Bundle Name',
+        enableHiding: false, // disable hiding for this column
 
-          cell: ({ row: { original }, getValue }) => (
-            <div className='flex flex-col text-cloudburst min-w-max'>
-              <p className='text-bold text-small capitalize'>{getValue()}</p>
-            </div>
-          ),
-        }
-      ),
-      columnHelper.accessor('pageCount', {
-        header: 'Pages',
+        cell: ({ row: { original }, getValue }) => (
+          <div className='flex flex-col text-cloudburst min-w-max'>
+            <p className='text-bold text-small capitalize'>{getValue()}</p>
+          </div>
+        ),
+      }),
+      columnHelper.accessor('amount', {
+        header: 'Amount',
         enableHiding: false, // disable hiding for this column
         cell: (info) => (
           <div className='flex flex-col '>
-            <p className='text-bold text-small lowercase'>{info.getValue()}</p>
+            <p className='text-bold text-small lowercase'>
+              {currencyFormatter(info.getValue())}
+            </p>
           </div>
         ),
       }),
-      columnHelper.accessor(`status`, {
-        header: 'Status',
-        filterFn: 'contactStatusFilter' as any,
-        cell: ({ getValue }) => (
-          <div className='inline-block'>
-            <Chip
-              size='sm'
-              variant='flat'
-              className='capitalize'
-              radius='sm'
-              color={
-                getValue() == 'published'
-                  ? 'success'
-                  : getValue() == 'draft'
-                  ? 'warning'
-                  : 'danger'
-              }
-            >
-              {getValue()}
-            </Chip>
-          </div>
-        ),
+      columnHelper.accessor(`bundleType`, {
+        header: 'Bundle Type',
+        filterFn: 'bundleTypeFilter' as any,
+        cell: ({ getValue }) => {
+          const bundleTypeColors: Record<
+            IPaymentBundle['bundleType'],
+            | 'primary'
+            | 'secondary'
+            | 'success'
+            | 'warning'
+            | 'danger'
+            | 'default'
+          > = {
+            cash: 'primary',
+            'Purchase Of Books': 'success',
+            'Transferring Stars To Other Users': 'default',
+            'Cash Promo': 'warning',
+            'Book Promo': 'secondary',
+          }
+          return (
+            <div className='inline-block'>
+              <Chip
+                size='sm'
+                variant='flat'
+                className='capitalize'
+                radius='sm'
+                color={bundleTypeColors[getValue()]}
+              >
+                {getValue()}
+              </Chip>
+            </div>
+          )
+        },
       }),
-      columnHelper.accessor(`dateCreated`, {
-        header: 'Date Created',
+      columnHelper.accessor(`description`, {
+        header: 'Description',
         cell: ({ getValue }) => (
-          <div className='inline-block'>
-            {moment(getValue()).format('MMMM DD, YYYY')}
-          </div>
+          <div className='inline-block'>{getValue()}</div>
         ),
       }),
       columnHelper.display({
@@ -135,7 +182,7 @@ const ChaptersSection = () => {
                 key='delete'
                 onPress={() => {
                   setShowDeleteChapterModal(true)
-                  setSelectedChapter(info.row.original)
+                  //   setSelectedChapter(info.row.original)
                 }}
               >
                 Delete
@@ -145,11 +192,11 @@ const ChaptersSection = () => {
         ),
       }),
     ],
-    [allChapters]
+    [dummyData]
   )
 
   const table = useReactTable({
-    data: allChapters || [],
+    data: dummyData || [],
     columns,
     state: {
       globalFilter,
@@ -167,9 +214,9 @@ const ChaptersSection = () => {
     onColumnFiltersChange: setColumnFilters,
     onSortingChange: setSorting,
     filterFns: {
-      contactStatusFilter: (row, columnId, filterValue) => {
+      bundleTypeFilter: (row, columnId, filterValue) => {
         if (filterValue == 'all') return true
-        return row.original.status.toLowerCase() == filterValue
+        return row.original.bundleType.toLowerCase() == filterValue
       },
     },
   })
@@ -226,14 +273,14 @@ const ChaptersSection = () => {
         }
         <TableBody
           loadingContent={<Spinner label={'Loading, Please wait...' as any} />}
-          isLoading={allChaptersLoading}
+          //   isLoading={allChaptersLoading}
           emptyContent={
-            allChapters && allChapters?.length > 0
-              ? 'No chapters found. Try adjusting your filters.'
-              : 'No chapters available at the moment.'
+            dummyData && dummyData?.length > 0
+              ? 'No payment bundles found. Try adjusting your filters.'
+              : 'No payment bundles available at the moment.'
           }
         >
-          {!allChaptersLoading &&
+          {2 < 4 &&
             (table.getRowModel().rows.map((row) => (
               <TableRow key={row.id}>
                 {row.getVisibleCells().map((cell) => (
@@ -245,40 +292,57 @@ const ChaptersSection = () => {
             )) as any)}
         </TableBody>
       </Table>
-      <DeleteChapterModal
-        isOpen={showDeleteChapterModal}
-        setIsOpen={setShowDeleteChapterModal}
-        selectedChapter={selectedChapter as IChapter}
-      />
     </div>
   )
 }
 
-export default ChaptersSection
+export default PaymentBundlesSection
 
 const TopContent = ({
   table,
   setGlobalFilter,
 }: {
-  table: TableType<IChapter>
+  table: TableType<IPaymentBundle>
   setGlobalFilter: any
 }) => {
   const [showCreateChapterModal, setShowCreateChapterModal] = useState(false)
 
-  const { allChapters } = useGetAllChapters()
-  const getStatusCount = useCallback(
-    (status: string) => {
-      if (allChapters) {
-        if (status == 'all') return allChapters.length
+  const getCount = useCallback(
+    (bundleType: string) => {
+      if (dummyData) {
+        if (bundleType == 'all') return dummyData.length
         else
-          return allChapters.filter(
-            (each) => each.status.toLocaleLowerCase() == status
+          return dummyData.filter(
+            (each) => each.bundleType.toLocaleLowerCase() == bundleType
           ).length
       }
       return '-'
     },
-    [allChapters, table.getColumn('status')?.getFilterValue()]
+    [dummyData, table.getColumn('bundleType')?.getFilterValue()]
   )
+
+  const bundleTypeOptions = [
+    { value: 'cash', label: `Cash (${getCount('cash')})` },
+    {
+      value: 'Purchase Of Books',
+      label: `Purchase Of Books (${getCount('Purchase Of Books')})`,
+    },
+    {
+      value: 'Transferring Stars To Other Users',
+      label: `Transferring Stars To Other Users (${getCount(
+        'Transferring Stars To Other Users'
+      )})`,
+    },
+    {
+      value: 'Cash Promo',
+      label: `Cash Promo (${getCount('Cash Promo')})`,
+    },
+    {
+      value: 'Book Promo',
+      label: `Book Promo (${getCount('Book Promo')})`,
+    },
+  ]
+
   return (
     <>
       <div className='flex flex-col gap-4'>
@@ -289,41 +353,33 @@ const TopContent = ({
               variant='shadow'
               onPress={() => setShowCreateChapterModal(true)}
             >
-              Add Chapter
+              Add Bundle
             </Button>
             <InputField
               type='select'
               className='w-36'
-              value={table.getColumn('status')?.getFilterValue() as string}
+              value={table.getColumn('bundleType')?.getFilterValue() as string}
               onChange={(value) => {
-                table.getColumn('status')?.setFilterValue(value)
+                table.getColumn('bundleType')?.setFilterValue(value)
               }}
               options={[
-                { value: 'all', label: `All (${getStatusCount('all')})` },
-                {
-                  value: 'published',
-                  label: `Published (${getStatusCount('published')})`,
-                },
-                { value: 'draft', label: `Draft (${getStatusCount('draft')})` },
-                {
-                  value: 'review',
-                  label: `Review (${getStatusCount('review')})`,
-                },
+                { value: 'all', label: `All (${getCount('all')})` },
+                ...bundleTypeOptions,
               ]}
             />
           </div>
           <InputField
             type='search'
-            placeholder='Search chapters'
+            placeholder='Search bundles'
             register={{ onChange: (e: any) => setGlobalFilter(e.target.value) }}
           />
         </div>
         <div className='flex justify-between items-center'>
           <span className='text-default-400 text-small'>
             <span className='capitalize'>
-              {String(table.getColumn('status')?.getFilterValue())}
+              {String(table.getColumn('bundleType')?.getFilterValue())}
             </span>{' '}
-            chapters ({table.getFilteredRowModel().rows.length || 0})
+            payment bundles ({table.getFilteredRowModel().rows.length || 0})
           </span>
           <label className='flex items-center text-default-400 text-small'>
             Rows per page:
@@ -346,10 +402,9 @@ const TopContent = ({
   )
 }
 
-const BottomContent = ({ table }: { table: TableType<IChapter> }) => {
-  const { allChapters } = useGetAllChapters()
+const BottomContent = ({ table }: { table: TableType<IPaymentBundle> }) => {
   return (
-    allChapters && (
+    dummyData && (
       <div className='py-2 px-2 flex justify-between items-center'>
         <div className='flex-grow flex justify-center'>
           <Pagination

@@ -4,6 +4,7 @@ import Providers from '@/app/Providers'
 import '@/app/globals.css'
 
 import { Inter, Roboto } from 'next/font/google'
+import Footer from '@/components/scaffold/footer'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -32,6 +33,7 @@ export default function RootLayout({
       <body className={`${inter.className} ${roboto.className}  antialiased`}>
         <Providers>
           <main>{children}</main>
+          <Footer />
         </Providers>
       </body>
     </html>
