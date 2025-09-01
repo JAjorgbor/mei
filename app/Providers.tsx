@@ -61,7 +61,7 @@ const Content = ({ children }: ProvidersProps) => {
   return (
     <>
       {' '}
-      <ToastProvider toastProps={{ classNames: { wrapper: '!z-[999]' } }} />
+      <ToastProvider regionProps={{ classNames: { base: 'z-[999]' } }} />
       {isLoading ? (
         <div className='grid place-items-center h-screen w-screen'>
           <Spinner />

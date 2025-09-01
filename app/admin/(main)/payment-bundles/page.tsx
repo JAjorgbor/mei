@@ -9,7 +9,7 @@ export default function PaymentBudlePage() {
   return (
     <Container>
       <div className='space-y-4'>
-        <h3 className='text-3xl font-bold'>Payments</h3>
+        <h3 className='text-3xl font-bold'>Payment Bundles</h3>
         <PaymentBundlesSection />
       </div>
     </Container>

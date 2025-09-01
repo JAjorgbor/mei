@@ -54,9 +54,9 @@ const InviteTeamMemberModal: FC<BaseModalProps> = ({ isOpen, setIsOpen }) => {
             Cancel
           </Button>
           <Button
-            //color='secondary'
             size='sm'
             type='submit'
+            color='primary'
             form='invite-team-member-form'
             isLoading={formMethods.formState.isSubmitting}
           >

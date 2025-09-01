@@ -100,7 +100,7 @@ const CreateChapterModal: FC<BaseModalProps> = ({ isOpen, setIsOpen }) => {
             size='sm'
             type='submit'
             form='create-chapter-form'
-            //color='secondary'
+            color='primary'
             isLoading={formMethods.formState.isSubmitting}
           >
             Create

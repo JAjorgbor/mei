@@ -100,7 +100,6 @@ axiosInstance.interceptors.response.use(
         originalConfig.headers.Authorization = `Bearer ${data.accessToken}`
         return axiosInstance(originalConfig)
       } catch (err) {
-        processQueue(err, null)
         const whiteListedAdminRoutes = [
           '/admin',
           '/admin/verify-access',
@@ -115,7 +114,7 @@ axiosInstance.interceptors.response.use(
           Cookies.remove(cookieName) // Remove each cookie
         }
         window.location.href = '/admin'
-        return Promise.reject(err)
+        return processQueue(err, null)
       } finally {
         isRefreshing = false
       }

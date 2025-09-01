@@ -1,8 +1,10 @@
 'use client'
-import { IPaymentBundle } from '@/api-utils/admin/interfaces/payment-bundles.interfaces'
-import CreateChapterModal from '@/components/admin/chapters/CreateChapterModal'
+import { IPaymentBundle } from '@/api-utils/admin/interfaces/payment-bundle.interfaces'
+import CreatePaymetBundleModal from '@/components/admin/payment-bundles/CreatePaymentBundleModal'
 import InputField from '@/components/elements/InputField'
+import useGetAllPaymentBundles from '@/hooks/requests/useGetAllPaymentBundles'
 import { currencyFormatter } from '@/utils/currencyFormatter'
+import truncateText from '@/utils/truncateText'
 import {
   BreadcrumbItem,
   Breadcrumbs,
@@ -38,48 +40,6 @@ import { MoreVertical } from 'lucide-react'
 import React, { useCallback, useMemo, useState } from 'react'
 
 const columnHelper = createColumnHelper<IPaymentBundle>()
-const dummyData: IPaymentBundle[] = [
-  {
-    id: 'txn_001',
-    amount: 49.99,
-    numberOfstars: 5,
-    bundleType: 'cash',
-    description: 'Starter pack purchase',
-    dateCreated: 1693507200,
-  },
-  {
-    id: 'txn_002',
-    amount: 99.95,
-    numberOfstars: 10,
-    bundleType: 'Purchase Of Books',
-    description: 'Monthly premium subscription',
-    dateCreated: 1696099200,
-  },
-  {
-    id: 'txn_003',
-    amount: 0,
-    numberOfstars: 1,
-    bundleType: 'Book Promo',
-    description: 'Daily login reward',
-    dateCreated: 1698777600,
-  },
-  {
-    id: 'txn_004',
-    amount: 299.0,
-    numberOfstars: 20,
-    bundleType: 'cash',
-    description: 'Mega bundle offer',
-    dateCreated: 1701456000,
-  },
-  {
-    id: 'txn_005',
-    amount: 15.5,
-    numberOfstars: 3,
-    bundleType: 'Cash Promo',
-    description: 'Special promotion reward',
-    dateCreated: 1704048000,
-  },
-]
 
 const PaymentBundlesSection = () => {
   const [globalFilter, setGlobalFilter] = useState<any>('')
@@ -96,18 +56,11 @@ const PaymentBundlesSection = () => {
   })
 
   const [sorting, setSorting] = useState<SortingState>([])
+  const { allPaymentBundles, allPaymentBundlesLoading } =
+    useGetAllPaymentBundles()
+
   const columns = useMemo(
     () => [
-      columnHelper.accessor((row) => `Bundle Name`, {
-        header: 'Bundle Name',
-        enableHiding: false, // disable hiding for this column
-
-        cell: ({ row: { original }, getValue }) => (
-          <div className='flex flex-col text-cloudburst min-w-max'>
-            <p className='text-bold text-small capitalize'>{getValue()}</p>
-          </div>
-        ),
-      }),
       columnHelper.accessor('amount', {
         header: 'Amount',
         enableHiding: false, // disable hiding for this column
@@ -133,10 +86,10 @@ const PaymentBundlesSection = () => {
             | 'default'
           > = {
             cash: 'primary',
-            'Purchase Of Books': 'success',
-            'Transferring Stars To Other Users': 'default',
-            'Cash Promo': 'warning',
-            'Book Promo': 'secondary',
+            purchaseOfBooks: 'success',
+            transferringStarsToOtherUsers: 'default',
+            cashPromo: 'warning',
+            bookPromo: 'secondary',
           }
           return (
             <div className='inline-block'>
@@ -156,7 +109,7 @@ const PaymentBundlesSection = () => {
       columnHelper.accessor(`description`, {
         header: 'Description',
         cell: ({ getValue }) => (
-          <div className='inline-block'>{getValue()}</div>
+          <div className='inline-block'>{truncateText(getValue(), 30)}</div>
         ),
       }),
       columnHelper.display({
@@ -192,11 +145,11 @@ const PaymentBundlesSection = () => {
         ),
       }),
     ],
-    [dummyData]
+    [allPaymentBundles]
   )
 
   const table = useReactTable({
-    data: dummyData || [],
+    data: allPaymentBundles || [],
     columns,
     state: {
       globalFilter,
@@ -227,7 +180,9 @@ const PaymentBundlesSection = () => {
     <div className='space-y-6'>
       <Breadcrumbs>
         <BreadcrumbItem href='/admin/dashboard'>Dashboard</BreadcrumbItem>
-        <BreadcrumbItem href='/admin/chapters'>Chapters</BreadcrumbItem>
+        <BreadcrumbItem href='/admin/payment-bundles'>
+          Payment Bundles
+        </BreadcrumbItem>
       </Breadcrumbs>
       <Table
         aria-label='Recent Contacts'
@@ -273,9 +228,9 @@ const PaymentBundlesSection = () => {
         }
         <TableBody
           loadingContent={<Spinner label={'Loading, Please wait...' as any} />}
-          //   isLoading={allChaptersLoading}
+          isLoading={allPaymentBundlesLoading}
           emptyContent={
-            dummyData && dummyData?.length > 0
+            allPaymentBundles && allPaymentBundles?.length > 0
               ? 'No payment bundles found. Try adjusting your filters.'
               : 'No payment bundles available at the moment.'
           }
@@ -305,27 +260,29 @@ const TopContent = ({
   table: TableType<IPaymentBundle>
   setGlobalFilter: any
 }) => {
-  const [showCreateChapterModal, setShowCreateChapterModal] = useState(false)
+  const [showCreatePaymetBundleModal, setShowCreatePaymetBundleModal] =
+    useState(false)
+  const { allPaymentBundles } = useGetAllPaymentBundles()
 
   const getCount = useCallback(
     (bundleType: string) => {
-      if (dummyData) {
-        if (bundleType == 'all') return dummyData.length
+      if (allPaymentBundles) {
+        if (bundleType == 'all') return allPaymentBundles.length
         else
-          return dummyData.filter(
+          return allPaymentBundles.filter(
             (each) => each.bundleType.toLocaleLowerCase() == bundleType
           ).length
       }
       return '-'
     },
-    [dummyData, table.getColumn('bundleType')?.getFilterValue()]
+    [allPaymentBundles, table.getColumn('bundleType')?.getFilterValue()]
   )
 
   const bundleTypeOptions = [
     { value: 'cash', label: `Cash (${getCount('cash')})` },
     {
-      value: 'Purchase Of Books',
-      label: `Purchase Of Books (${getCount('Purchase Of Books')})`,
+      value: 'purchaseOfBooks',
+      label: `purchaseOfBooks (${getCount('purchaseOfBooks')})`,
     },
     {
       value: 'Transferring Stars To Other Users',
@@ -338,8 +295,8 @@ const TopContent = ({
       label: `Cash Promo (${getCount('Cash Promo')})`,
     },
     {
-      value: 'Book Promo',
-      label: `Book Promo (${getCount('Book Promo')})`,
+      value: 'bookPromo',
+      label: `bookPromo (${getCount('bookPromo')})`,
     },
   ]
 
@@ -351,7 +308,7 @@ const TopContent = ({
             <Button
               color='primary'
               variant='shadow'
-              onPress={() => setShowCreateChapterModal(true)}
+              onPress={() => setShowCreatePaymetBundleModal(true)}
             >
               Add Bundle
             </Button>
@@ -370,7 +327,7 @@ const TopContent = ({
           </div>
           <InputField
             type='search'
-            placeholder='Search bundles'
+            placeholder='Search payment bundles'
             register={{ onChange: (e: any) => setGlobalFilter(e.target.value) }}
           />
         </div>
@@ -394,17 +351,18 @@ const TopContent = ({
           </label>
         </div>
       </div>
-      <CreateChapterModal
-        isOpen={showCreateChapterModal}
-        setIsOpen={setShowCreateChapterModal}
+      <CreatePaymetBundleModal
+        isOpen={showCreatePaymetBundleModal}
+        setIsOpen={setShowCreatePaymetBundleModal}
       />
     </>
   )
 }
 
 const BottomContent = ({ table }: { table: TableType<IPaymentBundle> }) => {
+  const { allPaymentBundles } = useGetAllPaymentBundles()
   return (
-    dummyData && (
+    allPaymentBundles && (
       <div className='py-2 px-2 flex justify-between items-center'>
         <div className='flex-grow flex justify-center'>
           <Pagination

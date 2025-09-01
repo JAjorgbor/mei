@@ -4,10 +4,10 @@ export interface IPaymentBundle {
   numberOfstars: number
   bundleType:
     | 'cash'
-    | 'Purchase Of Books'
-    | 'Transferring Stars To Other Users'
-    | 'Cash Promo'
-    | 'Book Promo'
+    | 'purchaseOfBooks'
+    | 'transferringStarsToOtherUsers'
+    | 'cashPromo'
+    | 'bookPromo'
   description: string
   dateCreated: number
 }
