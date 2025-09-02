@@ -33,7 +33,7 @@ const SignUpForm = () => {
       // show toast or error message here
     } else {
       router.push('/portal/dashboard')
-      console.log('success')
+      console.log(result)
     }
   }
   return (
@@ -84,6 +84,7 @@ const SignUpForm = () => {
             <InputField
               label='Email Address'
               type='email'
+              placeholder='email@example.com'
               register={formMethods.register('email')}
               errorMessage={formMethods?.formState?.errors?.email?.message}
             />
@@ -134,7 +135,7 @@ const SignUpForm = () => {
             </Button>
           </form>
           <p className='text-sm text-center'>
-            Already have an account?
+            Already have an account?{' '}
             <Link href='/portal' className='text-primary underline'>
               Sign in
             </Link>

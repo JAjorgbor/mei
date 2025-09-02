@@ -64,6 +64,7 @@ const SignInForm = () => {
             <InputField
               label='Email Address'
               type='email'
+              placeholder='email@example.com'
               register={formMethods.register('email')}
               errorMessage={formMethods?.formState?.errors?.email?.message}
             />
