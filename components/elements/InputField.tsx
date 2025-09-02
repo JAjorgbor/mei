@@ -508,7 +508,7 @@ const InputField: FC<InputFieldProps> = ({
             radius={'none'}
             isSelected={Boolean(value)}
             onValueChange={!disabled ? onChange : undefined}
-            classNames={{ icon: 'text-white' }}
+            // classNames={{ icon: 'text-white dark:text-black' }}
           />
         )
       case 'switch':

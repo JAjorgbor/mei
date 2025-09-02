@@ -54,7 +54,6 @@ const Content = ({ children }: ProvidersProps) => {
         fontSize == 'large' ? '1.3rem' : '1rem'
       )
       Cookies.set('fontSize', fontSize)
-      console.log(fontSize)
     }
   }, [fontSize])
 
