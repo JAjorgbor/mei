@@ -1,7 +1,9 @@
 import NextAuth from 'next-auth'
-import Google from 'next-auth/providers/google'
+import GoogleProvider from 'next-auth/providers/google'
+
 import CredentialsProvider from 'next-auth/providers/credentials'
 import axios from 'axios'
+import { config } from 'process'
 
 const isDev = process.env.NODE_ENV !== 'production'
 const axiosInstance = axios.create({
@@ -16,13 +18,16 @@ const axiosInstance = axios.create({
 
 export const { handlers, signIn, signOut, auth } = NextAuth((req) => ({
   providers: [
-    Google,
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
     CredentialsProvider({
       name: 'credentials',
       credentials: {
         email: { label: 'Email', type: 'email' },
         password: { label: 'Password', type: 'password' },
-        role: {},
+        userType: {},
       },
       async authorize(credentials: any) {
         try {
@@ -48,7 +53,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth((req) => ({
     sessionToken: {
       name: `authjs.session-token`,
       options: {
-        httpOnly: false,
+        httpOnly: true,
         sameSite: 'lax',
         path: '/',
         secure: !isDev, // ✅ Important for localhost
@@ -59,33 +64,59 @@ export const { handlers, signIn, signOut, auth } = NextAuth((req) => ({
     async signIn({ user, account, profile }) {
       if (account?.provider === 'google') {
         try {
-          const url = new URL(req?.url as string)
-          const isNew = url.searchParams.get('isNew')
-          // sign up logic
-          if (isNew == 'true') {
-            const { data } = await axios.post(`/user/sign-up`, {
+          const cookieJar = req?.cookies
+
+          let isSignup = cookieJar?.get('isSignup')?.value == 'true'
+          if (isSignup) {
+            console.log('isSignup', cookieJar?.get('isSignup'))
+            const { data } = await axiosInstance.post(`/user/sign-up`, {
               provider: 'google',
               email: profile?.email,
-              googleAccesToken: account.access_token,
+              googleAccessToken: account.access_token,
+            })
+            const { accessToken, refreshToken, ...cleanedUser } = data
+            user = {
+              ...user,
+              ...cleanedUser,
+              accessToken,
+              refreshToken,
+              userType: 'user',
+            }
+            console.log('sign up response', user)
+            return true
+          } else {
+            console.log('method', 'sign in')
+            const { data } = await axiosInstance.post(`/user/sign-in`, {
+              provider: 'google',
+              email: profile?.email,
+              googleAccessToken: account.access_token,
             })
             console.log(data)
-            return data
+            const { accessToken, refreshToken, ...cleanedUser } = data
+
+            Object.assign(user, cleanedUser, {
+              accessToken,
+              refreshToken,
+              userType: 'user',
+            })
+            return true
           }
-          const { data } = await axiosInstance.post(`/user/sign-in`, {
-            provider: 'google',
-            email: profile?.email,
-            googleAccesToken: account.access_token,
-          })
-          console.log(data)
-          return data
-        } catch (e) {
-          console.error('Custom API sync failed:', e)
-          return false
+        } catch (e: any) {
+          console.error('Google provider sync failed:', e.config.data)
+          const errorMessage = encodeURIComponent(
+            e?.response?.data?.detail ||
+              'Something went wrong. Please try again later.'
+          )
+          const params = new URLSearchParams(req?.nextUrl?.searchParams)
+          params.set('error', errorMessage)
+
+          return `/portal?${params.toString()}`
         }
       }
       return true
     },
-    async jwt({ token, user, trigger, session }) {
+
+    async jwt({ token, user, trigger, account, session }) {
       if (user) {
         const { accessToken, refreshToken, verifyAdminAccess, ...rest } =
           user as any
@@ -94,11 +125,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth((req) => ({
         token.refreshToken = refreshToken
         token.verifyAdminAccess = verifyAdminAccess
       }
+
       if (trigger === 'update' && session.verifyAdminAccess) {
         token.verifyAdminAccess = session.verifyAdminAccess
       }
+
       return token
     },
+
     async session({ session, token }: { session: any; token: any }) {
       session.user = token.user
       session.user.verifyAdminAccess = token.verifyAdminAccess

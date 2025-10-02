@@ -1,6 +1,6 @@
 'use client'
 
-import { IBook } from '@/api-utils/admin/interfaces/book.interface'
+import { IBook } from '@/api-utils/global-interfaces/book.interface'
 import { getAllBooks } from '@/api-utils/admin/requests/book.requests'
 import useSWR from 'swr'
 

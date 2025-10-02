@@ -1,5 +1,6 @@
 'use client'
 import InputField from '@/components/elements/InputField'
+import Cookies from 'js-cookie'
 import {
   addToast,
   Button,
@@ -12,17 +13,55 @@ import { Mail, Router } from 'lucide-react'
 import { signIn } from 'next-auth/react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { registerUser } from '@/api-utils/portal/requests/auth.requests'
+
+export const signUpSchema = z
+  .object({
+    firstName: z.string().min(1, 'First name is required'),
+    lastName: z.string().min(1, 'Last name is required'),
+    email: z.string().email('Please enter a valid email address'),
+    password: z.string().min(6, 'Password must be at least 6 characters'),
+    confirmPassword: z.string().min(6, 'Please confirm your password'),
+    agreeToTerms: z.boolean().refine((val) => val, {
+      message: 'You must agree to the Terms of Service and Privacy Policy',
+    }),
+    provider: z.string(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.password !== data.confirmPassword) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Passwords do not match',
+        path: ['password'],
+      })
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Passwords do not match',
+        path: ['confirmPassword'],
+      })
+    }
+  })
+
+type FormFields = z.infer<typeof signUpSchema>
 
 const SignUpForm = () => {
-  const formMethods = useForm()
+  const formMethods = useForm<FormFields>({
+    resolver: zodResolver(signUpSchema),
+    defaultValues: { provider: 'credentials' },
+  })
+
   const router = useRouter()
+  const [keepLoading, setKeepLoading] = useState(false)
 
   const handleGoogleSignIn = async () => {
+    Cookies.set('isSignup', 'true')
     const result: any = await signIn('google', {
-      //   redirect: false,
-      callbackUrl: '/portal/dashboard?isNew=true',
+      redirect: false,
+      redirectTo: '/portal/dashboard',
     })
 
     console.log(result)
@@ -32,8 +71,28 @@ const SignUpForm = () => {
       addToast({ title: 'Google sign-in failed', color: 'danger' })
       // show toast or error message here
     } else {
-      router.push('/portal/dashboard')
+      // Cookies.remove('isSignup')
+      // router.push('/portal/dashboard')
       console.log(result)
+    }
+  }
+  const handleSubmit = async (formData: FormFields) => {
+    try {
+      const payload: Partial<FormFields> = formData
+      delete payload.confirmPassword
+      delete payload.agreeToTerms
+      const res = await registerUser(payload)
+      console.log(res)
+      router.push('/portal/dashboard')
+    } catch (error: any) {
+      console.error(error)
+      addToast({
+        title:
+          error?.data?.message ||
+          error?.message ||
+          'Something went wrong. Please try again later.',
+        color: 'danger',
+      })
     }
   }
   return (
@@ -60,7 +119,10 @@ const SignUpForm = () => {
             OR SIGN UP WITH EMAIL
             <hr className='flex-1' />
           </div>
-          <form className='space-y-4'>
+          <form
+            className='space-y-4'
+            onSubmit={formMethods.handleSubmit(handleSubmit)}
+          >
             <div className='grid md:grid-cols-2 gap-4'>
               <InputField
                 label='First Name'
@@ -130,7 +192,13 @@ const SignUpForm = () => {
                 formMethods?.formState?.errors?.agreeToTerms?.message
               }
             />
-            <Button type='submit' color='primary' fullWidth className='block'>
+            <Button
+              type='submit'
+              color='primary'
+              fullWidth
+              className='block'
+              isLoading={formMethods.formState.isSubmitting || keepLoading}
+            >
               Create Account
             </Button>
           </form>

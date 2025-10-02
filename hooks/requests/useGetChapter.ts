@@ -1,8 +1,7 @@
 'use client'
 
-import { IChapter } from '@/api-utils/admin/interfaces/chapter.interfaces'
 import { getChapter } from '@/api-utils/admin/requests/chapter.requests'
-import useGetBook from '@/hooks/requests/useGetBook'
+import { IChapter } from '@/api-utils/global-interfaces/chapter.interfaces'
 import useSWR from 'swr'
 
 export default function useGetChapter(chapterId: string) {

@@ -1,6 +1,6 @@
 'use client'
 
-import { IUser } from '@/api-utils/admin/interfaces/user.interfaces'
+import { IUser } from '@/api-utils/global-interfaces/user.interfaces'
 import { getAllUsers } from '@/api-utils/admin/requests/user.requests'
 import useSWR from 'swr'
 

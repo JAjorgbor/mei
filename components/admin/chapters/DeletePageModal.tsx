@@ -1,5 +1,5 @@
 'use client'
-import { IPage } from '@/api-utils/admin/interfaces/page.interface'
+import { IPage } from '@/api-utils/global-interfaces/page.interface'
 import { deleteChapter } from '@/api-utils/admin/requests/chapter.requests'
 import { deletePage } from '@/api-utils/admin/requests/page.requests'
 import ModalWrapper, {

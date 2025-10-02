@@ -1,7 +1,6 @@
 'use client'
 import { addNewPage } from '@/api-utils/admin/requests/page.requests'
 import InputField from '@/components/elements/InputField'
-import useGetBook from '@/hooks/requests/useGetBook'
 import useGetChapter from '@/hooks/requests/useGetChapter'
 import {
   addToast,
@@ -15,13 +14,16 @@ import {
 } from '@heroui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import dynamicImport from 'next/dynamic'
-import { useRouter, useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+// @ts-ignore
 import 'react-quill/dist/quill.snow.css'
 import { z } from 'zod'
 
 const ReactQuill = dynamicImport(() => import('react-quill'), { ssr: false })
+
+const BOOK_ID = process.env.NEXT_PUBLIC_BOOK_ID
 
 const schema = z.object({
   textContent: z
@@ -94,7 +96,6 @@ const AddPageSection = () => {
 
   const { chapterId } = useParams()
   const [activeTab, setActiveTab] = useState('content')
-  const { book } = useGetBook()
   const { chapter } = useGetChapter(chapterId as string)
   const [keepLoading, setKeepLoading] = useState(false)
   const router = useRouter()
@@ -102,7 +103,7 @@ const AddPageSection = () => {
   const handleSubmit = async (formData: FormFields) => {
     try {
       const { createMore, ...payload } = formData
-      const res = await addNewPage(book?.id as string, {
+      const res = await addNewPage(BOOK_ID as string, {
         ...payload,
         chapterId,
       })

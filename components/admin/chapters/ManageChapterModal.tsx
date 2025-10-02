@@ -1,5 +1,5 @@
 'use client'
-import { IChapter } from '@/api-utils/admin/interfaces/chapter.interfaces'
+import { IChapter } from '@/api-utils/global-interfaces/chapter.interfaces'
 import { updateChapter } from '@/api-utils/admin/requests/chapter.requests'
 import { uploadToCloudinary } from '@/api-utils/general.requests'
 import extractPublicId from '@/utils/extractCloudinaryPublicId'
@@ -9,7 +9,6 @@ import ModalWrapper, {
 } from '@/components/admin/elements/ModalWrapper'
 import InputField from '@/components/elements/InputField'
 import useGetAllChapters from '@/hooks/requests/useGetAllChapters'
-import useGetBook from '@/hooks/requests/useGetBook'
 import useGetChapter from '@/hooks/requests/useGetChapter'
 import { addToast, Button } from '@heroui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -18,6 +17,8 @@ import Image from 'next/image'
 import { useEffect, useRef, useState, type FC } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+
+const BOOK_ID = process.env.NEXT_PUBLIC_BOOK_ID
 
 const schema = z.object({
   coverImage: z
@@ -40,7 +41,6 @@ const ManageChapterModal: FC<BaseModalProps & { chapter: IChapter }> = ({
   chapter,
 }) => {
   const formMethods = useForm<FormFields>({ resolver: zodResolver(schema) })
-  const { book } = useGetBook()
   const { mutateAllChapters } = useGetAllChapters()
   const { mutateChapter } = useGetChapter(chapter?.id)
 
@@ -66,7 +66,7 @@ const ManageChapterModal: FC<BaseModalProps & { chapter: IChapter }> = ({
         public_id,
       })
 
-      formData.bookId = book?.id
+      formData.bookId = BOOK_ID
       formData.coverImage = data.secure_url
       await updateChapter(chapter.id, formData)
 

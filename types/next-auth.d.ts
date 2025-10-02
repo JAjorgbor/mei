@@ -4,8 +4,9 @@ import NextAuth from 'next-auth'
 declare module 'next-auth' {
   interface Session {
     user: {
-      role?: string
+      userType?: string
       id?: string
+      error?: string
       verifyAdminAccess?: 'not-verified' | 'verified'
     } & DefaultSession['user']
     accessToken?: string
@@ -13,7 +14,7 @@ declare module 'next-auth' {
   }
 
   interface User {
-    role?: string
+    userType?: string
     id?: string
   }
 }

@@ -1,5 +1,5 @@
 'use client'
-import { IChapter } from '@/api-utils/admin/interfaces/chapter.interfaces'
+import { IChapter } from '@/api-utils/global-interfaces/chapter.interfaces'
 import CreateChapterModal from '@/components/admin/chapters/CreateChapterModal'
 import DeleteChapterModal from '@/components/admin/chapters/DeleteChapterModal'
 import Container from '@/components/elements/Container'

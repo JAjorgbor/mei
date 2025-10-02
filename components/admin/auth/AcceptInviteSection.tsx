@@ -99,7 +99,7 @@ const AcceptInviteSection = () => {
           ...userPayload,
           ...payload,
           verifyAdminAccess: 'not-verified',
-          role: 'admin',
+          userType: 'admin',
         }),
       })
       router.push('/admin/verify-access')

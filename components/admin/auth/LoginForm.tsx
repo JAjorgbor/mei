@@ -26,8 +26,6 @@ const LoginForm = () => {
   const formMethods = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
   })
-  const { data: session } = useSession()
-  console.log(session)
   const handleSubmit = async (formData: LoginSchema) => {
     try {
       const { data } = await login(formData)
@@ -43,7 +41,7 @@ const LoginForm = () => {
           ...userPayload,
           ...formData,
           verifyAdminAccess: 'not-verified',
-          role: 'admin',
+          userType: 'admin',
         }),
       })
       router.push(`/admin/verify-access?callbackUrl=${callbackUrl}`)

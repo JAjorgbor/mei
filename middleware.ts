@@ -5,7 +5,7 @@ export default async (req: NextRequest) => {
   const session = await auth()
   const verifyAdminAccess = session?.user?.verifyAdminAccess || 'not-verified'
   const { searchParams } = new URL(req.url)
-  const isLoggedIn = session?.user?.role == 'admin'
+  const isLoggedIn = session?.user?.userType == 'admin'
   const callbackUrl = searchParams.get('callbackUrl') || '/admin/dashboard'
   const verifyAdminAccessRoutes = [
     '/admin/verify-access',

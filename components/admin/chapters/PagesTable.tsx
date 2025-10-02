@@ -1,5 +1,5 @@
 'use client'
-import { IPage } from '@/api-utils/admin/interfaces/page.interface'
+import { IPage } from '@/api-utils/global-interfaces/page.interface'
 import DeletePageModal from '@/components/admin/chapters/DeletePageModal'
 import InputField from '@/components/elements/InputField'
 import useGetPagesForChapter from '@/hooks/requests/useGetPagesForChapter'

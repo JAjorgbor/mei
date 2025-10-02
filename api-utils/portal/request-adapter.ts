@@ -16,6 +16,9 @@ const axiosInstance = axios.create({
 let isRefreshing = false
 let failedQueue: any[] = []
 
+export const PORTAL_REFRESH_KEY = 'portalRefreshToken'
+export const PORTAL_ACCESS_KEY = 'portalAccessToken'
+
 const processQueue = (error: any, token: string | null = null) => {
   failedQueue.forEach((prom) => {
     if (error) {
@@ -30,13 +33,14 @@ const processQueue = (error: any, token: string | null = null) => {
 // === Request Interceptor ===
 axiosInstance.interceptors.request.use(async (config) => {
   const session: any = await getSession()
-  const storedAccessToken = sessionStorage.getItem('portalAccessToken')
-  const storedRefreshToken = sessionStorage.getItem('portalRefreshToken')
+  const storedAccessToken = sessionStorage.getItem(PORTAL_ACCESS_KEY)
+  const storedRefreshToken = sessionStorage.getItem(PORTAL_REFRESH_KEY)
+  console.log(session)
   const accessToken = storedAccessToken || session?.accessToken
   const refreshToken = storedRefreshToken || session?.refreshToken
 
-  sessionStorage.setItem('portalAccessToken', accessToken)
-  sessionStorage.setItem('portalRefreshToken', refreshToken)
+  sessionStorage.setItem(PORTAL_ACCESS_KEY, accessToken)
+  sessionStorage.setItem(PORTAL_REFRESH_KEY, refreshToken)
 
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`
@@ -72,7 +76,7 @@ axiosInstance.interceptors.response.use(
 
       try {
         const refreshToken =
-          sessionStorage.getItem('refreshToken') || session?.refreshToken
+          sessionStorage.getItem(PORTAL_REFRESH_KEY) || session?.refreshToken
 
         console.log('refreshing token', refreshToken)
 
@@ -82,8 +86,8 @@ axiosInstance.interceptors.response.use(
           { headers: { Authorization: null } } // prevent stale token usage
         )
 
-        sessionStorage.setItem('portalAccessToken', data.accessToken)
-        sessionStorage.setItem('portalRefreshToken', data.refreshToken)
+        sessionStorage.setItem(PORTAL_ACCESS_KEY, data.accessToken)
+        sessionStorage.setItem(PORTAL_REFRESH_KEY, data.refreshToken)
 
         await signIn('credentials', {
           redirect: false,

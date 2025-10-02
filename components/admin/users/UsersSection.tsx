@@ -1,5 +1,5 @@
 'use client'
-import { IUser } from '@/api-utils/admin/interfaces/user.interfaces'
+import { IUser } from '@/api-utils/global-interfaces/user.interfaces'
 import InputField from '@/components/elements/InputField'
 import useGetAllUsers from '@/hooks/requests/useGetAllUsers'
 import {

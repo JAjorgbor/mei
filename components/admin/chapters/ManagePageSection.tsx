@@ -1,10 +1,6 @@
 'use client'
-import {
-  addNewPage,
-  updatePage,
-} from '@/api-utils/admin/requests/page.requests'
+import { updatePage } from '@/api-utils/admin/requests/page.requests'
 import InputField from '@/components/elements/InputField'
-import useGetBook from '@/hooks/requests/useGetBook'
 import useGetChapter from '@/hooks/requests/useGetChapter'
 import useGetPage from '@/hooks/requests/useGetPage'
 import {
@@ -20,9 +16,10 @@ import {
 } from '@heroui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import dynamicImport from 'next/dynamic'
-import { useRouter, useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+// @ts-ignore
 import 'react-quill/dist/quill.snow.css'
 import { z } from 'zod'
 

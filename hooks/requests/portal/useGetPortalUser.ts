@@ -3,22 +3,22 @@
 import { IUser } from '@/api-utils/global-interfaces/user.interfaces'
 import { getUser } from '@/api-utils/admin/requests/user.requests'
 import useSWR from 'swr'
+import { getPortalUser } from '@/api-utils/portal/requests/user.requests'
 
-export default function useGetUser(userId: string) {
+export default function useGetPortalUser() {
   const fetcher = async () => {
-    if (userId) {
-      const { data } = await getUser(userId)
-      return data
-    }
+    const { data } = await getPortalUser()
+    console.log(data)
+    return data
   }
   const { data, error, mutate, isLoading } = useSWR<IUser>(
-    `/api/users/${userId}`,
+    `/api/portal/user`,
     fetcher
   )
   return {
-    user: data,
-    userError: error,
-    userLoading: isLoading,
+    portalUser: data,
+    portalUserError: error,
+    portalUserLoading: isLoading,
     mutateUser: mutate,
   }
 }

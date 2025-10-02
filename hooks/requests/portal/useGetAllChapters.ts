@@ -1,7 +1,7 @@
 'use client'
 
-import { getAllChapters } from '@/api-utils/admin/requests/chapter.requests'
 import { IChapter } from '@/api-utils/global-interfaces/chapter.interfaces'
+import { getAllChapters } from '@/api-utils/portal/requests/chapter.requests'
 import useSWR from 'swr'
 
 const BOOK_ID = process.env.NEXT_PUBLIC_BOOK_ID

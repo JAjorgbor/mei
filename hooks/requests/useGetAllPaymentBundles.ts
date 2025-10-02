@@ -1,6 +1,6 @@
 'use client'
 
-import { IPaymentBundle } from '@/api-utils/admin/interfaces/payment-bundle.interfaces'
+import { IPaymentBundle } from '@/api-utils/global-interfaces/payment-bundle.interfaces'
 import { getPaymentBundles } from '@/api-utils/admin/requests/payment-bundle.requests'
 import useSWR from 'swr'
 

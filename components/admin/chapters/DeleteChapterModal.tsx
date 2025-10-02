@@ -1,5 +1,5 @@
 'use client'
-import { IChapter } from '@/api-utils/admin/interfaces/chapter.interfaces'
+import { IChapter } from '@/api-utils/global-interfaces/chapter.interfaces'
 import { deleteChapter } from '@/api-utils/admin/requests/chapter.requests'
 import ModalWrapper, {
   BaseModalProps,

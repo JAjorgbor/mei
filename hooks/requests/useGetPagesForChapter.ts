@@ -1,6 +1,6 @@
 'use client'
 
-import { IPage } from '@/api-utils/admin/interfaces/page.interface'
+import { IPage } from '@/api-utils/global-interfaces/page.interface'
 import { getPagesForChapter } from '@/api-utils/admin/requests/page.requests'
 import useSWR from 'swr'
 

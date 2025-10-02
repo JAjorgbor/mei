@@ -1,5 +1,5 @@
 'use client'
-import { IPaymentBundle } from '@/api-utils/admin/interfaces/payment-bundle.interfaces'
+import { IPaymentBundle } from '@/api-utils/global-interfaces/payment-bundle.interfaces'
 import CreatePaymetBundleModal from '@/components/admin/payment-bundles/CreatePaymentBundleModal'
 import InputField from '@/components/elements/InputField'
 import useGetAllPaymentBundles from '@/hooks/requests/useGetAllPaymentBundles'

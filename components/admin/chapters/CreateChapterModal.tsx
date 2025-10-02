@@ -6,7 +6,6 @@ import ModalWrapper, {
 } from '@/components/admin/elements/ModalWrapper'
 import InputField from '@/components/elements/InputField'
 import useGetAllChapters from '@/hooks/requests/useGetAllChapters'
-import useGetBook from '@/hooks/requests/useGetBook'
 import { addToast, Button } from '@heroui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CameraIcon } from 'lucide-react'
@@ -30,9 +29,10 @@ const schema = z.object({
 
 type FormFields = z.infer<typeof schema>
 
+const BOOK_ID = process.env.NEXT_PUBLIC_BOOK_ID
+
 const CreateChapterModal: FC<BaseModalProps> = ({ isOpen, setIsOpen }) => {
   const formMethods = useForm<FormFields>({ resolver: zodResolver(schema) })
-  const { book } = useGetBook()
   const { mutateAllChapters } = useGetAllChapters()
   const fileInputRef = useRef<any>(null)
   const watchAvatar = formMethods.watch('coverImage')
@@ -54,10 +54,10 @@ const CreateChapterModal: FC<BaseModalProps> = ({ isOpen, setIsOpen }) => {
         folder: `mie-novel/admin/chapters/cover-images/`,
       })
 
-      formData.bookId = book?.id
+      formData.bookId = BOOK_ID
       formData.coverImage = data.secure_url
 
-      await createChapter({ ...formData, bookId: book?.id })
+      await createChapter({ ...formData, bookId: BOOK_ID })
 
       setIsOpen(false)
       mutateAllChapters()
