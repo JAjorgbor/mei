@@ -1,4 +1,8 @@
 'use client'
+import {
+  ADMIN_ACCESS_KEY,
+  ADMIN_REFRESH_KEY,
+} from '@/api-utils/admin/request-adapter'
 import { login } from '@/api-utils/admin/requests/auth.requests'
 import InputField from '@/components/elements/InputField'
 import { addToast, Button, Card, CardBody } from '@heroui/react'
@@ -31,8 +35,8 @@ const LoginForm = () => {
       const { data } = await login(formData)
 
       const { accessToken, refreshToken, ...userPayload } = data
-      sessionStorage.setItem('accessToken', accessToken)
-      sessionStorage.setItem('refreshToken', refreshToken)
+      sessionStorage.setItem(ADMIN_ACCESS_KEY, accessToken)
+      sessionStorage.setItem(ADMIN_REFRESH_KEY, refreshToken)
       await signIn('credentials', {
         redirect: false,
         accessToken: accessToken,

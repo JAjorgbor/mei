@@ -12,6 +12,9 @@ const axiosInstance = axios.create({
   },
 })
 
+export const ADMIN_REFRESH_KEY = 'adminRefreshToken'
+export const ADMIN_ACCESS_KEY = 'adminAccessToken'
+
 // === Refresh Token Lock Logic ===
 let isRefreshing = false
 let failedQueue: any[] = []
@@ -30,13 +33,13 @@ const processQueue = (error: any, token: string | null = null) => {
 // === Request Interceptor ===
 axiosInstance.interceptors.request.use(async (config) => {
   const session: any = await getSession()
-  const storedAccessToken = sessionStorage.getItem('accessToken')
-  const storedRefreshToken = sessionStorage.getItem('refreshToken')
+  const storedAccessToken = sessionStorage.getItem(ADMIN_ACCESS_KEY)
+  const storedRefreshToken = sessionStorage.getItem(ADMIN_REFRESH_KEY)
   const accessToken = storedAccessToken || session?.accessToken
   const refreshToken = storedRefreshToken || session?.refreshToken
 
-  sessionStorage.setItem('accessToken', accessToken)
-  sessionStorage.setItem('refreshToken', refreshToken)
+  sessionStorage.setItem(ADMIN_ACCESS_KEY, accessToken)
+  sessionStorage.setItem(ADMIN_REFRESH_KEY, refreshToken)
 
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`
@@ -72,7 +75,7 @@ axiosInstance.interceptors.response.use(
 
       try {
         const refreshToken =
-          sessionStorage.getItem('refreshToken') || session?.refreshToken
+          sessionStorage.getItem(ADMIN_REFRESH_KEY) || session?.refreshToken
 
         console.log('refreshing token', refreshToken)
 
@@ -82,8 +85,8 @@ axiosInstance.interceptors.response.use(
           { headers: { Authorization: null } } // prevent stale token usage
         )
 
-        sessionStorage.setItem('accessToken', data.accessToken)
-        sessionStorage.setItem('refreshToken', data.refreshToken)
+        sessionStorage.setItem(ADMIN_ACCESS_KEY, data.accessToken)
+        sessionStorage.setItem(ADMIN_REFRESH_KEY, data.refreshToken)
 
         await signIn('credentials', {
           redirect: false,

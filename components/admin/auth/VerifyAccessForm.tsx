@@ -10,6 +10,10 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import {
+  ADMIN_ACCESS_KEY,
+  ADMIN_REFRESH_KEY,
+} from '@/api-utils/admin/request-adapter'
 
 const schema = z.object({
   otp: z
@@ -47,8 +51,8 @@ const VerifyAccessForm = () => {
         refreshToken: data.refreshToken,
         userData: JSON.stringify(session?.user),
       })
-      sessionStorage.setItem('accessToken', data.accessToken)
-      sessionStorage.setItem('refreshToken', data.accessToken)
+      sessionStorage.setItem(ADMIN_ACCESS_KEY, data.accessToken)
+      sessionStorage.setItem(ADMIN_REFRESH_KEY, data.accessToken)
       addToast({
         title: 'OTP has been resent. Please check your email!',
         color: 'success',

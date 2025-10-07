@@ -60,7 +60,7 @@ const ViewChapterSection = () => {
 
         <div className='gap-3 w-3/5 mx-auto flex flex-col items-center'>
           {chapter ? (
-            <Image
+            <img
               src={chapter?.coverImage || 'https://dummyimage.com/300x500'}
               alt='chapter-cover-image'
               className='object-cover h-80'

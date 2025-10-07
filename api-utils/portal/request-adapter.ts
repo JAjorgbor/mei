@@ -35,7 +35,6 @@ axiosInstance.interceptors.request.use(async (config) => {
   const session: any = await getSession()
   const storedAccessToken = sessionStorage.getItem(PORTAL_ACCESS_KEY)
   const storedRefreshToken = sessionStorage.getItem(PORTAL_REFRESH_KEY)
-  console.log(session)
   const accessToken = storedAccessToken || session?.accessToken
   const refreshToken = storedRefreshToken || session?.refreshToken
 

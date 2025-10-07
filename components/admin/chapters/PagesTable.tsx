@@ -282,7 +282,7 @@ const TopContent = ({
         <div className='flex gap-4 flex-wrap'>
           <Button
             as={Link}
-            //color='secondary'
+            color='primary'
             variant='shadow'
             href={`/admin/chapters/${chapterId}/add-page`}
           >
