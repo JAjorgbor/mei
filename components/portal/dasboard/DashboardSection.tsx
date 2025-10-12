@@ -3,6 +3,7 @@ import Container from '@/components/elements/Container'
 import ContinueActivityTabs from '@/components/portal/dasboard/ContinueActivityTabs'
 import useGetPortalBookmarks from '@/hooks/requests/portal/useGetPortalBookmarks'
 import useGetPortalUser from '@/hooks/requests/portal/useGetPortalUser'
+import useSetHeaderNavigation from '@/hooks/useSetHeaderNavigation'
 import {
   Button,
   Card,
@@ -37,6 +38,10 @@ const DashboardSection = () => {
       : moment().hour() < 17
       ? { icon: <Sun className='inline-block' />, greeting: 'afternoon' }
       : { icon: <Moon className='inline-block' />, greeting: 'evening' }
+  useSetHeaderNavigation({
+    title: 'Dashboard',
+    backLink: `/`,
+  })
   return (
     <div className='relative'>
       <div className='bg-gradient-radial from-secondary to-transparent to-50% h-screen absolute top-0 left-0 w-full' />

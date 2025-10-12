@@ -28,7 +28,7 @@ import { useEffect, useState } from 'react'
 const Header = () => {
   const { navigation } = useAppSelector((state) => state.header)
   const [navigationState, setNavigationState] = useState<
-    { title: string; backLink: string } | undefined
+    { title: string; backLink: string; width?: string } | undefined
   >()
 
   const pathname = usePathname()
@@ -43,7 +43,10 @@ const Header = () => {
 
   const dispatch = useAppDispatch()
   return (
-    <Navbar className='z-20' classNames={{ wrapper: 'max-w-6xl' }}>
+    <Navbar
+      className='z-20'
+      classNames={{ wrapper: navigationState?.width ?? 'max-w-6xl' }}
+    >
       <NavbarContent>
         <NavbarBrand className='gap-3'>
           {navigationState ? (

@@ -1,12 +1,13 @@
 'use client'
 import Container from '@/components/elements/Container'
 import useGetPortalChapter from '@/hooks/requests/portal/useGetPortalChapter'
+import useGetPortalPagesForChapter from '@/hooks/requests/portal/useGetPortalPagesForChapter'
 import useSetHeaderNavigation from '@/hooks/useSetHeaderNavigation'
+import htmlToText from '@/utils/htmlToText'
 import { Button, Image as HeroUIImage, Skeleton } from '@heroui/react'
 import {
   ChevronLeft,
   ChevronRight,
-  Eye,
   Heart,
   LockOpen,
   MessageSquare,
@@ -15,16 +16,20 @@ import Link from 'next/link'
 import { useParams, usePathname } from 'next/navigation'
 
 const ChapterDetailsSection = () => {
-  useSetHeaderNavigation({
-    title: 'Chapter Label',
-    backLink: '/portal/chapters',
-  })
   const pathname = usePathname()
   const params = useParams()
   const { chapter, chapterLoading } = useGetPortalChapter(
     params.chapterId as string
   )
-  console.log(chapter)
+
+  const { pages, pagesLoading } = useGetPortalPagesForChapter(
+    params?.chapterId as string
+  )
+  useSetHeaderNavigation({
+    title: `Chapter ${chapter?.number || 'Loading...'}`,
+    backLink: '/portal/chapters',
+  })
+  console.log(pages)
   return (
     <div className='space-y-8'>
       <div
@@ -93,9 +98,9 @@ const ChapterDetailsSection = () => {
               <span className='inline-flex items-center gap-2'>
                 <Heart size={15} /> {chapter?.likesCount} Likes
               </span>
-              <span className='inline-flex items-center gap-2'>
+              {/* <span className='inline-flex items-center gap-2'>
                 <Eye size={15} /> [2.7k] Reads
-              </span>
+              </span> */}
             </>
           )}
         </div>
@@ -114,7 +119,7 @@ const ChapterDetailsSection = () => {
         <div className='space-y-6 max-w-3xl mx-auto'>
           <LockOpen size={25} className='text-foreground-500' />
           <div className='divide-y divide-foreground-600 '>
-            {chapterLoading ? (
+            {pagesLoading ? (
               Array(5)
                 .fill(null)
                 .map((_, index) => (
@@ -128,20 +133,15 @@ const ChapterDetailsSection = () => {
                     </div>
                   </div>
                 ))
-            ) : chapter?.pages && chapter?.pages?.length > 0 ? (
-              Array(5)
-                .fill(null)
-                .map((_, index) => (
-                  <div className='space-y-3 py-4' key={index}>
-                    <h5 className='font-semibold'>Page {index + 1}</h5>
-                    <p className='text-sm'>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Provident, corporis iste nulla, omnis vel incidunt iure
-                      velit consequuntur nemo, obcaecati voluptate? Magnam iste
-                      neque quas...
-                    </p>
-                  </div>
-                ))
+            ) : pages && pages?.length > 0 ? (
+              pages.map((each, index) => (
+                <div className='space-y-3 py-4' key={index}>
+                  <h5 className='font-semibold'>Page {index + 1}</h5>
+                  <p className='text-sm truncate'>
+                    {htmlToText(each.textContent)}
+                  </p>
+                </div>
+              ))
             ) : (
               <div className='p-5 text-center h-52 text-foreground-500'>
                 No pages available for this chapter.

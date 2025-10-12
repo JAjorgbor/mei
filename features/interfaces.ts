@@ -8,5 +8,6 @@ export interface CurrencyState {
 export interface HeaderState {
   theme: 'light' | 'dark' | 'system'
   fontSize: 'normal' | 'large'
-  navigation?: { title: string; backLink: string }
+
+  navigation?: { title: string; backLink: string; width?: string }
 }

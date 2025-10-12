@@ -9,7 +9,10 @@ const BOOK_ID = process.env.NEXT_PUBLIC_BOOK_ID
 export default function useGetPortalAllChapters() {
   const fetcher = async () => {
     if (BOOK_ID) {
-      const { data } = await getPortalAllChapters(BOOK_ID)
+      const { data } = await getPortalAllChapters(BOOK_ID, {
+        start: 0,
+        stop: 100,
+      })
       return data
     }
   }
