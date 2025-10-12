@@ -11,7 +11,10 @@ const ChaptersSection = () => {
     title: 'Chapters',
     backLink: '/portal/dashboard',
   })
-  const { allChapters, allChaptersLoading } = useGetPortalAllChapters()
+  const { allChapters, allChaptersLoading } = useGetPortalAllChapters({
+    start: 0,
+    stop: 100,
+  })
   console.log(allChapters)
   return (
     <Container>

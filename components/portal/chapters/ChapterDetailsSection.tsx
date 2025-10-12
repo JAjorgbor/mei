@@ -1,5 +1,6 @@
 'use client'
 import Container from '@/components/elements/Container'
+import useGetPortalAllChapters from '@/hooks/requests/portal/useGetPortalAllChapters'
 import useGetPortalChapter from '@/hooks/requests/portal/useGetPortalChapter'
 import useGetPortalPagesForChapter from '@/hooks/requests/portal/useGetPortalPagesForChapter'
 import useSetHeaderNavigation from '@/hooks/useSetHeaderNavigation'
@@ -14,6 +15,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { useParams, usePathname } from 'next/navigation'
+import { useMemo } from 'react'
 
 const ChapterDetailsSection = () => {
   const pathname = usePathname()
@@ -29,7 +31,28 @@ const ChapterDetailsSection = () => {
     title: `Chapter ${chapter?.number || 'Loading...'}`,
     backLink: '/portal/chapters',
   })
-  console.log(pages)
+  const { allChapters, allChaptersValidating } = useGetPortalAllChapters({
+    start: chapter
+      ? chapter?.number - 2 > 0
+        ? chapter?.number - 2
+        : 0
+      : undefined,
+    stop: chapter ? chapter?.number + 2 : undefined,
+  })
+  const prevChapter = useMemo(() => {
+    if (!allChaptersValidating && allChapters && chapter) {
+      return allChapters.find((c) => c.number < chapter.number) || undefined
+    }
+    return undefined
+  }, [allChapters, allChaptersValidating, chapter])
+
+  const nextChapter = useMemo(() => {
+    if (!allChaptersValidating && allChapters && chapter) {
+      return allChapters.find((c) => c.number > chapter.number) || undefined
+    }
+    return undefined
+  }, [allChapters, allChaptersValidating, chapter])
+
   return (
     <div className='space-y-8'>
       <div
@@ -44,22 +67,29 @@ const ChapterDetailsSection = () => {
         <HeroUIImage
           src={chapter?.coverImage}
           alt='chapter'
-          height={400}
+          height={300}
           width={300}
-          className='object-cover mx-auto z-10'
+          className='object-cover object-center mx-auto z-10'
           classNames={{ wrapper: 'min-w-full' }}
         />
       </div>
       <Container className='space-y-5'>
         {/* Navigate to other chapters */}
         <div className='flex justify-between items-center max-w-xl mx-auto'>
-          <button
-            type='button'
-            aria-label='Previous Chapter'
-            className='rounded-full hover:bg-foreground/10 p-1'
-          >
-            <ChevronLeft size={25} />
-          </button>
+          {allChaptersValidating ? (
+            <Skeleton className='rounded-full p-4' />
+          ) : prevChapter ? (
+            <Link
+              href={`/portal/chapters/${prevChapter?.id}`}
+              type='button'
+              aria-label='Previous Chapter'
+              className='rounded-full hover:bg-foreground/10 p-1'
+            >
+              <ChevronLeft size={25} />
+            </Link>
+          ) : (
+            <span />
+          )}
           <div className='space-y-4 text-center'>
             {!chapterLoading ? (
               <>
@@ -74,13 +104,19 @@ const ChapterDetailsSection = () => {
               </>
             )}
           </div>
-          <button
-            type='button'
-            aria-label='Previous Chapter'
-            className='rounded-full hover:bg-foreground/10 p-1'
-          >
-            <ChevronRight size={25} />
-          </button>
+          {allChaptersValidating ? (
+            <Skeleton className='rounded-full p-4' />
+          ) : nextChapter ? (
+            <Link
+              href={`/portal/chapters/${nextChapter?.id}`}
+              aria-label='Previous Chapter'
+              className='rounded-full hover:bg-foreground/10 p-1'
+            >
+              <ChevronRight size={25} />
+            </Link>
+          ) : (
+            <span />
+          )}
         </div>
         {/* Chapter performance */}
         <div className='flex justify-center gap-6 text-sm text-foreground-500'>
