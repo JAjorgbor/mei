@@ -167,9 +167,9 @@ const ChapterStats = ({
           color='primary'
           radius='full'
           onPress={handleLikeChapter}
-          disabled={loadingLike}
+          isLoading={loadingLike}
         >
-          {chapter?.likesCount}
+          {!loadingLike && chapter?.likesCount}
         </Button>
         {/* <Button
           size='sm'
