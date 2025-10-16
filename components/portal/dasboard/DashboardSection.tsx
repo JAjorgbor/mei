@@ -44,10 +44,10 @@ const DashboardSection = () => {
   })
   return (
     <div className='relative'>
-      <div className='bg-gradient-radial from-secondary to-transparent to-50% h-screen absolute top-0 left-0 w-full' />
+      <div className='bg-gradient-radial from-secondary to-transparent to-50% h-screen absolute top-0 left-0 w-full bg-cover' />
       <Container className='space-y-12 relative z-10'>
         <div className='space-y-10 '>
-          <div className='text-xl flex items-start gap-3'>
+          <div className='text-xl flex items-start gap-3 font-playfair'>
             {portalUserLoading ? (
               <Skeleton className='h-7 rounded-md max-w-64 w-full' />
             ) : (
@@ -93,11 +93,7 @@ const DashboardSection = () => {
                   temporibus. A, debitis.
                 </CardBody>
                 <CardFooter>
-                  <Button
-                    color='secondary'
-                    endContent={<ArrowRight size={20} />}
-                    className='w-full'
-                  >
+                  <Button color='secondary' className='w-full'>
                     Continue Reading
                   </Button>
                 </CardFooter>

@@ -14,7 +14,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        playfair: ['var(--font-playfair)'], // 👈 Add your font variable here
+        playfair: ['var(--font-playfair)'],
+        lato: ['var(--font-lato)'],
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

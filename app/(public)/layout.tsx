@@ -1,9 +1,9 @@
-import type { Metadata } from 'next'
-import { Inter, Roboto } from 'next/font/google'
-import { cookies } from 'next/headers'
 import '@/app/globals.css'
 import Providers from '@/app/Providers'
 import Header from '@/components/scaffold/main/Header'
+import type { Metadata } from 'next'
+import { Lato, Roboto } from 'next/font/google'
+import { cookies } from 'next/headers'
 
 import { Playfair_Display } from 'next/font/google'
 
@@ -15,9 +15,11 @@ const playfair = Playfair_Display({
   variable: '--font-playfair',
 })
 
-const inter = Inter({
+const lato = Lato({
   subsets: ['latin'],
-  weight: ['400', '500', '700'],
+  weight: ['400', '700'],
+  display: 'swap',
+  variable: '--font-lato',
 })
 
 const roboto = Roboto({
@@ -40,7 +42,7 @@ export default function RootLayout({
   return (
     <html lang='en' className={`${storedTheme || ''}`}>
       <body
-        className={`${playfair.variable} ${inter.className} ${roboto.className}  antialiased`}
+        className={`${playfair.variable} ${lato.variable} ${roboto.className} antialiased`}
       >
         <Providers>
           <Header />

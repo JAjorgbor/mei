@@ -1,10 +1,18 @@
 'use client'
+import {
+  likeChapter,
+  unlikeChapter,
+} from '@/api-utils/portal/requests/like.requests'
 import Container from '@/components/elements/Container'
 import CommentSection from '@/components/portal/chapters/CommentSection'
 import useGetPortalChapter from '@/hooks/requests/portal/useGetPortalChapter'
+import useGetPortalChapterLikes from '@/hooks/requests/portal/useGetPortalChapterLikes'
 import useGetPortalPagesForChapter from '@/hooks/requests/portal/useGetPortalPagesForChapter'
+import useGetPortalUser from '@/hooks/requests/portal/useGetPortalUser'
+import useGetPortalUserLikes from '@/hooks/requests/portal/useGetPortalUserLikes'
 import useSetHeaderNavigation from '@/hooks/useSetHeaderNavigation'
 import {
+  addToast,
   Button,
   Card,
   CardBody,
@@ -33,6 +41,7 @@ const ReadChapterSection = () => {
     backLink: `/portal/chapters/${chapterId}`,
     width: 'max-w-[700px]',
   })
+
   return (
     <>
       <Container>
@@ -99,39 +108,80 @@ const ChapterStats = ({
 }: {
   setShowComments: (showComment: boolean) => void
 }) => {
+  const { chapterId }: { chapterId: string } = useParams()
+  const { chapter, mutateChapter } = useGetPortalChapter(chapterId as string)
+  const [loadingLike, setLoadingLike] = useState(false)
+  const { chapterLikes, mutateChapterLikes } =
+    useGetPortalChapterLikes(chapterId)
+  const { portalUser } = useGetPortalUser()
+  const existingLike = chapterLikes?.find(
+    (each) => each.userId == portalUser?.userId
+  )
+  console.log(chapterLikes)
+
+  const handleLikeChapter = async () => {
+    setLoadingLike(true)
+    try {
+      if (existingLike) {
+        await unlikeChapter(existingLike?.id)
+      } else await likeChapter({ chapterId })
+      mutateChapter()
+      mutateChapterLikes()
+    } catch (error: any) {
+      console.log(error)
+      addToast({
+        color: 'danger',
+        title:
+          error?.data?.message ||
+          error?.message ||
+          'Something went wrong. Please try again later.',
+      })
+    } finally {
+      setLoadingLike(false)
+    }
+  }
   return (
-    <div className='flex justify-center gap-4 w-full'>
-      <Button
-        size='sm'
-        startContent={<MessageSquareText size={15} />}
-        variant='bordered'
-        className='bg-background'
-        color='primary'
-        radius='full'
-        onPress={() => setShowComments(true)}
-      >
-        40
-      </Button>
-      <Button
-        size='sm'
-        startContent={<Heart size={15} />}
-        variant='bordered'
-        className='bg-background'
-        color='primary'
-        radius='full'
-      >
-        300
-      </Button>
-      <Button
-        size='sm'
-        startContent={<Eye size={15} />}
-        variant='bordered'
-        className='bg-background'
-        color='primary'
-        radius='full'
-      >
-        2.7K
-      </Button>
-    </div>
+    chapter && (
+      <div className='flex justify-center gap-4 w-full'>
+        <Button
+          size='sm'
+          startContent={<MessageSquareText size={15} />}
+          variant='bordered'
+          className='bg-background'
+          color='primary'
+          radius='full'
+          onPress={() => setShowComments(true)}
+        >
+          {chapter?.commentsCount}
+        </Button>
+        <Button
+          size='sm'
+          startContent={
+            <Heart
+              size={15}
+              className={existingLike ? 'fill-foreground' : ''}
+            />
+          }
+          variant='bordered'
+          className='bg-background disabled:cursor-progress disabled:!opacity-80'
+          color='primary'
+          radius='full'
+          onPress={handleLikeChapter}
+          disabled={loadingLike}
+        >
+          {chapter?.likesCount}
+        </Button>
+        {/* <Button
+          size='sm'
+          startContent={<Eye size={15} />}
+          variant='bordered'
+          className='bg-background'
+          color='primary'
+          radius='full'
+        >
+          2.7K
+        </Button> */}
+      </div>
+    )
   )
 }

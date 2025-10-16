@@ -6,6 +6,15 @@ html {
   font-size: var(--app-font-size);
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply font-lato;
+}
+
 .content-renderer {
   @apply space-y-3;
 }
