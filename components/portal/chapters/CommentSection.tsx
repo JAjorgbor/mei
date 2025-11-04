@@ -78,26 +78,19 @@ const CommentSection = ({
       <div
         className={`w-dvw px-0 h-screen overflow-y-hidden bg-background fixed top-16 space-y-8 transform transition-all duration-700 flex justify-center ${
           showComments
-            ? 'translate-x-0 opacity-100 z-[100]'
+            ? 'translate-x-0 opacity-100 z-[400]'
             : 'left-0 translate-x-full opacity-0 -z-50'
         }`}
       >
         <Container className={`h-screen bg-background fixed`} width='3xl'>
-          <div className='relative pb-8 overflow-y-auto max-h-screen space-y-5 divide-y divide-foreground-300 dark:divide-foreground-50 px-4'>
+          <div className='relative pb-8 overflow-y-auto max-h-screen space-y-5 divide-y divide-foreground-300 dark:divide-foreground-800 px-4'>
             <form
-              className='flex gap-3 items-center sticky top-0 left-0 bg-background z-10 p-2'
+              className='flex gap-3 items-center sticky top-0 left-0 bg-background z-10 p-2 px-0'
               onSubmit={formMethods.handleSubmit(handleSubmit)}
             >
-              <Button
-                isIconOnly
-                type='button'
-                onPress={() => setShowComments(false)}
-                radius='full'
-                variant='light'
-                color='primary'
-              >
+              <button type='button' onClick={() => setShowComments(false)}>
                 <XCircle size={25} />
-              </Button>
+              </button>
               <InputField
                 type='text'
                 register={formMethods.register('text')}

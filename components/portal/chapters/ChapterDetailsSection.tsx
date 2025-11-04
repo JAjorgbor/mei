@@ -31,7 +31,7 @@ const ChapterDetailsSection = () => {
     title: `Chapter ${chapter?.number || 'Loading...'}`,
     backLink: '/portal/chapters',
   })
-  const { allChapters, allChaptersValidating } = useGetPortalAllChapters({
+  const { allChapters, allChaptersLoading } = useGetPortalAllChapters({
     start: chapter
       ? chapter?.number - 2 > 0
         ? chapter?.number - 2
@@ -40,23 +40,23 @@ const ChapterDetailsSection = () => {
     stop: chapter ? chapter?.number + 2 : undefined,
   })
   const prevChapter = useMemo(() => {
-    if (!allChaptersValidating && allChapters && chapter) {
+    if (!allChaptersLoading && allChapters && chapter) {
       return allChapters.find((c) => c.number < chapter.number) || undefined
     }
     return undefined
-  }, [allChapters, allChaptersValidating, chapter])
+  }, [allChapters, allChaptersLoading, chapter])
 
   const nextChapter = useMemo(() => {
-    if (!allChaptersValidating && allChapters && chapter) {
+    if (!allChaptersLoading && allChapters && chapter) {
       return allChapters.find((c) => c.number > chapter.number) || undefined
     }
     return undefined
-  }, [allChapters, allChaptersValidating, chapter])
+  }, [allChapters, allChaptersLoading, chapter])
 
   return (
     <div className='space-y-8'>
       <div
-        className={`py-12 bg-cover bg-center grid place-items-center relative`}
+        className={`py-12 bg-cover bg-center grid place-items-center relative bg-no-repeat`}
         style={{
           background: `url(${chapter?.coverImage})`,
           backgroundRepeat: 'no-repeat',
@@ -69,14 +69,14 @@ const ChapterDetailsSection = () => {
           alt='chapter'
           height={300}
           width={300}
-          className='object-cover object-center mx-auto z-10'
+          className='object-cover object-center mx-auto z-10 shadow'
           classNames={{ wrapper: 'min-w-full' }}
         />
       </div>
       <Container className='space-y-5'>
         {/* Navigate to other chapters */}
         <div className='flex justify-between items-center max-w-xl mx-auto'>
-          {allChaptersValidating ? (
+          {allChaptersLoading ? (
             <Skeleton className='rounded-full p-4' />
           ) : prevChapter ? (
             <Link
@@ -104,7 +104,7 @@ const ChapterDetailsSection = () => {
               </>
             )}
           </div>
-          {allChaptersValidating ? (
+          {allChaptersLoading ? (
             <Skeleton className='rounded-full p-4' />
           ) : nextChapter ? (
             <Link

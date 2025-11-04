@@ -54,8 +54,11 @@ const ChaptersSection = () => {
                     <HeroUIImage
                       alt='cover image'
                       src={each?.coverImage}
-                      className='w-full object-cover object-center h-full md:h-48'
-                      classNames={{ wrapper: 'min-w-full h-fit flex-1' }}
+                      className='size-full object-cover object-center md:h-48'
+                      classNames={{
+                        wrapper: 'min-w-full h-fit flex-1 overflow-hidden',
+                        // img: 'size-full object-cover',
+                      }}
                       // classNames={{ wrapper: 'min-w-full max-h-min' }}
                     />
                   </div>

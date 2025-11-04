@@ -44,7 +44,12 @@ const ReadChapterSection = () => {
 
   return (
     <>
-      <Container>
+      <Container className='space-y-6'>
+        <div className='text-center space-y-2'>
+          <h1 className='text-lg'>Chapter {chapter?.number}</h1>
+          <h2 className='text-2xl font-semibold'>{chapter?.chapterLabel}</h2>
+        </div>
+
         <Navbar
           shouldHideOnScroll
           classNames={{
@@ -75,7 +80,7 @@ const ReadChapterSection = () => {
             ) : (
               pages?.map((each, index) => (
                 <Card key={index} radius='none'>
-                  <CardBody>
+                  <CardBody className='!pointer-events-none'>
                     <div
                       className='space-y-3'
                       dangerouslySetInnerHTML={{ __html: each?.textContent }}
