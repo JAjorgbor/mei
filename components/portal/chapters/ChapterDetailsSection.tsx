@@ -56,11 +56,12 @@ const ChapterDetailsSection = () => {
   return (
     <div className='space-y-8'>
       <div
-        className={`py-12 bg-cover bg-center grid place-items-center relative bg-no-repeat`}
+        className={`py-12 grid place-items-center relative bg-no-repeat`}
         style={{
           background: `url(${chapter?.coverImage})`,
           backgroundRepeat: 'no-repeat',
           backgroundSize: 'cover',
+          backgroundPosition: 'center',
         }}
       >
         <div className='absolute bg-transparent inset-0 backdrop-blur' />
