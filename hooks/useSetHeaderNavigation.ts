@@ -10,7 +10,9 @@ export default function useSetHeaderNavigation(payload: {
   width?: string
 }) {
   const dispatch = useAppDispatch()
+  const { title, backLink, width } = payload
+
   useEffect(() => {
-    dispatch(setHeaderNavigation(payload))
-  }, [payload])
+    dispatch(setHeaderNavigation({ title, backLink, width }))
+  }, [dispatch, title, backLink, width])
 }

@@ -9,7 +9,7 @@ const BottomNavigation = () => {
   return (
     <div className='sticky bottom-3 w-full z-[300] mt-8'>
       <div className=' max-w-lg px-5 mx-auto'>
-        <div className='w-full rounded-lg px-5 py-2 bg-gray-500/50 text-white backdrop-blur  flex gap-3 items-center justify-between'>
+        <div className='w-full rounded-2xl px-5 py-2 bg-background border border-foreground-200 dark:border-foreground-900 flex gap-3 items-center justify-between'>
           <Link
             className={`flex flex-col items-center gap-1 flex-1 ${
               pathname == '/portal/dashboard' ? 'text-secondary' : ''
@@ -24,7 +24,7 @@ const BottomNavigation = () => {
             }`}
             href='/portal/chapters'
           >
-            <Book size={15} /> <span className='text-xs'>Read</span>
+            <Book size={15} /> <span className='text-xs'>Chapters</span>
           </Link>
           <Link
             className={`flex flex-col items-center gap-1 flex-1 ${

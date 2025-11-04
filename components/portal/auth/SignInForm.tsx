@@ -10,6 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import Cookies from 'js-cookie'
 import { Mail } from 'lucide-react'
 import { signIn, signOut } from 'next-auth/react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -58,15 +59,21 @@ const SignInForm = () => {
     Cookies.remove('isSignup')
     const result: any = await signIn('google', {
       redirect: false,
-      redirectTo: callbackUrl,
+      callbackUrl: callbackUrl,
     })
 
-    console.log(result)
-    window.location.href = result.url
     if (result?.error) {
       console.error('Google sign-in failed:', result.error)
       addToast({ title: 'Google sign-in failed', color: 'danger' })
-      // show toast or error message here
+      return
+    }
+
+    // Only redirect if we have a URL and no error
+    if (result?.url) {
+      // Small delay to ensure the session is properly initialized
+      setTimeout(() => {
+        window.location.href = result.url
+      }, 100)
     }
   }
   const handleSubmit = async (formData: FormFields) => {
@@ -89,14 +96,13 @@ const SignInForm = () => {
       setKeepLoading(true)
     } catch (error: any) {
       console.log(error)
-      // addToast({
-      //   title:
-      //     error?.response?.data?.detail ||
-      //     error?.message ||
-      //     'Something went wrong. Please try again later',
-      //   color: 'danger',
-
-      // })
+      addToast({
+        title:
+          error?.response?.data?.detail ||
+          error?.message ||
+          'Something went wrong. Please try again later',
+        color: 'danger',
+      })
     }
   }
 
@@ -111,7 +117,15 @@ const SignInForm = () => {
             Continue your journey through this remarkable story
           </p>
           <Button
-            startContent={<Mail size={20} />}
+            startContent={
+              <Image
+                src='/google-logo.svg'
+                alt='google logo'
+                width={80}
+                height={80}
+                className='!size-5'
+              />
+            }
             color='primary'
             variant='bordered'
             fullWidth

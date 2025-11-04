@@ -194,7 +194,13 @@ const Header = () => {
                 </DropdownMenu>
               </Dropdown>
             ) : (
-              <Button size='sm' color='primary' radius='full'>
+              <Button
+                size='sm'
+                color='primary'
+                radius='full'
+                as={Link}
+                href='/portal'
+              >
                 Sign In
               </Button>
             )}

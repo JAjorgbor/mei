@@ -12,12 +12,7 @@ export default function Home() {
           <p className='text-lg'>
             A place to read, Learn and deepen your understanding of conviction
           </p>
-          <Button
-            radius='full'
-            color='primary'
-            as={Link}
-            href='/portal/dashboard'
-          >
+          <Button radius='full' color='primary' as={Link} href='/portal'>
             Start Reading
           </Button>
         </div>

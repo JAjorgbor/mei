@@ -10,4 +10,5 @@ export interface IUser {
   balance: number
   unlockedChapters: string[]
   dateCreated: Date
+  stage: { currentStage: number; currentExperience: number }
 }

@@ -1,32 +1,16 @@
 'use client'
 import ThemeSwitch from '@/components/elements/ThemeSwitch'
-import { setTheme } from '@/features/headerSlice'
+import { setHeaderNavigation } from '@/features/headerSlice'
 import { useAppDispatch, useAppSelector } from '@/features/store'
-import {
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
-  Navbar,
-  NavbarBrand,
-  NavbarContent,
-  NavbarItem,
-} from '@heroui/react'
-import {
-  BookOpen,
-  CircleChevronLeft,
-  MonitorIcon,
-  MoonIcon,
-  Plus,
-  Star,
-  SunIcon,
-} from 'lucide-react'
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from '@heroui/react'
+import { BookOpen, CircleChevronLeft, Plus, Star } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 const Header = () => {
   const { navigation } = useAppSelector((state) => state.header)
+
   const [navigationState, setNavigationState] = useState<
     { title: string; backLink: string; width?: string } | undefined
   >()
@@ -34,7 +18,7 @@ const Header = () => {
   const pathname = usePathname()
 
   useEffect(() => {
-    setNavigationState(undefined)
+    dispatch(setHeaderNavigation(undefined))
   }, [pathname])
 
   useEffect(() => {

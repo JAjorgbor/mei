@@ -18,10 +18,6 @@ import { ALargeSmallIcon, MonitorIcon, MoonIcon, SunIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 const ThemeSection = () => {
-  useSetHeaderNavigation({
-    title: 'Theme Settings',
-    backLink: '/portal/settings',
-  })
   const { theme: reduxTheme, fontSize } = useAppSelector(
     (state) => state.header
   )
@@ -48,6 +44,11 @@ const ThemeSection = () => {
   useEffect(() => {
     setFontIsLarge(fontSize == 'large')
   }, [fontSize])
+
+  useSetHeaderNavigation({
+    title: 'Theme Settings',
+    backLink: '/portal/settings',
+  })
   return (
     <Container>
       <div className='grid md:grid-cols-3 gap-5'>

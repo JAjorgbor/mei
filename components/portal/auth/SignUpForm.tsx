@@ -18,6 +18,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { registerUser } from '@/api-utils/portal/requests/auth.requests'
+import Image from 'next/image'
 
 export const signUpSchema = z
   .object({
@@ -61,19 +62,21 @@ const SignUpForm = () => {
     Cookies.set('isSignup', 'true')
     const result: any = await signIn('google', {
       redirect: false,
-      redirectTo: '/portal/dashboard',
+      callbackUrl: '/portal/dashboard',
     })
-
-    console.log(result)
 
     if (result?.error) {
       console.error('Google sign-in failed:', result.error)
       addToast({ title: 'Google sign-in failed', color: 'danger' })
-      // show toast or error message here
-    } else {
-      // Cookies.remove('isSignup')
-      // router.push('/portal/dashboard')
-      console.log(result)
+      return
+    }
+
+    // Only redirect if we have a URL and no error
+    if (result?.url) {
+      // Small delay to ensure the session is properly initialized
+      setTimeout(() => {
+        window.location.href = result.url
+      }, 100)
     }
   }
   const handleSubmit = async (formData: FormFields) => {
@@ -106,7 +109,15 @@ const SignUpForm = () => {
             Create your account to access this remarkable story
           </p>
           <Button
-            startContent={<Mail size={20} />}
+            startContent={
+              <Image
+                src='/google-logo.svg'
+                alt='google logo'
+                width={80}
+                height={80}
+                className='!size-5'
+              />
+            }
             color='primary'
             variant='bordered'
             fullWidth

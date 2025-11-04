@@ -16,31 +16,24 @@ const ContinueActivityTabs = () => {
             </div>
           }
         >
-          <div className='space-y-4 divide-y divide-default-200'>
+          <div className='space-y-2'>
             {Array(4)
               .fill(null)
               .map((_, index) => (
                 <Card
                   key={index}
-                  className='bg-background shadow-none'
-                  radius='none'
+                  className='bg-background shadow-none border border-foreground-200 dark:border-foreground-900'
                 >
                   <CardHeader>
                     <div className='flex items-center justify-between w-full'>
                       <h3 className='font-semibold text-lg'>
                         Chapter 1, Page 20
                       </h3>
-                      <button className='text-danger'>
+                      <button className='text-secondary'>
                         <MinusCircle />
                       </button>
                     </div>
                   </CardHeader>
-                  <CardBody>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                    do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                    ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                  </CardBody>
                 </Card>
               ))}
           </div>
@@ -54,24 +47,25 @@ const ContinueActivityTabs = () => {
             </div>
           }
         >
-          {Array(2)
-            .fill(null)
-            .map((_, index) => (
-              <Card
-                key={index}
-                className='bg-background shadow-none'
-                radius='none'
-              >
-                <CardBody>
-                  <div className='flex items-center justify-between w-full'>
-                    <h3 className='font-semibold text-lg'>Chapter 1</h3>
-                    <button className='text-danger'>
-                      <MinusCircle />
-                    </button>
-                  </div>
-                </CardBody>
-              </Card>
-            ))}
+          <div className='space-y-2'>
+            {Array(2)
+              .fill(null)
+              .map((_, index) => (
+                <Card
+                  key={index}
+                  className='bg-background shadow-none border border-foreground-200 dark:border-foreground-900'
+                >
+                  <CardBody>
+                    <div className='flex items-center justify-between w-full'>
+                      <h3 className='font-semibold text-lg'>Chapter 1</h3>
+                      <button className='text-danger'>
+                        <MinusCircle />
+                      </button>
+                    </div>
+                  </CardBody>
+                </Card>
+              ))}
+          </div>
         </Tab>
       </Tabs>
     </div>

@@ -1,15 +1,18 @@
 'use client'
 import Container from '@/components/elements/Container'
+import LogOutModal from '@/components/portal/settings/LogOutModal'
 import useSetHeaderNavigation from '@/hooks/useSetHeaderNavigation'
 import { Button, Card, CardBody } from '@heroui/react'
 import { Key, KeySquare, LogOut, SunMoon } from 'lucide-react'
 import Link from 'next/link'
+import { useState } from 'react'
 
 const SettingsSection = () => {
   useSetHeaderNavigation({
     title: 'Settings & Privacy',
     backLink: '/portal/profile',
   })
+  const [showLogOutModal, setShowLogOutModal] = useState(false)
   return (
     <Container>
       <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
@@ -52,11 +55,14 @@ const SettingsSection = () => {
             </div>
           </CardBody>
         </Card>
-        <Card
-          as={Button}
-          className='hover:bg-foreground hover:!text-background'
-        >
-          <CardBody>
+        <Card className='hover:bg-foreground hover:!text-background'>
+          <CardBody
+            as={'button'}
+            onClick={() => {
+              console.log('adfa')
+              setShowLogOutModal(true)
+            }}
+          >
             <div className='flex gap-3 items-center'>
               <div className='px-3'>
                 <LogOut size={30} />
@@ -90,6 +96,7 @@ const SettingsSection = () => {
           </CardBody>
         </Card>
       </div>
+      <LogOutModal isOpen={showLogOutModal} setIsOpen={setShowLogOutModal} />
     </Container>
   )
 }

@@ -32,6 +32,8 @@ const DashboardSection = () => {
   const { bookmarks } = useGetPortalBookmarks()
   const { data: session } = useSession()
 
+  console.log(portalUser)
+
   const timeOfDay =
     moment().hour() < 12
       ? { icon: <Sunrise className='inline-block' />, greeting: 'morning' }
@@ -44,7 +46,7 @@ const DashboardSection = () => {
   })
   return (
     <div className='relative'>
-      <div className='bg-gradient-radial from-secondary to-transparent to-50% h-screen absolute top-0 left-0 w-full bg-cover' />
+      <div className='bg-gradient-radial from-secondary to-transparent to-60% md:to-50% h-[70vh] md:h-screen absolute top-0 left-0 w-full bg-cover' />
       <Container className='space-y-12 relative z-10'>
         <div className='space-y-10 '>
           <div className='text-xl flex items-start gap-3 font-playfair'>
@@ -58,16 +60,22 @@ const DashboardSection = () => {
             )}
           </div>
           <Progress
-            value={0}
-            aria-label='Stage 1'
+            value={portalUser?.stage?.currentExperience || 0}
+            aria-label={`Stage ${portalUser?.stage?.currentStage || '-'}`}
             color='secondary'
-            label='Stage 1'
+            label={`Stage ${portalUser?.stage?.currentStage || '-'}`}
             showValueLabel
             formatOptions={{ style: 'percent' }}
             maxValue={100}
+            classNames={{
+              base: 'relative',
+              value:
+                'absolute -bottom-8 left-0 text-foreground-700 dark:text-foreground-400',
+              label: 'text-foreground-700 dark:text-foreground-400',
+            }}
           />
 
-          <Card className='md:w-1/2 lg:w-1/3 mx-auto'>
+          <Card className='max-w-md mx-auto bg-background'>
             {portalUserLoading ? (
               <>
                 <CardHeader>
