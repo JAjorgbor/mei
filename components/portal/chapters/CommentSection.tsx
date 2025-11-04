@@ -51,8 +51,6 @@ const CommentSection = ({
     else document.body.style.overflowY = 'auto'
   }, [showComments])
 
-  console.log(chapterComments)
-
   const handleSubmit = async (formData: CreateCommentPayload) => {
     try {
       await createComment(formData)

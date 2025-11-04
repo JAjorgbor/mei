@@ -5,6 +5,7 @@ import {
 } from '@/api-utils/portal/requests/like.requests'
 import Container from '@/components/elements/Container'
 import CommentSection from '@/components/portal/chapters/CommentSection'
+import useGetPortalAllChapters from '@/hooks/requests/portal/useGetPortalAllChapters'
 import useGetPortalChapter from '@/hooks/requests/portal/useGetPortalChapter'
 import useGetPortalChapterLikes from '@/hooks/requests/portal/useGetPortalChapterLikes'
 import useGetPortalPagesForChapter from '@/hooks/requests/portal/useGetPortalPagesForChapter'
@@ -20,11 +21,19 @@ import {
   Navbar,
   NavbarContent,
   NavbarItem,
+  Skeleton,
   Spinner,
 } from '@heroui/react'
-import { Eye, Heart, MessageSquareText } from 'lucide-react'
+import {
+  ChevronLeft,
+  ChevronRight,
+  Eye,
+  Heart,
+  MessageSquareText,
+} from 'lucide-react'
+import Link from 'next/link'
 import { useParams } from 'next/navigation'
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 
 const ReadChapterSection = () => {
   const { chapterId } = useParams()
@@ -42,13 +51,76 @@ const ReadChapterSection = () => {
     width: 'max-w-[700px]',
   })
 
+  const { allChapters, allChaptersLoading } = useGetPortalAllChapters({
+    start: chapter
+      ? chapter?.number - 2 > 0
+        ? chapter?.number - 2
+        : 0
+      : undefined,
+    stop: chapter ? chapter?.number + 2 : undefined,
+  })
+  const prevChapter = useMemo(() => {
+    if (!allChaptersLoading && allChapters && chapter) {
+      return allChapters.find((c) => c.number < chapter.number) || undefined
+    }
+    return undefined
+  }, [allChapters, allChaptersLoading, chapter])
+
+  const nextChapter = useMemo(() => {
+    if (!allChaptersLoading && allChapters && chapter) {
+      return allChapters.find((c) => c.number > chapter.number) || undefined
+    }
+    return undefined
+  }, [allChapters, allChaptersLoading, chapter])
+  const navButtons = (
+    <div className='flex gap-1'>
+      {allChaptersLoading ? (
+        <Skeleton className='h-8 flex-1' />
+      ) : prevChapter ? (
+        <Button
+          as={Link}
+          className='border-0 hover:border flex-1'
+          variant='bordered'
+          color='primary'
+          radius='none'
+          startContent={<ChevronLeft />}
+          href={`/portal/chapters/${prevChapter?.id}`}
+          aria-label='Previous Chapter'
+        >
+          Previous Chapter
+        </Button>
+      ) : (
+        <span className='flex-1' />
+      )}
+      {allChaptersLoading ? (
+        <Skeleton className='h-8 flex-1' />
+      ) : nextChapter ? (
+        <Button
+          as={Link}
+          className='border-0 hover:border flex-1'
+          variant='bordered'
+          color='primary'
+          radius='none'
+          endContent={<ChevronRight />}
+          href={`/portal/chapters/${nextChapter?.id}`}
+          aria-label='Next Chapter'
+        >
+          Next Chapter
+        </Button>
+      ) : (
+        <span className='flex-1' />
+      )}
+    </div>
+  )
   return (
     <>
       <Container className='space-y-6'>
-        <div className='text-center space-y-2'>
-          <h1 className='text-lg'>Chapter {chapter?.number}</h1>
-          <h2 className='text-2xl font-semibold'>{chapter?.chapterLabel}</h2>
-        </div>
+        {chapter && (
+          <div className='text-center space-y-2'>
+            <h1 className='text-lg'>Chapter {chapter?.number}</h1>
+            <h2 className='text-2xl font-semibold'>{chapter?.chapterLabel}</h2>
+          </div>
+        )}
 
         <Navbar
           shouldHideOnScroll
@@ -68,6 +140,7 @@ const ReadChapterSection = () => {
         </Navbar>
 
         <div className='max-w-2xl mx-auto space-y-6 relative'>
+          {navButtons}
           <div className='space-y-6'>
             {pagesLoading ? (
               <div className='h-[80vh] grid place-items-center'>
@@ -96,6 +169,8 @@ const ReadChapterSection = () => {
             )}
           </div>
           <ChapterStats setShowComments={setShowComments} />
+
+          {navButtons}
         </div>
       </Container>
       <CommentSection
