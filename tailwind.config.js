@@ -24,6 +24,7 @@ module.exports = {
       },
       animation: {
         slidedown: 'slidedown 0.5s ease-in-out',
+        'gradient-xy': 'gradient-xy 3s ease infinite',
       },
       keyframes: {
         slidedown: {
@@ -32,6 +33,16 @@ module.exports = {
           },
           '100%': {
             top: '0',
+          },
+        },
+        'gradient-xy': {
+          '0%, 100%': {
+            'background-size': '200% 200%',
+            'background-position': 'left center',
+          },
+          '50%': {
+            'background-size': '200% 200%',
+            'background-position': 'right center',
           },
         },
       },

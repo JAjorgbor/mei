@@ -51,7 +51,11 @@ const ProfileSection = () => {
           </>
         )}
         <div className='flex gap-4 items-center justify-center flex-wrap'>
-          <Button size='sm' startContent={<Edit size={15} />}>
+          <Button
+            size='sm'
+            startContent={<Edit size={15} />}
+            className='bg-default/40'
+          >
             Edit Profile
           </Button>
 
@@ -60,6 +64,7 @@ const ProfileSection = () => {
             startContent={<Settings size={15} />}
             href='/portal/settings'
             as={Link}
+            className='bg-default/40'
           >
             Account Settings
           </Button>
@@ -68,6 +73,7 @@ const ProfileSection = () => {
             startContent={<ShoppingBag size={15} />}
             href='/portal/store'
             as={Link}
+            className='bg-default/40'
           >
             Store
           </Button>
@@ -78,6 +84,7 @@ const ProfileSection = () => {
             }
             href='/portal/share-stars'
             as={Link}
+            className='bg-default/40'
           >
             Share Stars
           </Button>

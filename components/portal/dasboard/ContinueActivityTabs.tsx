@@ -120,7 +120,7 @@ const ContinueActivityTabs = () => {
                     className='bg-background shadow-none border border-foreground-100 dark:border-foreground-900 p-0'
                   >
                     <CardBody className='p-0'>
-                      <div className='relative bg-default-200 h-44 rounded-xl grid place-items-center'>
+                      <div className='relative bg-default/40 h-44 rounded-xl grid place-items-center'>
                         <div className='absolute top-4 right-4'>
                           {bookmarkLoadingIndex == index ? (
                             <Spinner size='sm' />
@@ -208,7 +208,7 @@ const ContinueActivityTabs = () => {
                     className='bg-background shadow-none border border-foreground-100 dark:border-foreground-900 p-0'
                   >
                     <CardBody className='p-0'>
-                      <div className='relative bg-default-200 h-44 rounded-xl grid place-items-center'>
+                      <div className='relative bg-default/40 h-44 rounded-xl grid place-items-center'>
                         <div className='absolute top-4 right-4'>
                           {likeLoadingIndex == index ? (
                             <Spinner size='sm' />

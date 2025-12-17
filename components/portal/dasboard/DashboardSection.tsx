@@ -43,10 +43,10 @@ const DashboardSection = () => {
   })
   return (
     <div className='relative'>
-      <div className='bg-gradient-radial from-secondary/50 to-transparent to-40% h-[70vh] md:h-screen absolute top-0 left-0 w-full bg-cover' />
+      <div className='bg-gradient-radial from-secondary/30 to-transparent to-30% h-[70vh] md:h-screen absolute top-0 left-0 w-full bg-cover' />
       <Container className='space-y-16 relative z-10'>
         <div className='space-y-16 '>
-          <div className='text-xl flex items-start gap-3 font-playfair'>
+          <div className='text-lg flex items-start gap-3 font-playfair'>
             {portalUserLoading ? (
               <Skeleton className='h-7 rounded-md max-w-64 w-full' />
             ) : (
@@ -72,39 +72,42 @@ const DashboardSection = () => {
             }}
           />
 
-          <Card className='max-w-md mx-auto bg-background border border-foreground-200 dark:border-foreground-600'>
-            {portalUserLoading ? (
-              <>
-                <CardHeader>
-                  <Skeleton className='h-6 w-48 rounded' />
-                </CardHeader>
-                <CardBody className='space-y-2'>
-                  <Skeleton className='w-full h-5 rounded' />
-                  <Skeleton className='w-4/5 h-5 rounded' />
-                  <Skeleton className='w-full h-5 rounded' />
-                  <Skeleton className='w-3/5 h-5 rounded' />
-                </CardBody>
-                <CardFooter>
-                  <Skeleton className='rounded-xl h-10 w-full' />
-                </CardFooter>
-              </>
-            ) : (
-              <>
-                <CardHeader className='text-2xl'>Chapter 1</CardHeader>
-                <CardBody className='text-foreground-500'>
-                  Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                  Inventore aliquid ad facilis voluptate omnis consequuntur
-                  harum ea voluptas libero, assumenda aliquam, tenetur
-                  temporibus. A, debitis.
-                </CardBody>
-                <CardFooter>
-                  <Button color='secondary' className='w-full' radius='full'>
-                    Continue Reading
-                  </Button>
-                </CardFooter>
-              </>
-            )}
-          </Card>
+          <div className='relative group max-w-md mx-auto'>
+            <div className='absolute -inset-1 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-xl blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200 animate-gradient-xy' />
+            <Card className='bg-background border border-foreground-200 dark:border-foreground-600 relative'>
+              {portalUserLoading ? (
+                <>
+                  <CardHeader>
+                    <Skeleton className='h-6 w-48 rounded' />
+                  </CardHeader>
+                  <CardBody className='space-y-2'>
+                    <Skeleton className='w-full h-5 rounded' />
+                    <Skeleton className='w-4/5 h-5 rounded' />
+                    <Skeleton className='w-full h-5 rounded' />
+                    <Skeleton className='w-3/5 h-5 rounded' />
+                  </CardBody>
+                  <CardFooter>
+                    <Skeleton className='rounded-xl h-10 w-full' />
+                  </CardFooter>
+                </>
+              ) : (
+                <>
+                  <CardHeader className='text-2xl'>Chapter 1</CardHeader>
+                  <CardBody className='text-foreground-500'>
+                    Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                    Inventore aliquid ad facilis voluptate omnis consequuntur
+                    harum ea voluptas libero, assumenda aliquam, tenetur
+                    temporibus. A, debitis.
+                  </CardBody>
+                  <CardFooter>
+                    <Button color='secondary' className='w-full' radius='full'>
+                      Continue Reading
+                    </Button>
+                  </CardFooter>
+                </>
+              )}
+            </Card>
+          </div>
         </div>
 
         <ContinueActivityTabs />
