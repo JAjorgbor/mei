@@ -5,7 +5,7 @@ import { useAppDispatch } from '@/features/store'
 import { useEffect } from 'react'
 
 export default function useSetHeaderNavigation(payload: {
-  title: string
+  title: string | undefined
   backLink: string
   width?: string
 }) {

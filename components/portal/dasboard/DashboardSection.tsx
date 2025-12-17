@@ -30,9 +30,6 @@ import { useSession } from 'next-auth/react'
 const DashboardSection = () => {
   const { portalUser, portalUserLoading } = useGetPortalUser()
   const { bookmarks } = useGetPortalBookmarks()
-  const { data: session } = useSession()
-
-  console.log(portalUser)
 
   const timeOfDay =
     moment().hour() < 12
@@ -41,14 +38,14 @@ const DashboardSection = () => {
       ? { icon: <Sun className='inline-block' />, greeting: 'afternoon' }
       : { icon: <Moon className='inline-block' />, greeting: 'evening' }
   useSetHeaderNavigation({
-    title: 'Dashboard',
+    title: undefined,
     backLink: `/`,
   })
   return (
     <div className='relative'>
-      <div className='bg-gradient-radial from-secondary to-transparent to-60% md:to-50% h-[70vh] md:h-screen absolute top-0 left-0 w-full bg-cover' />
-      <Container className='space-y-12 relative z-10'>
-        <div className='space-y-10 '>
+      <div className='bg-gradient-radial from-secondary/50 to-transparent to-40% h-[70vh] md:h-screen absolute top-0 left-0 w-full bg-cover' />
+      <Container className='space-y-16 relative z-10'>
+        <div className='space-y-16 '>
           <div className='text-xl flex items-start gap-3 font-playfair'>
             {portalUserLoading ? (
               <Skeleton className='h-7 rounded-md max-w-64 w-full' />
@@ -75,7 +72,7 @@ const DashboardSection = () => {
             }}
           />
 
-          <Card className='max-w-md mx-auto bg-background'>
+          <Card className='max-w-md mx-auto bg-background border border-foreground-200 dark:border-foreground-600'>
             {portalUserLoading ? (
               <>
                 <CardHeader>
@@ -94,14 +91,14 @@ const DashboardSection = () => {
             ) : (
               <>
                 <CardHeader className='text-2xl'>Chapter 1</CardHeader>
-                <CardBody>
+                <CardBody className='text-foreground-500'>
                   Lorem ipsum dolor sit amet consectetur, adipisicing elit.
                   Inventore aliquid ad facilis voluptate omnis consequuntur
                   harum ea voluptas libero, assumenda aliquam, tenetur
                   temporibus. A, debitis.
                 </CardBody>
                 <CardFooter>
-                  <Button color='secondary' className='w-full'>
+                  <Button color='secondary' className='w-full' radius='full'>
                     Continue Reading
                   </Button>
                 </CardFooter>

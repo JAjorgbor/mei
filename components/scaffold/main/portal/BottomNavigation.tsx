@@ -16,7 +16,7 @@ const BottomNavigation = () => {
             }`}
             href='/portal/dashboard'
           >
-            <Home size={15} /> <span className='text-xs'>Home</span>
+            <Home size={17} /> <span className='text-xs'>Home</span>
           </Link>
           <Link
             className={`flex flex-col items-center gap-1 flex-1 ${
@@ -24,7 +24,7 @@ const BottomNavigation = () => {
             }`}
             href='/portal/chapters'
           >
-            <Book size={15} /> <span className='text-xs'>Chapters</span>
+            <Book size={17} /> <span className='text-xs'>Chapters</span>
           </Link>
           <Link
             className={`flex flex-col items-center gap-1 flex-1 ${
@@ -32,7 +32,7 @@ const BottomNavigation = () => {
             }`}
             href='/portal/profile'
           >
-            <UserCircle size={15} /> <span className='text-xs'>Profile</span>
+            <UserCircle size={17} /> <span className='text-xs'>Profile</span>
           </Link>
         </div>
       </div>

@@ -1,4 +1,9 @@
 'use client'
+import { IBookmark } from '@/api-utils/global-interfaces/bookmark.interfaces'
+import {
+  createPortalUserBookmark,
+  deletePortalUserBookmark,
+} from '@/api-utils/portal/requests/bookmark.requests'
 import {
   likeChapter,
   unlikeChapter,
@@ -6,6 +11,7 @@ import {
 import Container from '@/components/elements/Container'
 import CommentSection from '@/components/portal/chapters/CommentSection'
 import useGetPortalAllChapters from '@/hooks/requests/portal/useGetPortalAllChapters'
+import useGetPortalBookmarks from '@/hooks/requests/portal/useGetPortalBookmarks'
 import useGetPortalChapter from '@/hooks/requests/portal/useGetPortalChapter'
 import useGetPortalChapterLikes from '@/hooks/requests/portal/useGetPortalChapterLikes'
 import useGetPortalPagesForChapter from '@/hooks/requests/portal/useGetPortalPagesForChapter'
@@ -23,8 +29,10 @@ import {
   NavbarItem,
   Skeleton,
   Spinner,
+  Tooltip,
 } from '@heroui/react'
 import {
+  Bookmark,
   ChevronLeft,
   ChevronRight,
   Eye,
@@ -84,7 +92,7 @@ const ReadChapterSection = () => {
           color='primary'
           radius='none'
           startContent={<ChevronLeft />}
-          href={`/portal/chapters/${prevChapter?.id}`}
+          href={`/portal/chapters/${prevChapter?.id}/read`}
           aria-label='Previous Chapter'
         >
           Previous Chapter
@@ -102,7 +110,7 @@ const ReadChapterSection = () => {
           color='primary'
           radius='none'
           endContent={<ChevronRight />}
-          href={`/portal/chapters/${nextChapter?.id}`}
+          href={`/portal/chapters/${nextChapter?.id}/read`}
           aria-label='Next Chapter'
         >
           Next Chapter
@@ -112,6 +120,8 @@ const ReadChapterSection = () => {
       )}
     </div>
   )
+  const { bookmarks } = useGetPortalBookmarks()
+  console.log(bookmarks)
   return (
     <>
       <Container className='space-y-6'>
@@ -151,21 +161,37 @@ const ReadChapterSection = () => {
                 No Pages available for this chapter.
               </div>
             ) : (
-              pages?.map((each, index) => (
-                <Card key={index} radius='none'>
-                  <CardBody className='!pointer-events-none'>
-                    <div
-                      className='space-y-3'
-                      dangerouslySetInnerHTML={{ __html: each?.textContent }}
-                    />
-                  </CardBody>
-                  <CardFooter>
-                    <div className='text-center text-sm text-foreground-600 w-full'>
+              pages?.map((each, index) => {
+                return (
+                  <div key={index} id={each.id}>
+                    <span className='text-secondary mr-2 text-xl inline-block font-bold'>
                       {index + 1}
-                    </div>
-                  </CardFooter>
-                </Card>
-              ))
+                    </span>
+                    <div
+                      className='space-y-3 !pointer-events-none font-playfair inline [&>*:first-child]:!inline-block
+    [&>*:last-child]:inline-block text-justify'
+                      dangerouslySetInnerHTML={{
+                        __html: each?.textContent,
+                      }}
+                    />
+                    <BookmarkButton
+                      bookmark={bookmarks?.find(
+                        (bookmark) => bookmark.pageId == each.id
+                      )}
+                      pageId={each.id}
+                    />
+                    {/* <div className='flex justify-between text-sm text-foreground-600 w-full'>
+                    <span />
+
+                    <Tooltip content='Bookmark'>
+                      <button type='button' className='inline-block'>
+                        <Bookmark size={20} className='text-foreground-500' />
+                      </button>
+                    </Tooltip>
+                  </div> */}
+                  </div>
+                )
+              })
             )}
           </div>
           <ChapterStats setShowComments={setShowComments} />
@@ -197,7 +223,6 @@ const ChapterStats = ({
   const existingLike = chapterLikes?.find(
     (each) => each.userId == portalUser?.userId
   )
-  console.log(chapterLikes)
 
   const handleLikeChapter = async () => {
     setLoadingLike(true)
@@ -222,7 +247,7 @@ const ChapterStats = ({
   }
   return (
     chapter && (
-      <div className='flex justify-center gap-4 w-full'>
+      <div className='flex justify-center gap-3 w-full'>
         <Button
           size='sm'
           startContent={<MessageSquareText size={15} />}
@@ -263,5 +288,61 @@ const ChapterStats = ({
         </Button> */}
       </div>
     )
+  )
+}
+
+const BookmarkButton = ({
+  bookmark,
+  pageId,
+}: {
+  bookmark: IBookmark | undefined
+  pageId: string
+}) => {
+  const { id: bookmarkId } = bookmark || {}
+  const [isLoading, setIsLoading] = useState(false)
+  const { portalUser } = useGetPortalUser()
+  const { mutateBookmarks } = useGetPortalBookmarks()
+
+  const handleBookmark = async () => {
+    setIsLoading(true)
+    try {
+      if (bookmark) {
+        await deletePortalUserBookmark(bookmarkId as string)
+      } else {
+        await createPortalUserBookmark(
+          portalUser?.userId as string,
+          pageId as string
+        )
+      }
+      mutateBookmarks()
+    } catch (error: any) {
+      console.log(error)
+      addToast({
+        color: 'danger',
+        title:
+          error?.data?.message ||
+          error?.message ||
+          'Something went wrong. Please try again later.',
+      })
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  return (
+    <Tooltip content={bookmark ? 'Remove Bookmark' : 'Bookmark'} showArrow>
+      <button type='button' className='inline-block' onClick={handleBookmark}>
+        {isLoading ? (
+          <Spinner size='sm' />
+        ) : (
+          <Bookmark
+            size={20}
+            className={`text-foreground-500 ${
+              bookmark ? 'fill-foreground-500' : ''
+            }`}
+          />
+        )}
+      </button>
+    </Tooltip>
   )
 }

@@ -4,12 +4,21 @@ import { setHeaderNavigation } from '@/features/headerSlice'
 import { useAppDispatch, useAppSelector } from '@/features/store'
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from '@heroui/react'
 import { BookOpen, CircleChevronLeft, Plus, Star } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 const Header = () => {
   const { navigation } = useAppSelector((state) => state.header)
+
+  const [themeState, setThemeState] = useState('')
+
+  const { theme: reduxTheme } = useAppSelector((state) => state.header)
+
+  useEffect(() => {
+    setThemeState(reduxTheme)
+  }, [reduxTheme])
 
   const [navigationState, setNavigationState] = useState<
     { title: string; backLink: string; width?: string } | undefined
@@ -33,20 +42,19 @@ const Header = () => {
     >
       <NavbarContent>
         <NavbarBrand className='gap-3'>
-          {navigationState ? (
+          {navigationState && (
             <Link href={navigationState?.backLink || '#'}>
               <CircleChevronLeft size={25} />
             </Link>
-          ) : (
-            <>
-              <BookOpen />
-              <p className='font-bold text-inherit'>Mie</p>
-            </>
           )}
-          {navigationState && (
+          {navigationState?.title ? (
             <NavbarItem className='md:hidden'>
               {navigationState?.title}
             </NavbarItem>
+          ) : themeState == 'light' ? (
+            <Image src='/logo-light.png' alt='logo' height={80} width={80} />
+          ) : (
+            <Image src='/logo-dark.png' alt='logo' height={80} width={80} />
           )}
         </NavbarBrand>
       </NavbarContent>

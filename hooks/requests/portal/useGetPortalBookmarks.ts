@@ -1,6 +1,7 @@
 'use client'
 
-import { getPortalUserBookmarks } from '@/api-utils/portal/requests/bookmark.request'
+import { IBookmark } from '@/api-utils/global-interfaces/bookmark.interfaces'
+import { getPortalUserBookmarks } from '@/api-utils/portal/requests/bookmark.requests'
 import { useSession } from 'next-auth/react'
 import useSWR from 'swr'
 
@@ -12,8 +13,8 @@ export default function useGetPortalBookmarks() {
       return data
     }
   }
-  const { data, error, mutate, isLoading } = useSWR(
-    `/api/user/bookmarks`,
+  const { data, error, mutate, isLoading } = useSWR<IBookmark[]>(
+    `/api/user/bookmarks/${JSON.stringify(session?.user)}`,
     fetcher
   )
   return {
