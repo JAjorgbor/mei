@@ -9,6 +9,7 @@ import {
   unlikeChapter,
 } from '@/api-utils/portal/requests/like.requests'
 import Container from '@/components/elements/Container'
+import CanvasPageRenderer from '@/components/portal/chapters/CanvasPageRenderer'
 import CommentSection from '@/components/portal/chapters/CommentSection'
 import useGetPortalAllChapters from '@/hooks/requests/portal/useGetPortalAllChapters'
 import useGetPortalBookmarks from '@/hooks/requests/portal/useGetPortalBookmarks'
@@ -121,7 +122,6 @@ const ReadChapterSection = () => {
     </div>
   )
   const { bookmarks } = useGetPortalBookmarks()
-  console.log(bookmarks)
   return (
     <>
       <Container className='space-y-6'>
@@ -149,7 +149,7 @@ const ReadChapterSection = () => {
           </NavbarContent>
         </Navbar>
 
-        <div className='max-w-2xl mx-auto space-y-6 relative'>
+        <div className='max-w-2xl mx-auto space-y-6 relative min-h-screen'>
           {navButtons}
           <div className='space-y-6'>
             {pagesLoading ? (
@@ -167,12 +167,10 @@ const ReadChapterSection = () => {
                     <span className='text-secondary mr-2 text-xl inline-block font-bold'>
                       {index + 1}
                     </span>
-                    <div
-                      className='space-y-3 !pointer-events-none font-playfair inline [&>*:first-child]:!inline-block
+                    <CanvasPageRenderer
+                      className='space-y-3 font-playfair inline [&>*:first-child]:!inline-block
     [&>*:last-child]:inline-block text-justify'
-                      dangerouslySetInnerHTML={{
-                        __html: each?.textContent,
-                      }}
+                      htmlContent={each?.textContent}
                     />
                     <BookmarkButton
                       bookmark={bookmarks?.find(
@@ -180,15 +178,6 @@ const ReadChapterSection = () => {
                       )}
                       pageId={each.id}
                     />
-                    {/* <div className='flex justify-between text-sm text-foreground-600 w-full'>
-                    <span />
-
-                    <Tooltip content='Bookmark'>
-                      <button type='button' className='inline-block'>
-                        <Bookmark size={20} className='text-foreground-500' />
-                      </button>
-                    </Tooltip>
-                  </div> */}
                   </div>
                 )
               })
