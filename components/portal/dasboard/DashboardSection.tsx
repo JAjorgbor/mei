@@ -50,14 +50,14 @@ const DashboardSection = () => {
       <Container className='space-y-16 relative z-10'>
         <div className='space-y-16 '>
           <div className='space-y-4'>
-            <div className='text-xl flex items-start gap-3 !font-dancing-script'>
+            <div className='flex items-start gap-3 '>
               {portalUserLoading ? (
                 <Skeleton className='h-7 rounded-md max-w-64 w-full' />
               ) : (
                 <>
                   {/* {timeOfDay?.icon} Good {timeOfDay.greeting},{' '}
                 {portalUser?.firstName} */}
-                  <span className='relative inline-block'>
+                  <span className='relative inline-block font-dancing-script text-3xl'>
                     My Life in Chapters
                     <svg
                       className='absolute -bottom-2 left-0 w-full h-[10px] text-secondary'
@@ -183,7 +183,7 @@ const DashboardSection = () => {
               <CardBody className='px-6 flex-grow flex items-center mb-4'>
                 <p className='text-xl leading-tight font-medium'>
                   Ready to read beyond chapter 15? unlock the full{' '}
-                  <span className='font-black text-secondary decoration-secondary/30 underline-offset-4 underline !font-dancing-script'>
+                  <span className='font-black text-secondary decoration-secondary/30 underline-offset-4 underline font-dancing-script text-xl ml-2 inline-block'>
                     My Echoes
                   </span>{' '}
                   experience.

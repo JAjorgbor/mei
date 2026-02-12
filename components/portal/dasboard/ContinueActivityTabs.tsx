@@ -101,7 +101,7 @@ const ContinueActivityTabs = () => {
               ))
             ) : bookmarks.length === 0 ? (
               <div className='col-span-full flex flex-col items-center justify-center p-8 text-center border border-dashed border-foreground-200 dark:border-foreground-700 rounded-xl'>
-                <div className='bg-default-100 p-4 rounded-full mb-4'>
+                <div className='bg-default-100/40 p-4 rounded-full mb-4'>
                   <BookOpen className='text-foreground-500' size={32} />
                 </div>
                 <h3 className='text-lg font-semibold mb-2'>No bookmarks yet</h3>
@@ -188,7 +188,7 @@ const ContinueActivityTabs = () => {
               ))
             ) : userLikes.length === 0 ? (
               <div className='col-span-full flex flex-col items-center justify-center p-8 text-center border border-dashed border-foreground-200 dark:border-foreground-700 rounded-xl'>
-                <div className='bg-default-100 p-4 rounded-full mb-4'>
+                <div className='bg-default-100/40 p-4 rounded-full mb-4'>
                   <ThumbsUp className='text-foreground-500' size={32} />
                 </div>
                 <h3 className='text-lg font-semibold mb-2'>

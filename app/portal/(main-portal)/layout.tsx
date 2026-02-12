@@ -4,17 +4,14 @@ import { CSSProperties, ReactNode } from 'react'
 
 import Providers from '@/app/Providers'
 import type { Metadata } from 'next'
-import { Inter, Roboto } from 'next/font/google'
 import '@/app/globals.css'
 
-import { Playfair_Display } from 'next/font/google'
 import Header from '@/components/scaffold/main/portal/Header'
+import { Dancing_Script, Inter, Lato, Roboto } from 'next/font/google'
 
-const playfair = Playfair_Display({
-  subsets: ['latin'], // or ['latin-ext'] depending on your needs
-  weight: ['400', '700'], // Available weights: '400', '500', '600', '700', '800', '900'
-  style: ['normal', 'italic'], // Optional: 'normal' or 'italic'
-  display: 'swap', // Optional for font loading strategy
+const dancingScript = Dancing_Script({
+  subsets: ['latin'],
+  weight: ['400'],
   variable: '--font-dancing-script',
 })
 
@@ -48,7 +45,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
       }
     >
       <body
-        className={`${playfair.variable} ${inter.className} ${roboto.className} antialiased`}
+        className={`${dancingScript.variable} ${inter.className} ${roboto.className} antialiased`}
       >
         <Providers>
           <Header />
