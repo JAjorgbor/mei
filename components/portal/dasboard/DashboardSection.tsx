@@ -50,7 +50,7 @@ const DashboardSection = () => {
       <Container className='space-y-16 relative z-10'>
         <div className='space-y-16 '>
           <div className='space-y-4'>
-            <div className='text-xl flex items-start gap-3 font-dancing-script'>
+            <div className='text-xl flex items-start gap-3 !font-dancing-script'>
               {portalUserLoading ? (
                 <Skeleton className='h-7 rounded-md max-w-64 w-full' />
               ) : (
@@ -183,7 +183,7 @@ const DashboardSection = () => {
               <CardBody className='px-6 flex-grow flex items-center mb-4'>
                 <p className='text-xl leading-tight font-medium'>
                   Ready to read beyond chapter 15? unlock the full{' '}
-                  <span className='font-black text-secondary decoration-secondary/30 underline-offset-4 underline font-dancing-script'>
+                  <span className='font-black text-secondary decoration-secondary/30 underline-offset-4 underline !font-dancing-script'>
                     My Echoes
                   </span>{' '}
                   experience.

@@ -6,6 +6,7 @@ import React from 'react'
 
 const BottomNavigation = () => {
   const pathname = usePathname()
+  if (pathname.includes('/read')) return null
   return (
     <div className='sticky bottom-3 w-full z-[300] mt-8'>
       <div className=' max-w-lg px-5 mx-auto'>

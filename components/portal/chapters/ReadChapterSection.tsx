@@ -81,50 +81,10 @@ const ReadChapterSection = () => {
     }
     return undefined
   }, [allChapters, allChaptersLoading, chapter])
-  const navButtons = (
-    <div className='flex gap-1'>
-      {allChaptersLoading ? (
-        <Skeleton className='h-8 flex-1' />
-      ) : prevChapter ? (
-        <Button
-          as={Link}
-          className='border-0 hover:border flex-1'
-          variant='bordered'
-          color='primary'
-          radius='none'
-          startContent={<ChevronLeft />}
-          href={`/portal/chapters/${prevChapter?.id}/read`}
-          aria-label='Previous Chapter'
-        >
-          Previous Chapter
-        </Button>
-      ) : (
-        <span className='flex-1' />
-      )}
-      {allChaptersLoading ? (
-        <Skeleton className='h-8 flex-1' />
-      ) : nextChapter ? (
-        <Button
-          as={Link}
-          className='border-0 hover:border flex-1'
-          variant='bordered'
-          color='primary'
-          radius='none'
-          endContent={<ChevronRight />}
-          href={`/portal/chapters/${nextChapter?.id}/read`}
-          aria-label='Next Chapter'
-        >
-          Next Chapter
-        </Button>
-      ) : (
-        <span className='flex-1' />
-      )}
-    </div>
-  )
   const { bookmarks } = useGetPortalBookmarks()
   return (
     <>
-      <Container className='space-y-6'>
+      <Container className='space-y-6 mb-16'>
         {chapter && (
           <div className='text-center space-y-2'>
             <h1 className='text-lg'>Chapter {chapter?.number}</h1>
@@ -150,7 +110,6 @@ const ReadChapterSection = () => {
         </Navbar>
 
         <div className='max-w-2xl mx-auto space-y-6 relative min-h-screen'>
-          {navButtons}
           <div className='space-y-6'>
             {pagesLoading ? (
               <div className='h-[80vh] grid place-items-center'>
@@ -169,7 +128,7 @@ const ReadChapterSection = () => {
                     </span>
                     <CanvasPageRenderer
                       className='space-y-3 font-dancing-script inline [&>*:first-child]:!inline-block
-    [&>*:last-child]:inline-block text-justify'
+    [&>*:last-child]:inline-block'
                       htmlContent={each?.textContent}
                     />
                     <BookmarkButton
@@ -184,10 +143,51 @@ const ReadChapterSection = () => {
             )}
           </div>
           <ChapterStats setShowComments={setShowComments} />
-
-          {navButtons}
         </div>
       </Container>
+      <div className='fixed bottom-3 w-full z-[300] px-4'>
+        <div className='flex gap-1 max-w-sm mx-auto bg-background rounded-xl items-center border border-foreground-200 dark:border-foreground-900 justify-between h-11'>
+          {allChaptersLoading ? (
+            <Skeleton className='h-10 w-10 rounded-l-lg' />
+          ) : prevChapter ? (
+            <Button
+              as={Link}
+              className='border-0 hover:border !rounded-l-lg'
+              variant='bordered'
+              color='primary'
+              radius='none'
+              startContent={<ChevronLeft />}
+              href={`/portal/chapters/${prevChapter?.id}/read`}
+              aria-label='Previous Chapter'
+              isIconOnly
+            />
+          ) : (
+            <span className='' />
+          )}
+          {!chapterLoading ? (
+            <>Chapter {chapter?.number}</>
+          ) : (
+            'Chapter Loading...'
+          )}
+          {allChaptersLoading ? (
+            <Skeleton className='h-10 w-10 !rounded-r-lg' />
+          ) : nextChapter ? (
+            <Button
+              as={Link}
+              className='border-0 hover:border !rounded-r-lg'
+              variant='bordered'
+              color='primary'
+              radius='none'
+              endContent={<ChevronRight />}
+              href={`/portal/chapters/${nextChapter?.id}/read`}
+              aria-label='Next Chapter'
+              isIconOnly
+            />
+          ) : (
+            <span className='' />
+          )}
+        </div>
+      </div>
       <CommentSection
         showComments={showComments}
         setShowComments={setShowComments}
