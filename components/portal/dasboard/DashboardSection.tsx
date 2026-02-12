@@ -33,8 +33,6 @@ const DashboardSection = () => {
   const { portalUser, portalUserLoading } = useGetPortalUser()
   const { bookmarks } = useGetPortalBookmarks()
 
-  console.log(portalUser)
-
   const timeOfDay =
     moment().hour() < 12
       ? { icon: <Sunrise className='inline-block' />, greeting: 'morning' }
@@ -59,7 +57,42 @@ const DashboardSection = () => {
                 <>
                   {/* {timeOfDay?.icon} Good {timeOfDay.greeting},{' '}
                 {portalUser?.firstName} */}
-                  My Life in Chapters
+                  <span className='relative inline-block'>
+                    My Life in Chapters
+                    <svg
+                      className='absolute -bottom-2 left-0 w-full h-[10px] text-secondary'
+                      viewBox='0 0 100 20'
+                      preserveAspectRatio='none'
+                    >
+                      {/* Base thick stroke */}
+                      <path
+                        d='M2 13C25 9 50 15 75 11C90 9 98 13 98 13'
+                        stroke='currentColor'
+                        strokeWidth='6'
+                        strokeLinecap='round'
+                        fill='none'
+                        className='opacity-20'
+                      />
+                      {/* Main textured stroke */}
+                      <path
+                        d='M4 12C20 8 45 16 70 10C85 6 96 12 96 12'
+                        stroke='currentColor'
+                        strokeWidth='4'
+                        strokeLinecap='round'
+                        fill='none'
+                        className='opacity-50'
+                      />
+                      {/* Fine bristle detail */}
+                      <path
+                        d='M8 15C30 11 55 18 80 12C90 10 94 14 94 14'
+                        stroke='currentColor'
+                        strokeWidth='2'
+                        strokeLinecap='round'
+                        fill='none'
+                        className='opacity-40'
+                      />
+                    </svg>
+                  </span>
                 </>
               )}
             </div>
@@ -69,39 +102,60 @@ const DashboardSection = () => {
               messy, unfiltered.
             </p>
           </div>
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto'>
-            <div className='relative w-full'>
-              <Card className='bg-background border border-foreground-200 dark:border-foreground-600 h-full'>
+          <div className='grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto items-stretch'>
+            <div className='lg:col-span-2 relative group'>
+              <div className='absolute -inset-0.5 bg-gradient-to-r from-secondary-500 to-primary-500 rounded-[2.5rem] blur opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200'></div>
+              <Card className='relative bg-background/60 backdrop-blur-xl border border-foreground-100 dark:border-foreground-800 h-full overflow-hidden rounded-[2rem] shadow-2xl'>
+                <div className='bg-secondary/10 px-6 py-3 border-b border-foreground-50 dark:border-foreground-900 flex justify-between items-center'>
+                  <div className='flex items-center gap-2'>
+                    <div className='w-2 h-2 rounded-full bg-secondary animate-pulse' />
+                    <span className='text-[11px] font-bold uppercase tracking-[0.2em] text-secondary-600 dark:text-secondary-400'>
+                      Resume your journey
+                    </span>
+                  </div>
+                </div>
                 {portalUserLoading ? (
                   <>
-                    <CardHeader>
-                      <Skeleton className='h-6 w-48 rounded' />
+                    <CardHeader className='px-8 pt-8'>
+                      <Skeleton className='h-10 w-64 rounded-lg' />
                     </CardHeader>
-                    <CardBody className='space-y-2'>
+                    <CardBody className='px-8 space-y-4'>
                       <Skeleton className='w-full h-5 rounded' />
+                      <Skeleton className='w-11/12 h-5 rounded' />
                       <Skeleton className='w-4/5 h-5 rounded' />
-                      <Skeleton className='w-full h-5 rounded' />
-                      <Skeleton className='w-3/5 h-5 rounded' />
                     </CardBody>
-                    <CardFooter>
-                      <Skeleton className='rounded-xl h-10 w-full' />
+                    <CardFooter className='px-8 pb-8'>
+                      <Skeleton className='rounded-full h-12 w-48' />
                     </CardFooter>
                   </>
                 ) : (
                   <>
-                    <CardHeader className='text-2xl'>
-                      Chapter {portalUser?.stopped_reading?.chapterNumber}
+                    <CardHeader className='px-8 pt-8 flex-col items-start gap-1'>
+                      <p className='text-tiny uppercase text-foreground-400 font-medium tracking-wider'>
+                        Current Progress
+                      </p>
+                      <h2 className='text-4xl font-black bg-clip-text text-transparent bg-gradient-to-br from-foreground to-foreground-600'>
+                        Chapter {portalUser?.stopped_reading?.chapterNumber}
+                      </h2>
                     </CardHeader>
-                    <CardBody className='text-foreground-500'>
-                      {portalUser?.stopped_reading?.chapterSnippet}
+                    <CardBody className='px-8 text-foreground-500 text-lg italic font-medium leading-relaxed opacity-80'>
+                      &ldquo;{portalUser?.stopped_reading?.chapterSnippet}
+                      &rdquo;
                     </CardBody>
-                    <CardFooter>
+                    <CardFooter className='px-8 pb-8 justify-start'>
                       <Button
                         color='secondary'
-                        className='w-full'
+                        className='text-md font-bold px-10 shadow-lg shadow-secondary/30 hover:shadow-secondary/40 transition-all hover:-translate-y-0.5'
                         radius='full'
+                        size='lg'
                         as={Link}
                         href={`/portal/chapters/${portalUser?.stopped_reading?.chapterId}`}
+                        endContent={
+                          <ArrowRight
+                            size={20}
+                            className='group-hover:translate-x-1 transition-transform'
+                          />
+                        }
                       >
                         Continue Reading
                       </Button>
@@ -111,34 +165,40 @@ const DashboardSection = () => {
               </Card>
             </div>
 
-            <Card className='bg-gradient-to-br from-secondary/20 to-primary/10 border-secondary/30 relative overflow-hidden h-full'>
-              <div className='absolute -top-4 -right-4 p-4 opacity-10 rotate-12'>
-                <Sparkles size={120} />
+            <Card className='bg-gradient-to-br from-secondary/30 via-secondary/10 to-primary/20 border-secondary/20 relative overflow-hidden h-full flex flex-col rounded-[2rem] shadow-xl group/cta hover:border-secondary/40 transition-colors'>
+              <div className='absolute -top-10 -right-10 p-4 opacity-[0.03] rotate-12 pointer-events-none group-hover/cta:scale-110 group-hover/cta:rotate-45 transition-transform duration-700'>
+                <Sparkles size={240} />
               </div>
-              <CardHeader className='flex gap-3 items-center'>
-                <div className='bg-secondary/20 p-2 rounded-lg'>
-                  <Sparkles className='text-secondary' size={20} />
+              <CardHeader className='px-6 pt-8 flex gap-4 items-center'>
+                <div className='bg-secondary shadow-lg shadow-secondary/40 p-2.5 rounded-2xl'>
+                  <Sparkles className='text-white' size={24} />
                 </div>
-                <p className='font-semibold'>Exclusive Access</p>
+                <div className='flex flex-col'>
+                  <p className='font-bold text-lg leading-tight'>Unlock All</p>
+                  <p className='text-tiny text-foreground-500 font-semibold uppercase tracking-tighter'>
+                    Premium Access
+                  </p>
+                </div>
               </CardHeader>
-              <CardBody>
-                <p className='text-lg leading-snug'>
-                  Want to start reading beyond chapter 15? unlock the rest of{' '}
-                  <span className='font-bold text-secondary italic'>
+              <CardBody className='px-6 flex-grow flex items-center mb-4'>
+                <p className='text-xl leading-tight font-medium'>
+                  Ready to read beyond chapter 15? unlock the full{' '}
+                  <span className='font-black text-secondary decoration-secondary/30 underline-offset-4 underline font-dancing-script'>
                     My Echoes
-                  </span>
+                  </span>{' '}
+                  experience.
                 </p>
               </CardBody>
-              <CardFooter>
+              <CardFooter className='px-6 pb-8 justify-start'>
                 <Button
                   as={Link}
                   href='/pricing'
                   color='secondary'
                   variant='shadow'
-                  fullWidth
                   radius='full'
+                  className='font-bold px-8 h-12 bg-secondary text-white shadow-xl shadow-secondary/20'
                 >
-                  Unlock Full Access
+                  Get Full Access
                 </Button>
               </CardFooter>
             </Card>
