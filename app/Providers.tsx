@@ -21,16 +21,16 @@ const Content = ({ children }: ProvidersProps) => {
   useEffect(() => {
     const handleSystemColorTheme = () => {
       const prefersDark = window.matchMedia(
-        '(prefers-color-scheme: dark)'
+        '(prefers-color-scheme: dark)',
       ).matches
       if (prefersDark) {
         document.documentElement.classList.remove('light')
         document.documentElement.classList.add('dark')
-        Cookies.set('theme', 'dark')
+        Cookies.set('theme', 'dark', { expires: 90 })
       } else {
         document.documentElement.classList.remove('dark')
         document.documentElement.classList.add('light')
-        Cookies.set('theme', 'light')
+        Cookies.set('theme', 'light', { expires: 90 })
       }
     }
 
@@ -43,7 +43,7 @@ const Content = ({ children }: ProvidersProps) => {
       }
     } else {
       document.documentElement.className = theme
-      Cookies.set('theme', theme)
+      ;(Cookies.set('theme', theme), { expires: 90 })
     }
   }, [theme])
 
@@ -51,9 +51,9 @@ const Content = ({ children }: ProvidersProps) => {
     if (pathname.startsWith('/portal')) {
       document.documentElement.style.setProperty(
         '--app-font-size',
-        fontSize == 'large' ? '1.3rem' : '1rem'
+        fontSize == 'large' ? '1.3rem' : '1rem',
       )
-      Cookies.set('fontSize', fontSize)
+      ;(Cookies.set('fontSize', fontSize), { expires: 90 })
     }
   }, [fontSize])
 

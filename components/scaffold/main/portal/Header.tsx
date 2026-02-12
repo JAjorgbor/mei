@@ -2,7 +2,13 @@
 import ThemeSwitch from '@/components/elements/ThemeSwitch'
 import { setHeaderNavigation } from '@/features/headerSlice'
 import { useAppDispatch, useAppSelector } from '@/features/store'
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from '@heroui/react'
+import {
+  Button,
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+} from '@heroui/react'
 import { BookOpen, CircleChevronLeft, Plus, Star } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -51,10 +57,23 @@ const Header = () => {
             <NavbarItem className='md:hidden'>
               {navigationState?.title}
             </NavbarItem>
-          ) : themeState == 'light' ? (
-            <Image src='/logo-light.png' alt='logo' height={80} width={80} />
           ) : (
-            <Image src='/logo-dark.png' alt='logo' height={80} width={80} />
+            <>
+              <Image
+                src='/logo-dark.png'
+                alt='logo'
+                height={80}
+                width={80}
+                className='dark:block hidden'
+              />
+              <Image
+                src='/logo.png'
+                alt='logo'
+                height={80}
+                width={80}
+                className='dark:hidden block'
+              />
+            </>
           )}
         </NavbarBrand>
       </NavbarContent>
@@ -68,10 +87,13 @@ const Header = () => {
           <ThemeSwitch />
         </NavbarItem>
         <NavbarItem>
-          <button className='bg-default-200/50 inline-flex rounded-3xl p-1.5 px-2 gap-2 items-center text-sm'>
-            <Star className='text-yellow-500 size-4 fill-yellow-500' /> 100{' '}
-            <Plus className='text-secondary size-4' />
-          </button>
+          <Button
+            color='secondary'
+            className='rounded-3xl p-1.5! px-2 gap-2 items-center text-sm h-8'
+            size='sm'
+          >
+            Subscribe
+          </Button>
         </NavbarItem>
       </NavbarContent>
     </Navbar>

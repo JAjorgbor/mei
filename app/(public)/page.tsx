@@ -8,7 +8,7 @@ export default function Home() {
     <Container>
       <div className='h-[84dvh] flex items-center'>
         <div className='space-y-5'>
-          <h1 className='font-playfair text-8xl'>My Stories & ideas</h1>
+          <h1 className='font-dancing-script text-8xl'>My Stories & ideas</h1>
           <p className='text-lg'>
             A place to read, Learn and deepen your understanding of conviction
           </p>

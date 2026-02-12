@@ -11,4 +11,9 @@ export interface IUser {
   unlockedChapters: string[]
   dateCreated: Date
   stage: { currentStage: number; currentExperience: number }
+  stopped_reading: {
+    chapterId: string
+    chapterNumber: number
+    chapterSnippet: string
+  }
 }

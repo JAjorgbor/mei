@@ -15,7 +15,7 @@ const playfair = Playfair_Display({
   weight: ['400', '700'], // Available weights: '400', '500', '600', '700', '800', '900'
   style: ['normal', 'italic'], // Optional: 'normal' or 'italic'
   display: 'swap', // Optional for font loading strategy
-  variable: '--font-playfair',
+  variable: '--font-dancing-script',
 })
 
 const lato = Lato({

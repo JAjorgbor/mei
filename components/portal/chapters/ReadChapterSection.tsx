@@ -49,7 +49,7 @@ const ReadChapterSection = () => {
   const [showComments, setShowComments] = useState(false)
   const { chapter, chapterLoading } = useGetPortalChapter(chapterId as string)
   const { pages, pagesLoading } = useGetPortalPagesForChapter(
-    chapterId as string
+    chapterId as string,
   )
 
   useSetHeaderNavigation({
@@ -168,13 +168,13 @@ const ReadChapterSection = () => {
                       {index + 1}
                     </span>
                     <CanvasPageRenderer
-                      className='space-y-3 font-playfair inline [&>*:first-child]:!inline-block
+                      className='space-y-3 font-dancing-script inline [&>*:first-child]:!inline-block
     [&>*:last-child]:inline-block text-justify'
                       htmlContent={each?.textContent}
                     />
                     <BookmarkButton
                       bookmark={bookmarks?.find(
-                        (bookmark) => bookmark.pageId == each.id
+                        (bookmark) => bookmark.pageId == each.id,
                       )}
                       pageId={each.id}
                     />
@@ -210,7 +210,7 @@ const ChapterStats = ({
     useGetPortalChapterLikes(chapterId)
   const { portalUser } = useGetPortalUser()
   const existingLike = chapterLikes?.find(
-    (each) => each.userId == portalUser?.userId
+    (each) => each.userId == portalUser?.userId,
   )
 
   const handleLikeChapter = async () => {
@@ -300,7 +300,7 @@ const BookmarkButton = ({
       } else {
         await createPortalUserBookmark(
           portalUser?.userId as string,
-          pageId as string
+          pageId as string,
         )
       }
       mutateBookmarks()

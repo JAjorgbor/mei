@@ -14,7 +14,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        playfair: ['var(--font-playfair)'],
+        'dancing-script': ['var(--font-dancing-script)'],
         lato: ['var(--font-lato)'],
       },
       backgroundImage: {
@@ -22,18 +22,10 @@ module.exports = {
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
-      animation: {
-        slidedown: 'slidedown 0.5s ease-in-out',
-        'gradient-xy': 'gradient-xy 3s ease infinite',
-      },
       keyframes: {
         slidedown: {
-          '0%': {
-            top: '-100%',
-          },
-          '100%': {
-            top: '0',
-          },
+          '0%': { top: '-100%' },
+          '100%': { top: '0' },
         },
         'gradient-xy': {
           '0%, 100%': {
@@ -45,6 +37,21 @@ module.exports = {
             'background-position': 'right center',
           },
         },
+        pulsate: {
+          '0%, 100%': {
+            transform: 'scale(1)',
+            opacity: '0.4',
+          },
+          '50%': {
+            transform: 'scale(1.2)',
+            opacity: '0.7',
+          },
+        },
+      },
+      animation: {
+        slidedown: 'slidedown 0.5s ease-in-out',
+        'gradient-xy': 'gradient-xy 3s ease infinite',
+        pulsate: 'pulsate 4s ease-in-out infinite',
       },
     },
   },
