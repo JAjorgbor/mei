@@ -85,31 +85,35 @@ const ContinueActivityTabs = () => {
             </div>
           }
         >
-          <div className='grid grid-cols-2 lg:grid-cols-3 gap-4'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
             {!bookmarks ? (
-              Array.from({ length: 2 }).map((_, index) => (
-                <div
-                  key={index}
-                  className='rounded-xl overflow-hidden border border-foreground-100 dark:border-foreground-900'
-                >
-                  <Skeleton className='h-44 rounded-xl' />
-                  <div className='p-3 space-y-3'>
-                    <Skeleton className='h-5 rounded-md w-1/2 mx-auto' />
-                    <Skeleton className='h-10 rounded-full w-full' />
+              Array.from({ length: 3 }).map((_, index) => (
+                <div key={index} className='space-y-4'>
+                  <Skeleton className='w-full aspect-video rounded-[2rem]' />
+                  <div className='space-y-2 px-2'>
+                    <Skeleton className='h-5 w-2/3 rounded-lg' />
+                    <Skeleton className='h-10 w-full rounded-full' />
                   </div>
                 </div>
               ))
             ) : bookmarks.length === 0 ? (
-              <div className='col-span-full flex flex-col items-center justify-center p-8 text-center border border-dashed border-foreground-200 dark:border-foreground-700 rounded-xl'>
-                <div className='bg-default-100/40 p-4 rounded-full mb-4'>
-                  <BookOpen className='text-foreground-500' size={32} />
+              <div className='col-span-full flex flex-col items-center justify-center p-12 text-center bg-background/40 backdrop-blur-md border border-dashed border-foreground-200 dark:border-foreground-800 rounded-[2.5rem]'>
+                <div className='bg-secondary/10 p-6 rounded-[2rem] mb-6'>
+                  <BookOpen className='text-secondary' size={40} />
                 </div>
-                <h3 className='text-lg font-semibold mb-2'>No bookmarks yet</h3>
-                <p className='text-foreground-500 max-w-xs mb-4'>
+                <h3 className='text-xl font-black mb-3'>No bookmarks yet</h3>
+                <p className='text-foreground-500 max-w-xs mb-8 font-medium leading-relaxed'>
                   Start reading and bookmark your favorite chapters to quickly
                   access them here.
                 </p>
-                <Button color='primary' as={Link} href='/portal/chapters'>
+                <Button
+                  color='secondary'
+                  radius='full'
+                  size='lg'
+                  className='font-bold shadow-lg shadow-secondary/20'
+                  as={Link}
+                  href='/portal/chapters'
+                >
                   Browse Chapters
                 </Button>
               </div>
@@ -118,38 +122,48 @@ const ContinueActivityTabs = () => {
                 return (
                   <Card
                     key={index}
-                    className='bg-background shadow-none border border-foreground-100 dark:border-foreground-900 p-0'
+                    className='group bg-background/60 backdrop-blur-xl border border-foreground-100 dark:border-foreground-900 rounded-[2rem] shadow-lg hover:shadow-xl transition-all duration-300'
                   >
                     <CardBody className='p-0'>
-                      <div className='relative bg-default/40 h-44 rounded-xl grid place-items-center'>
-                        <div className='absolute top-4 right-4'>
+                      <div className='relative bg-gradient-to-br from-secondary/10 to-primary/5 aspect-video rounded-t-[2rem] grid place-items-center overflow-hidden'>
+                        <div className='absolute top-4 right-4 z-10'>
                           {bookmarkLoadingIndex == index ? (
-                            <Spinner size='sm' />
+                            <Spinner size='sm' color='secondary' />
                           ) : (
                             <button
-                              className='text-secondary'
+                              className='p-2 bg-background/80 backdrop-blur-md rounded-xl text-foreground-400 hover:text-danger transition-colors border border-foreground-100 dark:border-foreground-800 shadow-xl'
                               onClick={() => handleBookmark(each?.id, index)}
                             >
-                              <MinusCircle />
+                              <MinusCircle size={18} />
                             </button>
                           )}
                         </div>
 
-                        <BookMarked size={45} strokeWidth={1} />
+                        <div className='p-4 bg-background/40 backdrop-blur-sm rounded-3xl border border-foreground-100/20 shadow-2xl group-hover:scale-110 transition-transform duration-500'>
+                          <BookMarked
+                            size={40}
+                            strokeWidth={1.5}
+                            className='text-secondary'
+                          />
+                        </div>
                       </div>
 
-                      <div className='space-y-3 p-3'>
-                        <h3 className='font-semibold text-lg text-center w-full'>
-                          {each?.chapterLabel}
-                        </h3>
-                        <p className='text-center text-sm text-foreground-500'>
-                          Page {each?.pageNumber || '[Number]'}
-                        </p>
+                      <div className='space-y-4 p-6'>
+                        <div className='space-y-1'>
+                          <h3 className='font-black text-xl line-clamp-1'>
+                            {each?.chapterLabel}
+                          </h3>
+                          <p className='text-tiny font-bold text-foreground-400 uppercase tracking-tighter'>
+                            Page {each?.pageNumber || '1'} &bull; Marked{' '}
+                            {moment().fromNow()}
+                          </p>
+                        </div>
                         <Button
                           radius='full'
-                          fullWidth
-                          variant='ghost'
-                          color='primary'
+                          size='lg'
+                          variant='flat'
+                          color='secondary'
+                          className='w-full font-black text-md bg-secondary/10 group-hover:bg-secondary group-hover:text-white transition-all'
                           as={Link}
                           href={`/portal/chapters/${each?.chapterId}/read#${each.pageId}`}
                         >
@@ -166,38 +180,40 @@ const ContinueActivityTabs = () => {
         <Tab
           key='liked'
           title={
-            <div className='flex gap-2 items-center'>
+            <div className='flex gap-2 items-center font-bold'>
               Liked
               <ThumbsUp size={15} />
             </div>
           }
         >
-          <div className='grid grid-cols-2 lg:grid-cols-3 gap-4'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
             {!userLikes ? (
-              Array.from({ length: 2 }).map((_, index) => (
-                <div
-                  key={index}
-                  className='rounded-xl overflow-hidden border border-foreground-100 dark:border-foreground-900'
-                >
-                  <Skeleton className='h-44 rounded-xl' />
-                  <div className='p-3 space-y-3'>
-                    <Skeleton className='h-5 rounded-md w-1/2 mx-auto' />
-                    <Skeleton className='h-10 rounded-full w-full' />
+              Array.from({ length: 3 }).map((_, index) => (
+                <div key={index} className='space-y-4'>
+                  <Skeleton className='w-full aspect-video rounded-[2rem]' />
+                  <div className='space-y-2 px-2'>
+                    <Skeleton className='h-5 w-2/3 rounded-lg' />
+                    <Skeleton className='h-10 w-full rounded-full' />
                   </div>
                 </div>
               ))
             ) : userLikes.length === 0 ? (
-              <div className='col-span-full flex flex-col items-center justify-center p-8 text-center border border-dashed border-foreground-200 dark:border-foreground-700 rounded-xl'>
-                <div className='bg-default-100/40 p-4 rounded-full mb-4'>
-                  <ThumbsUp className='text-foreground-500' size={32} />
+              <div className='col-span-full flex flex-col items-center justify-center p-12 text-center bg-background/40 backdrop-blur-md border border-dashed border-foreground-200 dark:border-foreground-800 rounded-[2.5rem]'>
+                <div className='bg-secondary/10 p-6 rounded-[2rem] mb-6'>
+                  <ThumbsUp className='text-secondary' size={40} />
                 </div>
-                <h3 className='text-lg font-semibold mb-2'>
-                  No liked chapters
-                </h3>
-                <p className='text-foreground-500 max-w-xs mb-4'>
+                <h3 className='text-xl font-black mb-3'>No liked chapters</h3>
+                <p className='text-foreground-500 max-w-xs mb-8 font-medium leading-relaxed'>
                   Like chapters while you read to save them to your collection.
                 </p>
-                <Button color='primary' as={Link} href='/portal/chapters'>
+                <Button
+                  color='secondary'
+                  radius='full'
+                  size='lg'
+                  className='font-bold shadow-lg shadow-secondary/20'
+                  as={Link}
+                  href='/portal/chapters'
+                >
                   Explore Chapters
                 </Button>
               </div>
@@ -206,38 +222,48 @@ const ContinueActivityTabs = () => {
                 return (
                   <Card
                     key={index}
-                    className='bg-background shadow-none border border-foreground-100 dark:border-foreground-900 p-0'
+                    className='group bg-background/60 backdrop-blur-xl border border-foreground-100 dark:border-foreground-900 rounded-[2rem] shadow-lg hover:shadow-xl transition-all duration-300'
                   >
                     <CardBody className='p-0'>
-                      <div className='relative bg-default/40 h-44 rounded-xl grid place-items-center'>
-                        <div className='absolute top-4 right-4'>
+                      <div className='relative bg-gradient-to-br from-primary/10 to-secondary/5 aspect-video rounded-t-[2rem] grid place-items-center overflow-hidden'>
+                        <div className='absolute top-4 right-4 z-10'>
                           {likeLoadingIndex == index ? (
-                            <Spinner size='sm' />
+                            <Spinner size='sm' color='secondary' />
                           ) : (
                             <button
-                              className='text-secondary'
+                              className='p-2 bg-background/80 backdrop-blur-md rounded-xl text-foreground-400 hover:text-danger transition-colors border border-foreground-100 dark:border-foreground-800 shadow-xl'
                               onClick={() => handleUnlike(each?.id, index)}
                             >
-                              <MinusCircle />
+                              <MinusCircle size={18} />
                             </button>
                           )}
                         </div>
 
-                        <ThumbsUp size={45} strokeWidth={1} />
+                        <div className='p-4 bg-background/40 backdrop-blur-sm rounded-3xl border border-foreground-100/20 shadow-2xl group-hover:scale-110 transition-transform duration-500'>
+                          <ThumbsUp
+                            size={40}
+                            strokeWidth={1.5}
+                            className='text-secondary'
+                          />
+                        </div>
                       </div>
 
-                      <div className='space-y-3 p-3'>
-                        <h3 className='font-semibold text-lg text-center w-full'>
-                          Chapter {index + 1}
-                        </h3>
-                        <p className='text-center text-sm text-foreground-500'>
-                          Liked on {moment(each.dateCreated).format('MM/DD/YY')}
-                        </p>
+                      <div className='space-y-4 p-6'>
+                        <div className='space-y-1'>
+                          <h3 className='font-black text-xl'>
+                            Chapter {index + 1}
+                          </h3>
+                          <p className='text-tiny font-bold text-foreground-400 uppercase tracking-tighter'>
+                            Liked on{' '}
+                            {moment(each.dateCreated).format('MMM DD, YYYY')}
+                          </p>
+                        </div>
                         <Button
                           radius='full'
-                          fullWidth
-                          variant='ghost'
-                          color='primary'
+                          size='lg'
+                          variant='flat'
+                          color='secondary'
+                          className='w-full font-black text-md bg-secondary/10 group-hover:bg-secondary group-hover:text-white transition-all'
                           as={Link}
                           href={`/portal/chapters/${each?.chapterId}/read`}
                         >

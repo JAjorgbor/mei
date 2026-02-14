@@ -53,9 +53,7 @@ const ReadChapterSection = () => {
   )
 
   useSetHeaderNavigation({
-    title: chapterLoading
-      ? 'Chapter Loading...'
-      : `Read Chapter ${chapter?.number}`,
+    title: '',
     backLink: `/portal/chapters/${chapterId}`,
     width: 'max-w-[700px]',
   })
@@ -127,9 +125,8 @@ const ReadChapterSection = () => {
                       {index + 1}
                     </span>
                     <CanvasPageRenderer
-                      className='space-y-3 font-dancing-script inline [&>*:first-child]:!inline-block
-    [&>*:last-child]:inline-block'
-                      htmlContent={each?.textContent}
+                      className='space-y-3 font-playfair [&>*:first-child]:!inline-block [&>*:last-child]:inline-block'
+                      htmlContent={each.textContent}
                     />
                     <BookmarkButton
                       bookmark={bookmarks?.find(
@@ -142,13 +139,13 @@ const ReadChapterSection = () => {
               })
             )}
           </div>
-          <ChapterStats setShowComments={setShowComments} />
+          {pages?.length && <ChapterStats setShowComments={setShowComments} />}
         </div>
       </Container>
       <div className='fixed bottom-3 w-full z-[300] px-4'>
         <div className='flex gap-1 max-w-sm mx-auto bg-background rounded-xl items-center border border-foreground-200 dark:border-foreground-900 justify-between h-11'>
           {allChaptersLoading ? (
-            <Skeleton className='h-10 w-10 rounded-l-lg' />
+            <Skeleton className='size-10 rounded-l-lg' />
           ) : prevChapter ? (
             <Button
               as={Link}
@@ -162,7 +159,7 @@ const ReadChapterSection = () => {
               isIconOnly
             />
           ) : (
-            <span className='' />
+            <span className='size-10' />
           )}
           {!chapterLoading ? (
             <>Chapter {chapter?.number}</>
@@ -170,7 +167,7 @@ const ReadChapterSection = () => {
             'Chapter Loading...'
           )}
           {allChaptersLoading ? (
-            <Skeleton className='h-10 w-10 !rounded-r-lg' />
+            <Skeleton className='size-10 !rounded-r-lg' />
           ) : nextChapter ? (
             <Button
               as={Link}
@@ -184,7 +181,7 @@ const ReadChapterSection = () => {
               isIconOnly
             />
           ) : (
-            <span className='' />
+            <span className='size-10' />
           )}
         </div>
       </div>

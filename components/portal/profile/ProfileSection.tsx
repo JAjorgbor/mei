@@ -68,26 +68,6 @@ const ProfileSection = () => {
           >
             Account Settings
           </Button>
-          <Button
-            size='sm'
-            startContent={<ShoppingBag size={15} />}
-            href='/portal/store'
-            as={Link}
-            className='bg-default/40'
-          >
-            Store
-          </Button>
-          <Button
-            size='sm'
-            startContent={
-              <Star className='fill-yellow-500 text-yellow-500' size={15} />
-            }
-            href='/portal/share-stars'
-            as={Link}
-            className='bg-default/40'
-          >
-            Share Stars
-          </Button>
         </div>
       </div>
       <ContinueActivityTabs />

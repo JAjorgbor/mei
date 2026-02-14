@@ -15,6 +15,7 @@ module.exports = {
     extend: {
       fontFamily: {
         'dancing-script': ['var(--font-dancing-script)'],
+        playfair: ['var(--font-playfair-display)'],
         lato: ['var(--font-lato)'],
       },
       backgroundImage: {

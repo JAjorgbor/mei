@@ -48,7 +48,7 @@ const DashboardSection = () => {
       <div className='bg-gradient-radial from-secondary/40 via-secondary-800/10 to-transparent h-screen w-screen absolute -top-1/4 -left-1/4 rounded-full blur-3xl animate-pulsate' />
       <div className='bg-gradient-radial from-secondary/40 via-secondary-800/10 to-transparent h-[80vh] w-[80vh] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl animate-pulsate [animation-delay:-2s]' />
       <Container className='space-y-16 relative z-10'>
-        <div className='space-y-16 '>
+        <div className='space-y-8 '>
           <div className='space-y-4'>
             <div className='flex items-start gap-3 '>
               {portalUserLoading ? (
@@ -130,7 +130,7 @@ const DashboardSection = () => {
                   </>
                 ) : (
                   <>
-                    <CardHeader className='px-8 pt-8 flex-col items-start gap-1'>
+                    <CardHeader className='px-4 md:px-8 md:pt-8 flex-col items-start gap-1'>
                       <p className='text-tiny uppercase text-foreground-400 font-medium tracking-wider'>
                         Current Progress
                       </p>
@@ -138,11 +138,13 @@ const DashboardSection = () => {
                         Chapter {portalUser?.stopped_reading?.chapterNumber}
                       </h2>
                     </CardHeader>
-                    <CardBody className='px-8 text-foreground-500 text-lg italic font-medium leading-relaxed opacity-80'>
-                      &ldquo;{portalUser?.stopped_reading?.chapterSnippet}
-                      &rdquo;
+                    <CardBody className='px-4 md:px-8 text-foreground-500 text-lg italic font-medium leading-relaxed opacity-80'>
+                      <div className='line-clamp-4'>
+                        &ldquo;{portalUser?.stopped_reading?.chapterSnippet}
+                        &rdquo;
+                      </div>
                     </CardBody>
-                    <CardFooter className='px-8 pb-8 justify-start'>
+                    <CardFooter className='px-4 md:px-8 md:pb-8 justify-start'>
                       <Button
                         color='secondary'
                         className='text-md font-bold px-10 shadow-lg shadow-secondary/30 hover:shadow-secondary/40 transition-all hover:-translate-y-0.5'
@@ -169,7 +171,7 @@ const DashboardSection = () => {
               <div className='absolute -top-10 -right-10 p-4 opacity-[0.03] rotate-12 pointer-events-none group-hover/cta:scale-110 group-hover/cta:rotate-45 transition-transform duration-700'>
                 <Sparkles size={240} />
               </div>
-              <CardHeader className='px-6 pt-8 flex gap-4 items-center'>
+              <CardHeader className='px-4 pt-4 md:px-6 md:pt-8 flex gap-4 items-center'>
                 <div className='bg-secondary shadow-lg shadow-secondary/40 p-2.5 rounded-2xl'>
                   <Sparkles className='text-white' size={24} />
                 </div>
@@ -189,7 +191,7 @@ const DashboardSection = () => {
                   experience.
                 </p>
               </CardBody>
-              <CardFooter className='px-6 pb-8 justify-start'>
+              <CardFooter className='px-3 md:px-6 md:pb-8 justify-start'>
                 <Button
                   as={Link}
                   href='/pricing'
