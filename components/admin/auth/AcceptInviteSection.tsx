@@ -11,12 +11,13 @@ import {
   CardHeader,
 } from '@heroui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ArrowRightIcon, BookOpenIcon, CameraIcon } from 'lucide-react'
+import { ArrowRightIcon, CameraIcon } from 'lucide-react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import Logo from '@/components/elements/Logo'
 
 const schema = z
   .object({
@@ -120,7 +121,7 @@ const AcceptInviteSection = () => {
     <Card>
       <CardHeader className='block'>
         <div className='flex flex-col gap items-center text-center'>
-          <BookOpenIcon className='text-primary text-2xl' />
+          <Logo width={60} height={60} />
           <h1 className='text-2xl font-bold'>Accept Invite</h1>
         </div>
       </CardHeader>

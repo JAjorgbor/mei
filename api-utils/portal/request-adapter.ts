@@ -35,9 +35,14 @@ axiosInstance.interceptors.request.use(async (config) => {
   const session: any = await getSession()
   const storedAccessToken = sessionStorage.getItem(PORTAL_ACCESS_KEY)
   const storedRefreshToken = sessionStorage.getItem(PORTAL_REFRESH_KEY)
-  const accessToken = storedAccessToken || session?.accessToken
-  const refreshToken = storedRefreshToken || session?.refreshToken
-
+  const accessToken =
+    storedAccessToken && storedAccessToken !== 'undefined'
+      ? storedAccessToken
+      : session?.accessToken
+  const refreshToken =
+    storedRefreshToken && storedRefreshToken !== 'undefined'
+      ? storedRefreshToken
+      : session?.refreshToken
   sessionStorage.setItem(PORTAL_ACCESS_KEY, accessToken)
   sessionStorage.setItem(PORTAL_REFRESH_KEY, refreshToken)
 
@@ -82,7 +87,7 @@ axiosInstance.interceptors.response.use(
         const { data } = await axiosInstance.post(
           'user/refresh',
           { refreshToken },
-          { headers: { Authorization: null } } // prevent stale token usage
+          { headers: { Authorization: null } }, // prevent stale token usage
         )
 
         sessionStorage.setItem(PORTAL_ACCESS_KEY, data.accessToken)
@@ -118,7 +123,7 @@ axiosInstance.interceptors.response.use(
     }
 
     return Promise.reject(error)
-  }
+  },
 )
 
 export default axiosInstance

@@ -120,14 +120,19 @@ const ReadChapterSection = () => {
             ) : (
               pages?.map((each, index) => {
                 return (
-                  <div key={index} id={each.id}>
+                  <div key={each.id}>
                     <span className='text-secondary mr-2 text-xl inline-block font-bold'>
                       {index + 1}
                     </span>
-                    <CanvasPageRenderer
+                    <div
+                      className='space-y-3 font-playfair [&>*:first-child]:!inline-block [&>*:last-child]:inline-block !pointer-events-none !select-none'
+                      dangerouslySetInnerHTML={{ __html: each.textContent }}
+                    />
+
+                    {/* <CanvasPageRenderer
                       className='space-y-3 font-playfair [&>*:first-child]:!inline-block [&>*:last-child]:inline-block'
                       htmlContent={each.textContent}
-                    />
+                    /> */}
                     <BookmarkButton
                       bookmark={bookmarks?.find(
                         (bookmark) => bookmark.pageId == each.id,

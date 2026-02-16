@@ -4,7 +4,7 @@ import Cookies from 'js-cookie'
 import TimerCountDown from '@/components/elements/TimerCountDown'
 import { addToast, Button, Card, CardBody, InputOtp } from '@heroui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { BookOpenIcon, RefreshCcw } from 'lucide-react'
+import { RefreshCcw } from 'lucide-react'
 import { signIn, useSession } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
@@ -14,6 +14,7 @@ import {
   ADMIN_ACCESS_KEY,
   ADMIN_REFRESH_KEY,
 } from '@/api-utils/admin/request-adapter'
+import Logo from '@/components/elements/Logo'
 
 const schema = z.object({
   otp: z
@@ -95,7 +96,7 @@ const VerifyAccessForm = () => {
         <form onSubmit={formMethods.handleSubmit(handleSubmit)}>
           <div className='space-y-4'>
             <div className='flex flex-col gap items-center'>
-              <BookOpenIcon className='text-primary text-2xl' />
+              <Logo width={60} height={60} />
               <h1 className='text-2xl font-bold'>Verify Access</h1>
             </div>
             <p className='text-sm text-center'>

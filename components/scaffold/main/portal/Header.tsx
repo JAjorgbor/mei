@@ -9,11 +9,11 @@ import {
   NavbarContent,
   NavbarItem,
 } from '@heroui/react'
-import { BookOpen, CircleChevronLeft, Plus, Star } from 'lucide-react'
-import Image from 'next/image'
+import { CircleChevronLeft, Plus, Star } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import Logo from '@/components/elements/Logo'
 
 const Header = () => {
   const { navigation } = useAppSelector((state) => state.header)
@@ -58,22 +58,7 @@ const Header = () => {
               {navigationState?.title}
             </NavbarItem>
           ) : (
-            <>
-              <Image
-                src='/logo-dark.png'
-                alt='logo'
-                height={80}
-                width={80}
-                className='dark:block hidden'
-              />
-              <Image
-                src='/logo.png'
-                alt='logo'
-                height={80}
-                width={80}
-                className='dark:hidden block'
-              />
-            </>
+            <Logo width={80} height={80} />
           )}
         </NavbarBrand>
       </NavbarContent>

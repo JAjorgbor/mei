@@ -72,7 +72,6 @@ const ContinueActivityTabs = () => {
       setLikeLoadingIndex(-1)
     }
   }
-
   return (
     <div>
       <Tabs aria-label='Options' variant='underlined'>
@@ -85,11 +84,11 @@ const ContinueActivityTabs = () => {
             </div>
           }
         >
-          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
+          <div className='grid sm:grid-cols-2 lg:grid-cols-3 gap-6'>
             {!bookmarks ? (
               Array.from({ length: 3 }).map((_, index) => (
                 <div key={index} className='space-y-4'>
-                  <Skeleton className='w-full aspect-video rounded-[2rem]' />
+                  <Skeleton className='w-full h-32 rounded-[2rem]' />
                   <div className='space-y-2 px-2'>
                     <Skeleton className='h-5 w-2/3 rounded-lg' />
                     <Skeleton className='h-10 w-full rounded-full' />
@@ -125,7 +124,7 @@ const ContinueActivityTabs = () => {
                     className='group bg-background/60 backdrop-blur-xl border border-foreground-100 dark:border-foreground-900 rounded-[2rem] shadow-lg hover:shadow-xl transition-all duration-300'
                   >
                     <CardBody className='p-0'>
-                      <div className='relative bg-gradient-to-br from-secondary/10 to-primary/5 aspect-video rounded-t-[2rem] grid place-items-center overflow-hidden'>
+                      <div className='relative bg-gradient-to-br from-secondary/10 to-primary/5 h-32 rounded-t-[2rem] grid place-items-center overflow-hidden'>
                         <div className='absolute top-4 right-4 z-10'>
                           {bookmarkLoadingIndex == index ? (
                             <Spinner size='sm' color='secondary' />
@@ -148,14 +147,14 @@ const ContinueActivityTabs = () => {
                         </div>
                       </div>
 
-                      <div className='space-y-4 p-6'>
+                      <div className='space-y-4 p-3 md:p-6'>
                         <div className='space-y-1'>
                           <h3 className='font-black text-xl line-clamp-1'>
                             {each?.chapterLabel}
                           </h3>
                           <p className='text-tiny font-bold text-foreground-400 uppercase tracking-tighter'>
                             Page {each?.pageNumber || '1'} &bull; Marked{' '}
-                            {moment().fromNow()}
+                            {moment(each?.dateCreated).fromNow()}
                           </p>
                         </div>
                         <Button
@@ -186,11 +185,11 @@ const ContinueActivityTabs = () => {
             </div>
           }
         >
-          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
+          <div className='grid sm:grid-cols-2 lg:grid-cols-3 gap-6'>
             {!userLikes ? (
               Array.from({ length: 3 }).map((_, index) => (
                 <div key={index} className='space-y-4'>
-                  <Skeleton className='w-full aspect-video rounded-[2rem]' />
+                  <Skeleton className='w-full h-32 rounded-[2rem]' />
                   <div className='space-y-2 px-2'>
                     <Skeleton className='h-5 w-2/3 rounded-lg' />
                     <Skeleton className='h-10 w-full rounded-full' />
@@ -225,7 +224,7 @@ const ContinueActivityTabs = () => {
                     className='group bg-background/60 backdrop-blur-xl border border-foreground-100 dark:border-foreground-900 rounded-[2rem] shadow-lg hover:shadow-xl transition-all duration-300'
                   >
                     <CardBody className='p-0'>
-                      <div className='relative bg-gradient-to-br from-primary/10 to-secondary/5 aspect-video rounded-t-[2rem] grid place-items-center overflow-hidden'>
+                      <div className='relative bg-gradient-to-br from-primary/10 to-secondary/5 h-32 rounded-t-[2rem] grid place-items-center overflow-hidden'>
                         <div className='absolute top-4 right-4 z-10'>
                           {likeLoadingIndex == index ? (
                             <Spinner size='sm' color='secondary' />
@@ -248,7 +247,7 @@ const ContinueActivityTabs = () => {
                         </div>
                       </div>
 
-                      <div className='space-y-4 p-6'>
+                      <div className='space-y-4 p-3 md:p-6'>
                         <div className='space-y-1'>
                           <h3 className='font-black text-xl'>
                             Chapter {index + 1}

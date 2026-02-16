@@ -16,6 +16,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
+import Logo from '@/components/elements/Logo'
 
 const Sidebar: React.FC = () => {
   const pathname = usePathname()
@@ -84,7 +85,7 @@ const Sidebar: React.FC = () => {
                 >
                   <div className='bg-content2 border-r border-divider h-screen flex flex-col'>
                     <div className='px-4 py-[1.11rem] flex items-center gap-2 '>
-                      <BookOpenIcon className='text-primary text-2xl' />
+                      <Logo width={35} height={35} />
                       <h1 className='text-xl font-bold'>Mie Admin</h1>
                     </div>
                     <Divider />
@@ -120,7 +121,7 @@ const Sidebar: React.FC = () => {
               </>
             ) : null}
           </AnimatePresence>,
-          document.getElementById('sidebar-wrapper') as HTMLElement
+          document.getElementById('sidebar-wrapper') as HTMLElement,
         )}
     </aside>
   )

@@ -21,18 +21,12 @@ import {
   NavbarMenuToggle,
 } from '@heroui/react'
 import Hamburger from 'hamburger-react'
-import {
-  BookOpen,
-  Edit,
-  LogOut,
-  MonitorIcon,
-  MoonIcon,
-  SunIcon,
-} from 'lucide-react'
+import { Edit, LogOut, MonitorIcon, MoonIcon, SunIcon } from 'lucide-react'
 import { signOut } from 'next-auth/react'
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import Logo from '@/components/elements/Logo'
 
 const Header = () => {
   const dispatch = useAppDispatch()
@@ -72,7 +66,7 @@ const Header = () => {
             className='md:hidden'
           />
           <NavbarBrand className='gap-3'>
-            <BookOpen />
+            <Logo width={40} height={40} />
             <p className='font-bold text-inherit'>Mie</p>
           </NavbarBrand>
         </NavbarContent>

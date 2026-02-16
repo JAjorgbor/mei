@@ -8,12 +8,12 @@ import InputField from '@/components/elements/InputField'
 import { addToast, Button, Card, CardBody } from '@heroui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Cookies from 'js-cookie'
-import { BookOpenIcon } from 'lucide-react'
 import { signIn, useSession } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import Logo from '@/components/elements/Logo'
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -70,7 +70,7 @@ const LoginForm = () => {
           <form onSubmit={formMethods.handleSubmit(handleSubmit)}>
             <div className='space-y-4'>
               <div className='flex flex-col gap items-center'>
-                <BookOpenIcon className='text-primary text-2xl' />
+                <Logo width={60} height={60} />
                 <h1 className='text-2xl font-bold'>Mie Admin</h1>
               </div>
               <InputField
