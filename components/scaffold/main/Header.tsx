@@ -1,8 +1,8 @@
 'use client'
-import Cookies from 'js-cookie'
+import Logo from '@/components/elements/Logo'
 import { setTheme } from '@/features/headerSlice'
 import { useAppDispatch, useAppSelector } from '@/features/store'
-import useGetAdmin from '@/hooks/requests/useGetAdmin'
+import useGetPortalUser from '@/hooks/requests/portal/useGetPortalUser'
 import useMediaQuery from '@/hooks/useMediaQuery'
 import {
   Avatar,
@@ -20,13 +20,12 @@ import {
   NavbarMenuItem,
   NavbarMenuToggle,
 } from '@heroui/react'
-import Hamburger from 'hamburger-react'
-import { Edit, LogOut, MonitorIcon, MoonIcon, SunIcon } from 'lucide-react'
+import Cookies from 'js-cookie'
+import { LogOut, MonitorIcon, MoonIcon, SunIcon } from 'lucide-react'
 import { signOut } from 'next-auth/react'
-import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import Logo from '@/components/elements/Logo'
+import React, { useEffect, useState } from 'react'
 
 const Header = () => {
   const dispatch = useAppDispatch()
@@ -39,10 +38,8 @@ const Header = () => {
 
   const pathname = usePathname()
 
-  const { admin } = useGetAdmin()
+  const { portalUser } = useGetPortalUser()
   const [themeState, setThemeState] = useState('')
-  const [showUpdateAdminDetailsModal, setShowUpdateAdminDetailsModal] =
-    useState(false)
 
   useEffect(() => {
     setThemeState(reduxTheme)
@@ -67,7 +64,6 @@ const Header = () => {
           />
           <NavbarBrand className='gap-3'>
             <Logo width={40} height={40} />
-            <p className='font-bold text-inherit'>Mie</p>
           </NavbarBrand>
         </NavbarContent>
         <NavbarContent className='hidden md:flex' justify='center'>
@@ -142,9 +138,9 @@ const Header = () => {
                     as='button'
                     className='transition-transform'
                     color='primary'
-                    name='Admin User'
+                    name='Portal User'
                     size='sm'
-                    src={admin?.avatar || ''}
+                    src={portalUser?.avatar || ''}
                   />
                 </DropdownTrigger>
 
@@ -156,18 +152,11 @@ const Header = () => {
                       isReadOnly
                     >
                       <p className='text-sm'>
-                        {admin?.firstName} {admin?.lastName}
+                        {portalUser?.firstName} {portalUser?.lastName}
                       </p>
-                      <p className='font-semibold'>{admin?.email}</p>
+                      <p className='font-semibold'>{portalUser?.email}</p>
                     </DropdownItem>
                   </DropdownSection>
-                  <DropdownItem
-                    key='settings'
-                    startContent={<Edit size={15} />}
-                    onPress={() => setShowUpdateAdminDetailsModal(true)}
-                  >
-                    Update Details
-                  </DropdownItem>
                   <DropdownItem
                     key='logout'
                     color='danger'
@@ -179,7 +168,7 @@ const Header = () => {
                         Cookies.remove(cookieName) // Remove each cookie
                       }
                       sessionStorage.clear()
-                      window.location.href = '/admin'
+                      window.location.href = '/'
                     }}
                     startContent={<LogOut size={15} />}
                   >
