@@ -15,7 +15,7 @@ const LogoLight: React.FC<LogoProps> = ({
   return (
     <Image
       src='/logo.png'
-      alt='Mie Logo'
+      alt='Echoes Logo'
       width={width}
       height={height}
       className={`object-contain ${className}`}

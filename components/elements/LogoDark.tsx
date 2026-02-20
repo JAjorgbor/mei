@@ -15,7 +15,7 @@ const LogoDark: React.FC<LogoProps> = ({
   return (
     <Image
       src='/logo-dark.png'
-      alt='Mie Logo Dark'
+      alt='Echoes Logo Dark'
       width={width}
       height={height}
       className={`object-contain ${className}`}

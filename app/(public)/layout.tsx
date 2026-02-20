@@ -2,7 +2,12 @@ import '@/app/globals.css'
 import Providers from '@/app/Providers'
 import Header from '@/components/scaffold/main/Header'
 import type { Metadata } from 'next'
-import { Lato, Roboto, Dancing_Script } from 'next/font/google'
+import {
+  Lato,
+  Roboto,
+  Dancing_Script,
+  Playfair_Display,
+} from 'next/font/google'
 import { cookies } from 'next/headers'
 
 const dancingScript = Dancing_Script({
@@ -18,14 +23,21 @@ const lato = Lato({
   variable: '--font-lato',
 })
 
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+  variable: '--font-playfair-display',
+})
+
 const roboto = Roboto({
   subsets: ['latin'],
   weight: ['400', '500', '700'],
 })
 
 export const metadata: Metadata = {
-  title: { default: 'Mie', template: '%s | Mie' },
-  description: 'Mie story app admin',
+  title: { default: 'Echoes', template: '%s | Echoes' },
+  description: 'Resonating stories and deep ideas from the soul.',
 }
 
 export default function RootLayout({
@@ -38,7 +50,7 @@ export default function RootLayout({
   return (
     <html lang='en' className={`${storedTheme || ''}`}>
       <body
-        className={`${dancingScript.variable} ${lato.variable} ${roboto.className} antialiased`}
+        className={`${dancingScript.variable} ${lato.variable} ${playfair.variable} ${roboto.className} antialiased`}
       >
         <Providers>
           <Header />

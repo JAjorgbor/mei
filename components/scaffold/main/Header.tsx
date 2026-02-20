@@ -63,7 +63,7 @@ const Header = () => {
             className='md:hidden'
           />
           <NavbarBrand className='gap-3'>
-            <Logo width={40} height={40} />
+            <Logo width={80} height={40} />
           </NavbarBrand>
         </NavbarContent>
         <NavbarContent className='hidden md:flex' justify='center'>
