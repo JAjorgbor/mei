@@ -7,7 +7,7 @@ export interface IUser {
   avatar: null
   accessToken: null
   refreshToken: null
-  bookmakrs: string[]
+  bookmarks: string[]
   likes: string[]
   balance: number
   unlockedChapters: string[]
