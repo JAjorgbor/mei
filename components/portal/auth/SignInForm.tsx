@@ -39,7 +39,7 @@ const SignInForm = () => {
   useEffect(() => {
     if (oauthErrorMessage)
       addToast({
-        title: decodeURIComponent(oauthErrorMessage),
+        description: decodeURIComponent(oauthErrorMessage),
         color: 'danger',
       })
 

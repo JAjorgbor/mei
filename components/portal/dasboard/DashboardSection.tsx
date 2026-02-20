@@ -1,6 +1,5 @@
 'use client'
 import Container from '@/components/elements/Container'
-import ContinueActivityTabs from '@/components/portal/dasboard/ContinueActivityTabs'
 import useGetPortalBookmarks from '@/hooks/requests/portal/useGetPortalBookmarks'
 import useGetPortalUser from '@/hooks/requests/portal/useGetPortalUser'
 import useSetHeaderNavigation from '@/hooks/useSetHeaderNavigation'
@@ -10,23 +9,10 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
-  Progress,
   Skeleton,
-  Tab,
-  Tabs,
 } from '@heroui/react'
-import {
-  ArrowRight,
-  Bookmark,
-  MinusCircle,
-  Moon,
-  Sun,
-  Sunrise,
-  ThumbsUp,
-  Sparkles,
-} from 'lucide-react'
+import { ArrowRight, Droplet, Moon, Sun, Sunrise } from 'lucide-react'
 import moment from 'moment'
-import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 
 const DashboardSection = () => {
@@ -169,11 +155,11 @@ const DashboardSection = () => {
 
             <Card className='bg-gradient-to-br from-secondary/30 via-secondary/10 to-primary/20 border-secondary/20 relative overflow-hidden h-full flex flex-col rounded-[2rem] shadow-xl group/cta hover:border-secondary/40 transition-colors'>
               <div className='absolute -top-10 -right-10 p-4 opacity-[0.03] rotate-12 pointer-events-none group-hover/cta:scale-110 group-hover/cta:rotate-45 transition-transform duration-700'>
-                <Sparkles size={240} />
+                <Droplet size={240} />
               </div>
               <CardHeader className='px-4 pt-4 md:px-6 md:pt-8 flex gap-4 items-center'>
                 <div className='bg-secondary shadow-lg shadow-secondary/40 p-2.5 rounded-2xl'>
-                  <Sparkles className='text-white' size={24} />
+                  <Droplet className='text-white' size={24} />
                 </div>
                 <div className='flex flex-col'>
                   <p className='font-bold text-lg leading-tight'>Unlock All</p>
@@ -206,8 +192,6 @@ const DashboardSection = () => {
             </Card>
           </div>
         </div>
-
-        <ContinueActivityTabs />
       </Container>
     </div>
   )

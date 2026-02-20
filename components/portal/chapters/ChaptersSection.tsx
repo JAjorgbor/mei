@@ -22,7 +22,6 @@ const ChaptersSection = () => {
     start: 0,
     stop: 100,
   })
-  console.log(allChapters)
   return (
     <Container>
       <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pb-12'>
@@ -30,11 +29,17 @@ const ChaptersSection = () => {
           ? Array(6)
               .fill(null)
               .map((_, index) => (
-                <div key={index} className='space-y-4'>
-                  <Skeleton className='w-full aspect-[4/3] rounded-[2rem]' />
-                  <div className='space-y-2 px-2'>
-                    <Skeleton className='h-6 w-3/4 rounded-lg' />
-                    <Skeleton className='h-4 w-1/2 rounded-lg' />
+                <div
+                  key={index}
+                  className='flex flex-row md:flex-col items-stretch h-40 md:h-auto gap-4'
+                >
+                  <Skeleton className='w-1/3 md:w-full aspect-auto md:aspect-[4/3] rounded-[2rem]' />
+                  <div className='w-2/3 md:w-full flex flex-col gap-2 justify-between px-2 '>
+                    <div className='space-y-2'>
+                      <Skeleton className='h-6 w-3/4 rounded-lg' />
+                      <Skeleton className='h-4 w-1/2 rounded-lg' />
+                    </div>
+                    <Skeleton className='h-8 w-1/3 rounded-lg !mt-auto' />
                   </div>
                 </div>
               ))

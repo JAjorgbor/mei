@@ -10,6 +10,7 @@ import Link from 'next/link'
 const ProfileSection = () => {
   useSetHeaderNavigation({ backLink: '/portal/dashboard', title: 'Profile' })
   const { portalUser, portalUserLoading } = useGetPortalUser()
+  console.log(portalUser)
   return (
     <Container className='space-y-8'>
       <div className='flex flex-col items-center gap-6'>
@@ -36,11 +37,11 @@ const ProfileSection = () => {
             </p>
             <div className='flex gap-4 justify-center items-center'>
               <span className='flex flex-col items-center'>
-                <span className=''>0</span>
+                <span className=''>{portalUser?.likes?.length}</span>
                 <span className='text-foreground-500 text-sm'> Liked</span>
               </span>
               <span className='flex flex-col items-center'>
-                <span className=''>0</span>
+                <span className=''>{portalUser?.bookmarks?.length}</span>
                 <span className='text-foreground-500 text-sm'> Bookmarks</span>
               </span>
               <span className='flex flex-col items-center'>
