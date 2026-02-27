@@ -10,7 +10,7 @@ export default function useGetChapter(chapterId: string) {
     const { data } = await getChapter(chapterId)
     return data
   }
-  const { data, error, mutate, isLoading } = useSWR<IList<IChapter>>(
+  const { data, error, mutate, isLoading } = useSWR<IChapter>(
     `/api/chapters/${chapterId}`,
     fetcher,
   )
