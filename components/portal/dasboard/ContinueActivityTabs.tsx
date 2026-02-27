@@ -28,10 +28,18 @@ import React, { useState } from 'react'
 import moment from 'moment'
 
 const ContinueActivityTabs = () => {
-  const { bookmarks, bookmarksLoading, mutateBookmarks } =
-    useGetPortalBookmarks()
-  const { userLikes, userLikesLoading, mutateUserLikes } =
-    useGetPortalUserLikes()
+  const {
+    bookmarks: bookmarksData,
+    bookmarksLoading,
+    mutateBookmarks,
+  } = useGetPortalBookmarks()
+  const bookmarks = bookmarksData?.items
+  const {
+    userLikes: userLikesData,
+    userLikesLoading,
+    mutateUserLikes,
+  } = useGetPortalUserLikes()
+  const userLikes = userLikesData?.items
   const [bookmarkLoadingIndex, setBookmarkLoadingIndex] = useState(-1)
   const [likeLoadingIndex, setLikeLoadingIndex] = useState(-1)
 

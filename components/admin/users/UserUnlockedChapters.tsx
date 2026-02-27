@@ -1,6 +1,6 @@
 'use client'
 import { IChapter } from '@/api-utils/global-interfaces/chapter.interfaces'
-import CreateChapterModal from '@/components/admin/chapters/CreateChapterModal'
+import CreateChapterModal from '@/components/admin/chapters/CreateChapterDrawer'
 import DeleteChapterModal from '@/components/admin/chapters/DeleteChapterModal'
 import InputField from '@/components/elements/InputField'
 import useGetAllChapters from '@/hooks/requests/useGetAllChapters'
@@ -69,7 +69,7 @@ const UserUnlockedChapters = () => {
               <p className='text-bold text-small capitalize'>{getValue()}</p>
             </div>
           ),
-        }
+        },
       ),
       columnHelper.accessor('pageCount', {
         header: 'Pages',
@@ -94,8 +94,8 @@ const UserUnlockedChapters = () => {
                 getValue() == 'published'
                   ? 'success'
                   : getValue() == 'draft'
-                  ? 'warning'
-                  : 'danger'
+                    ? 'warning'
+                    : 'danger'
               }
             >
               {getValue()}
@@ -136,7 +136,7 @@ const UserUnlockedChapters = () => {
         ),
       }),
     ],
-    [allChapters]
+    [allChapters],
   )
 
   const table = useReactTable({
@@ -199,13 +199,13 @@ const UserUnlockedChapters = () => {
                   key={header.id}
                   align={header.id === 'actions' ? 'center' : 'start'}
                   allowsSorting={['title', 'pageCount', 'dateCreated'].includes(
-                    header.id
+                    header.id,
                   )}
                   onClick={header.column.getToggleSortingHandler()}
                 >
                   {flexRender(
                     header.column.columnDef.header,
-                    header.getContext()
+                    header.getContext(),
                   )}
                 </TableColumn>
               ))}

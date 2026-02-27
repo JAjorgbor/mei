@@ -62,6 +62,16 @@ const ProfileSection = () => {
 
           <Button
             size='sm'
+            as={Link}
+            href='/portal/subscribe'
+            startContent={<Star size={15} />}
+            className='bg-default/40'
+          >
+            Subscription
+          </Button>
+
+          <Button
+            size='sm'
             startContent={<Settings size={15} />}
             href='/portal/settings'
             as={Link}

@@ -1,6 +1,8 @@
 'use client'
-import ManageChapterModal from '@/components/admin/chapters/ManageChapterModal'
+import ManageChapterDrawer from '@/components/admin/chapters/ManageChapterDrawer'
 import PagesTable from '@/components/admin/chapters/PagesTable'
+import AdminCommentSection from '@/components/admin/chapters/AdminCommentSection'
+import AdminLikesSection from '@/components/admin/chapters/AdminLikesSection'
 import useGetChapter from '@/hooks/requests/useGetChapter'
 import {
   BreadcrumbItem,
@@ -29,7 +31,7 @@ const chapterDetailsSchema = z.object({
 type FormFields = z.infer<typeof chapterDetailsSchema>
 
 const ViewChapterSection = () => {
-  const [showManageChapterModal, setShowManageChapterModal] = useState(false)
+  const [showManageChapterDrawer, setShowManageChapterDrawer] = useState(false)
   const formMethods = useForm<FormFields>({
     resolver: zodResolver(chapterDetailsSchema),
     defaultValues: { status: 'published' },
@@ -52,12 +54,11 @@ const ViewChapterSection = () => {
           <Button
             //color='secondary'
             startContent={<Edit size={15} />}
-            onPress={() => setShowManageChapterModal(true)}
+            onPress={() => setShowManageChapterDrawer(true)}
           >
             Manage
           </Button>
         </div>
-
         <div className='gap-3 w-3/5 mx-auto flex flex-col items-center'>
           {chapter ? (
             <img
@@ -103,20 +104,34 @@ const ViewChapterSection = () => {
           >
             Comments
           </Button>
+          <Button
+            radius='none'
+            className={`p-3 py-5 text-center flex-1 bg-transparent ${
+              activeTab == 'likes'
+                ? 'text-background border-b border-b-foreground bg-primary'
+                : ''
+            }`}
+            onPress={() => setActiveTab('likes')}
+          >
+            Likes
+          </Button>
         </div>
         <Tabs classNames={{ tab: 'hidden' }} selectedKey={activeTab}>
           <Tab key='pages' title='Pages'>
             <PagesTable />
           </Tab>
           <Tab key='comments' title='Comments'>
-            Comments
+            <AdminCommentSection />
+          </Tab>
+          <Tab key='likes' title='Likes'>
+            <AdminLikesSection />
           </Tab>
         </Tabs>
       </div>
-      <ManageChapterModal
-        isOpen={showManageChapterModal}
+      <ManageChapterDrawer
+        isOpen={showManageChapterDrawer}
         chapter={chapter!}
-        setIsOpen={setShowManageChapterModal}
+        setIsOpen={setShowManageChapterDrawer}
       />
     </div>
   )

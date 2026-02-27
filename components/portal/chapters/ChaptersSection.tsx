@@ -18,10 +18,9 @@ const ChaptersSection = () => {
     title: 'Chapters',
     backLink: '/portal/dashboard',
   })
-  const { allChapters, allChaptersLoading } = useGetPortalAllChapters({
-    start: 0,
-    stop: 100,
-  })
+  const { allChapters: allChaptersData, allChaptersLoading } =
+    useGetPortalAllChapters()
+  const allChapters = allChaptersData?.items
   return (
     <Container>
       <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pb-12'>

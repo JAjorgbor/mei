@@ -1,4 +1,4 @@
-import axiosInstance from '@/api-utils/admin/request-adapter'
+import axiosInstance from '@/api-utils/portal/request-adapter'
 
 export const registerUser = (data: any) =>
   axiosInstance.post(`/user/sign-up`, data)

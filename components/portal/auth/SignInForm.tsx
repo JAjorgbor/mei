@@ -79,6 +79,7 @@ const SignInForm = () => {
   const handleSubmit = async (formData: FormFields) => {
     try {
       const { data } = await loginUser(formData)
+      console.log(data)
       const { accessToken, refreshToken, ...userPayload } = data
       sessionStorage.setItem(PORTAL_ACCESS_KEY, accessToken)
       sessionStorage.setItem(PORTAL_REFRESH_KEY, refreshToken)
@@ -107,81 +108,94 @@ const SignInForm = () => {
   }
 
   return (
-    <Card className='max-w-sm mx-auto'>
-      <CardHeader className='w-full text-lg font-semibold justify-center'>
-        Welcome Back
-      </CardHeader>
-      <CardBody>
-        <div className='space-y-6'>
-          <p className='text-center text-sm'>
-            Continue your journey through this remarkable story
-          </p>
-          <Button
-            startContent={
-              <Image
-                src='/google-logo.svg'
-                alt='google logo'
-                width={80}
-                height={80}
-                className='!size-5'
-              />
-            }
-            color='primary'
-            variant='bordered'
-            fullWidth
-            onPress={handleGoogleSignIn}
-          >
-            Continue with Google
-          </Button>
-          <div className='flex gap-2 items-center text-sm'>
-            <hr className='flex-1' />
-            OR CONTINUE WITH EMAIL
-            <hr className='flex-1' />
+    <div className='w-full max-w-md mx-auto'>
+      <Card className='bg-background/60 dark:bg-zinc-900/60 backdrop-blur-2xl border border-default-100 shadow-2xl rounded-[2.5rem] overflow-hidden'>
+        <CardBody className='p-8'>
+          <div className='flex flex-col gap items-center text-center space-y-2 mb-6'>
+            <h1 className='text-2xl font-black tracking-tighter leading-none text-foreground'>
+              WELCOME BACK
+            </h1>
+            <span className='text-[10px] uppercase font-black text-primary tracking-widest mt-1'>
+              The Journey Continues
+            </span>
           </div>
-          <form
-            className='space-y-4'
-            onSubmit={formMethods.handleSubmit(handleSubmit)}
-          >
-            <InputField
-              label='Email Address'
-              type='email'
-              placeholder='email@example.com'
-              register={formMethods.register('email')}
-              errorMessage={formMethods?.formState?.errors?.email?.message}
-            />
-            <InputField
-              label='Password'
-              type='password'
-              register={formMethods.register('password')}
-              errorMessage={formMethods?.formState?.errors?.password?.message}
-            />
-            <p>
-              <Link
-                href='/portal/forgot-password'
-                className='text-sm text-primary text-end'
+
+          <div className='space-y-6'>
+            <Button
+              startContent={
+                <Image
+                  src='/google-logo.svg'
+                  alt='google logo'
+                  width={80}
+                  height={80}
+                  className='!size-5'
+                />
+              }
+              color='primary'
+              variant='flat'
+              className='bg-default-100 hover:bg-default-200 text-foreground font-bold h-12 rounded-2xl transition-colors w-full'
+              onPress={handleGoogleSignIn}
+            >
+              Continue with Google
+            </Button>
+
+            <div className='flex gap-4 items-center text-xs uppercase font-bold tracking-widest text-default-400'>
+              <hr className='flex-1 border-default-200' />
+              <span>Or Email</span>
+              <hr className='flex-1 border-default-200' />
+            </div>
+
+            <form
+              className='space-y-4'
+              onSubmit={formMethods.handleSubmit(handleSubmit)}
+            >
+              <InputField
+                label='Email Address'
+                type='email'
+                placeholder='email@example.com'
+                register={formMethods.register('email')}
+                errorMessage={formMethods?.formState?.errors?.email?.message}
+              />
+              <InputField
+                label='Password'
+                type='password'
+                register={formMethods.register('password')}
+                errorMessage={formMethods?.formState?.errors?.password?.message}
+              />
+
+              <div className='flex justify-end'>
+                <Link
+                  href='/portal/forgot-password'
+                  className='text-xs font-bold text-primary hover:text-primary/80 transition-colors uppercase tracking-widest'
+                >
+                  Forgot password?
+                </Link>
+              </div>
+
+              <Button
+                type='submit'
+                color='primary'
+                fullWidth
+                className='font-bold h-12 text-sm uppercase tracking-widest shadow-[0_0_20px_rgba(var(--heroui-primary-rgb),0.2)] rounded-2xl block mt-2'
+                isLoading={formMethods.formState.isSubmitting || keepLoading}
               >
-                Forgot your password?
+                Sign In To Portal
+              </Button>
+            </form>
+
+            <p className='text-sm text-center font-medium text-default-500 pt-2'>
+              Don&apos;t have an account?{' '}
+              <Link
+                href='/portal/sign-up'
+                className='text-primary font-bold hover:underline transition-all'
+              >
+                Sign up
               </Link>
             </p>
-            <Button
-              type='submit'
-              color='primary'
-              fullWidth
-              className='block'
-              isLoading={formMethods.formState.isSubmitting || keepLoading}
-            >
-              Sign In
-            </Button>
-          </form>
-          <p className='text-sm text-center'>
-            Don&apos;t have an account?{' '}
-            <Link href='/portal/sign-up' className='text-primary underline'>
-              Sign up
-            </Link>
-          </p>
-        </div>
-      </CardBody>
-    </Card>
+          </div>
+        </CardBody>
+      </Card>
+    </div>
   )
 }
 

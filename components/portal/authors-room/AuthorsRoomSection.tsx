@@ -2,6 +2,8 @@
 import Container from '@/components/elements/Container'
 import useGetPortalUser from '@/hooks/requests/portal/useGetPortalUser'
 import useSetHeaderNavigation from '@/hooks/useSetHeaderNavigation'
+import useGetPortalAllAuthorPosts from '@/hooks/requests/portal/useGetPortalAllAuthorPosts'
+import { IAuthorPost } from '@/api-utils/global-interfaces/author-room.interfaces'
 import {
   Avatar,
   Button,
@@ -10,11 +12,19 @@ import {
   CardFooter,
   CardHeader,
   Divider,
-  Skeleton,
+  Pagination,
+  Spinner,
   Textarea,
   Image,
   Tooltip,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  addToast,
 } from '@heroui/react'
+import data from '@emoji-mart/data'
+import Picker from '@emoji-mart/react'
+import { createReaction } from '@/api-utils/portal/requests/reactions.requests'
 import {
   Heart,
   MessageCircle,
@@ -27,46 +37,35 @@ import {
 import moment from 'moment'
 import React, { useState } from 'react'
 
-interface IReaction {
-  emoji: string
-  count: number
-  key: string
-}
-
-interface IAuthorPost {
-  id: string
-  content: string
-  chapterNumber?: number
-  dateCreated: string
-  reactions: IReaction[]
-}
-
 const AuthorsRoomSection = () => {
   const { portalUser, portalUserLoading } = useGetPortalUser()
-  const [posts, setPosts] = useState<IAuthorPost[]>([
-    {
-      id: '1',
-      content:
-        'Writing Chapter 15 was one of the most emotional experiences for me. Reliving those moments through ink and paper felt like opening an old wound, but one that was finally healing. I hope you guys felt the raw emotion in every word.',
-      chapterNumber: 15,
-      dateCreated: moment().subtract(2, 'days').toISOString(),
-      reactions: [
-        { emoji: '❤️', count: 24, key: 'heart' },
-        { emoji: '🥺', count: 12, key: 'emotional' },
-        { emoji: '✨', count: 8, key: 'sparkles' },
-      ],
-    },
-    {
-      id: '2',
-      content:
-        "I've been thinking a lot about the theme of 'Echoes'. How our past self speaks to us in the quiet moments. Do you ever feel like you're competing with a version of yourself that no longer exists?",
-      dateCreated: moment().subtract(5, 'days').toISOString(),
-      reactions: [
-        { emoji: '🤔', count: 15, key: 'thinking' },
-        { emoji: '🙌', count: 9, key: 'celebrate' },
-      ],
-    },
-  ])
+
+  const [page, setPage] = useState(1)
+  const rowsPerPage = 6
+
+  const {
+    allPosts: allPostsData,
+    allPostsLoading,
+    mutateAllPosts,
+  } = useGetPortalAllAuthorPosts(rowsPerPage, page)
+  const posts = allPostsData?.items || []
+
+  const handleReaction = async (emoji: string, postId: string) => {
+    console.log(emoji)
+    try {
+      await createReaction({ reaction: emoji, authorRoomId: postId })
+      mutateAllPosts()
+    } catch (error: any) {
+      console.log(error)
+      addToast({
+        color: 'danger',
+        title:
+          error?.data?.message || error?.message || 'Something went wrong.',
+      })
+    }
+  }
+
+  const pages = Math.ceil((allPostsData?.meta?.total || 0) / rowsPerPage) || 1
 
   useSetHeaderNavigation({
     title: "Author's Room",
@@ -141,77 +140,117 @@ const AuthorsRoomSection = () => {
           )}
 
           {/* Posts Feed */}
-          <div className='space-y-8'>
-            {posts.map((post) => (
-              <Card
-                key={post.id}
-                className='bg-background/40 backdrop-blur-md border border-foreground-100 dark:border-foreground-900 rounded-[2rem] shadow-lg hover:shadow-xl transition-all duration-300'
-              >
-                <CardHeader className='px-8 pt-8 flex justify-between items-start'>
-                  <div className='flex gap-4 items-center'>
-                    <Avatar
-                      src='/logo.png'
-                      className='w-12 h-12 border-2 border-secondary/20'
-                    />
-                    <div>
-                      <div className='flex items-center gap-2'>
-                        <p className='font-black text-lg'>Mei</p>
-                        <span className='px-2 py-0.5 bg-secondary/10 text-secondary text-[10px] font-bold rounded-full uppercase tracking-wider'>
-                          Author
+          {allPostsLoading ? (
+            <div className='flex flex-col items-center justify-center py-20'>
+              <Spinner
+                label='Loading thoughts...'
+                size='lg'
+                color='secondary'
+              />
+            </div>
+          ) : posts.length === 0 ? (
+            <div className='flex flex-col items-center justify-center py-20 bg-default-50 rounded-3xl border-2 border-dashed border-default-200'>
+              <p className='text-default-400'>No thoughts posted yet.</p>
+            </div>
+          ) : (
+            <div className='space-y-8'>
+              {posts.map((post) => (
+                <Card
+                  key={post.id}
+                  className='bg-background/40 backdrop-blur-md border border-foreground-100 dark:border-foreground-900 rounded-[2rem] shadow-lg hover:shadow-xl transition-all duration-300'
+                >
+                  <CardHeader className='px-8 pt-8 flex justify-between items-start'>
+                    <div className='flex gap-4 items-center'>
+                      <Avatar
+                        src='/logo.png'
+                        className='w-12 h-12 border-2 border-secondary/20'
+                      />
+                      <div>
+                        <div className='flex items-center gap-2'>
+                          <p className='font-black text-lg'>Mei</p>
+                          <span className='px-2 py-0.5 bg-secondary/10 text-secondary text-[10px] font-bold rounded-full uppercase tracking-wider'>
+                            Author
+                          </span>
+                        </div>
+                        <p className='text-tiny text-foreground-400'>
+                          {moment(post.dateCreated).fromNow()}
+                        </p>
+                      </div>
+                    </div>
+                    {post?.chapterSummary?.number && (
+                      <div className='bg-default-100/50 px-3 py-1 rounded-full flex items-center gap-2 border border-foreground-50'>
+                        <Sparkles className='text-secondary' size={14} />
+                        <span className='text-xs font-bold'>
+                          Chapter {post.chapterSummary.number}
                         </span>
                       </div>
-                      <p className='text-tiny text-foreground-400'>
-                        {moment(post.dateCreated).fromNow()}
-                      </p>
+                    )}
+                  </CardHeader>
+
+                  <CardBody className='px-8 py-6'>
+                    <p className='text-xl font-medium leading-relaxed text-foreground-700 dark:text-foreground-300 font-playfair'>
+                      &ldquo;{post.text}&rdquo;
+                    </p>
+                  </CardBody>
+
+                  <Divider className='opacity-50 mx-8 w-auto' />
+
+                  <CardFooter className='px-8 py-6 flex flex-wrap gap-3 items-center'>
+                    <div className='flex flex-wrap gap-2'>
+                      {post.reactions &&
+                        post.reactions.length > 0 &&
+                        post.reactions.map((reaction) => (
+                          <Button
+                            key={reaction.key}
+                            size='sm'
+                            variant='flat'
+                            radius='full'
+                            className='bg-default-100/80 hover:bg-secondary/10 hover:text-secondary group transition-all h-9 px-3 gap-2 border border-transparent hover:border-secondary/20'
+                          >
+                            <span className='text-lg'>{reaction.emoji}</span>
+                            <span className='font-bold'>{reaction.count}</span>
+                          </Button>
+                        ))}
+                      <Popover placement='top'>
+                        <PopoverTrigger>
+                          <Button
+                            isIconOnly
+                            size='sm'
+                            variant='light'
+                            radius='full'
+                            className='h-9 w-9 text-foreground-400 hover:text-secondary hover:bg-secondary/10'
+                          >
+                            <Smile size={20} />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className='p-0 border-none bg-transparent shadow-none'>
+                          <Picker
+                            data={data}
+                            onEmojiSelect={(emoji: any) =>
+                              handleReaction(emoji.native, post.id)
+                            }
+                            theme='auto'
+                          />
+                        </PopoverContent>
+                      </Popover>
                     </div>
-                  </div>
-                  {post.chapterNumber && (
-                    <div className='bg-default-100/50 px-3 py-1 rounded-full flex items-center gap-2 border border-foreground-50'>
-                      <Sparkles className='text-secondary' size={14} />
-                      <span className='text-xs font-bold'>
-                        Chapter {post.chapterNumber}
-                      </span>
-                    </div>
-                  )}
-                </CardHeader>
+                  </CardFooter>
+                </Card>
+              ))}
+            </div>
+          )}
 
-                <CardBody className='px-8 py-6'>
-                  <p className='text-xl font-medium leading-relaxed text-foreground-700 dark:text-foreground-300 font-playfair'>
-                    &ldquo;{post.content}&rdquo;
-                  </p>
-                </CardBody>
-
-                <Divider className='opacity-50 mx-8 w-auto' />
-
-                <CardFooter className='px-8 py-6 flex flex-wrap gap-3 items-center'>
-                  <div className='flex flex-wrap gap-2'>
-                    {post.reactions.map((reaction) => (
-                      <Button
-                        key={reaction.key}
-                        size='sm'
-                        variant='flat'
-                        radius='full'
-                        className='bg-default-100/80 hover:bg-secondary/10 hover:text-secondary group transition-all h-9 px-3 gap-2 border border-transparent hover:border-secondary/20'
-                      >
-                        <span className='text-lg'>{reaction.emoji}</span>
-                        <span className='font-bold'>{reaction.count}</span>
-                      </Button>
-                    ))}
-                    <Tooltip content='Add reaction'>
-                      <Button
-                        isIconOnly
-                        size='sm'
-                        variant='light'
-                        radius='full'
-                        className='h-9 w-9 text-foreground-400 hover:text-secondary hover:bg-secondary/10'
-                      >
-                        <Smile size={20} />
-                      </Button>
-                    </Tooltip>
-                  </div>
-                </CardFooter>
-              </Card>
-            ))}
+          <div className='flex w-full justify-center pt-4'>
+            <Pagination
+              isCompact
+              showControls
+              showShadow
+              page={page}
+              total={pages}
+              color='secondary'
+              onChange={(page) => setPage(page)}
+              className='text-white'
+            />
           </div>
         </div>
       </Container>

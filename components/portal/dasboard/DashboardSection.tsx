@@ -1,6 +1,5 @@
 'use client'
 import Container from '@/components/elements/Container'
-import useGetPortalBookmarks from '@/hooks/requests/portal/useGetPortalBookmarks'
 import useGetPortalUser from '@/hooks/requests/portal/useGetPortalUser'
 import useSetHeaderNavigation from '@/hooks/useSetHeaderNavigation'
 import {
@@ -17,14 +16,7 @@ import Link from 'next/link'
 
 const DashboardSection = () => {
   const { portalUser, portalUserLoading } = useGetPortalUser()
-  const { bookmarks } = useGetPortalBookmarks()
-
-  const timeOfDay =
-    moment().hour() < 12
-      ? { icon: <Sunrise className='inline-block' />, greeting: 'morning' }
-      : moment().hour() < 17
-        ? { icon: <Sun className='inline-block' />, greeting: 'afternoon' }
-        : { icon: <Moon className='inline-block' />, greeting: 'evening' }
+  console.log(portalUser)
   useSetHeaderNavigation({
     title: undefined,
     backLink: `/`,

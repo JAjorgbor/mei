@@ -65,7 +65,7 @@ const UsersSection = () => {
               <p className='text-foreground-400 text-xs'>{original.email}</p>
             </div>
           ),
-        }
+        },
       ),
       columnHelper.accessor(`status`, {
         header: 'Status',
@@ -78,11 +78,11 @@ const UsersSection = () => {
               className='capitalize'
               radius='sm'
               color={
-                getValue() == 'active'
+                String(getValue())?.toLowerCase() == 'active'
                   ? 'success'
                   : getValue() == 'inactive'
-                  ? 'warning'
-                  : 'danger'
+                    ? 'warning'
+                    : 'danger'
               }
             >
               {getValue()}
@@ -129,7 +129,7 @@ const UsersSection = () => {
         ),
       }),
     ],
-    []
+    [],
   )
   // const { allAgencyContacts, allAgencyContactsLoading } =
   //   useGetAllAgencyContacts()
@@ -196,13 +196,13 @@ const UsersSection = () => {
                   key={header.id}
                   align={header.id === 'actions' ? 'center' : 'start'}
                   allowsSorting={['unlockedChapters', 'dateCreated'].includes(
-                    header.id
+                    header.id,
                   )}
                   onClick={header.column.getToggleSortingHandler()}
                 >
                   {flexRender(
                     header.column.columnDef.header,
-                    header.getContext()
+                    header.getContext(),
                   )}
                 </TableColumn>
               ))}
@@ -250,12 +250,12 @@ const TopContent = ({
         if (status == 'all') return allUsers.length
         else
           return allUsers.filter(
-            (each: any) => each?.[key]?.toLocaleLowerCase() == status
+            (each: any) => each?.[key]?.toLocaleLowerCase() == status,
           ).length
       }
       return '-'
     },
-    [allUsers, table.getColumn('status')?.getFilterValue()]
+    [allUsers, table.getColumn('status')?.getFilterValue()],
   )
   return (
     <div className='flex flex-col gap-4'>

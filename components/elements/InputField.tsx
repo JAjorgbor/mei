@@ -203,7 +203,7 @@ const InputField: FC<InputFieldProps> = ({
   }, [defaultValue, value])
 
   const baseClass = twMerge(
-    'w-full p-2 py-2 block text-nevada rounded-md border border-gray-200 ',
+    'w-full p-2 py-2 block text-nevada rounded-xl border border-gray-200 ',
     startContent && 'rounded-l-none border-gray-200 border-l-none',
     !!errorMessage
       ? 'bg-red-100 dark:bg-red-900/40 border-red-500'
@@ -212,7 +212,7 @@ const InputField: FC<InputFieldProps> = ({
     classNames.input,
     disabled && 'cursor-not-allowed',
     'focus:outline-primary disabled:bg-gray-50/20',
-    `${selectSize == 'sm' && type == 'select' ? 'h-7 min-h-7' : ''}`
+    `${selectSize == 'sm' && type == 'select' ? 'h-7 min-h-7' : ''}`,
   )
 
   useEffect(() => {
@@ -440,7 +440,6 @@ const InputField: FC<InputFieldProps> = ({
               // listboxWrapper: 'max-h-[400px]',
             }}
             onSelectionChange={(value) => {
-              onChange(value)
               setSelectFieldValue(value)
               const array = Array.from(value)
               onChange(array[0])
@@ -465,36 +464,32 @@ const InputField: FC<InputFieldProps> = ({
           <Autocomplete
             aria-label={(label as string) || 'select  field'}
             placeholder={placeholder}
-            defaultSelectedKeys={defaultValue ? [defaultValue] : ['']}
-            inputProps={{
-              classNames: {
-                inputWrapper: `${baseClass} border-none !py-1 relative shadow-none !text-nevada !rounded-r-lg`,
-                input: '!text-nevada',
-              },
-            }}
+            defaultSelectedKey={defaultValue ?? undefined}
             classNames={{
               selectorButton: '!text-nevada',
             }}
             selectedKey={value as string}
             onSelectionChange={(value) => {
               onChange(value)
+              setSelectFieldValue(value)
             }}
-            disabled={disabled}
+            isDisabled={disabled}
             endContent={endContent}
           >
-            {/* eslint-disable-next-line */}
-            {/* @ts-ignore */}
-            {options?.map((option) => (
-              <AutocompleteItem
-                key={option?.value}
-                variant='solid'
-                classNames={{
-                  wrapper: 'group',
-                }}
-              >
-                <>{option?.label}</>
-              </AutocompleteItem>
-            ))}
+            {
+              options?.map((option) => (
+                <AutocompleteItem
+                  key={option?.value}
+                  textValue={option?.label as string}
+                  variant='solid'
+                  classNames={{
+                    wrapper: 'group',
+                  }}
+                >
+                  <>{option?.label}</>
+                </AutocompleteItem>
+              ))!
+            }
           </Autocomplete>
         )
       case 'checkbox':
@@ -723,7 +718,7 @@ const InputField: FC<InputFieldProps> = ({
             ? 'flex items-center gap-1 space-y-0'
             : 'space-y-1',
           classNames.base,
-          disabled && 'cursor-not-allowed'
+          disabled && 'cursor-not-allowed',
         )}
       >
         {type == 'radio' ||
@@ -736,17 +731,18 @@ const InputField: FC<InputFieldProps> = ({
               </p>
             )
           : renderLabelLeft
-          ? label && (
-              <p className={twMerge(`order-1`, classNames.label)}>
-                {label} {isRequired && <span className='text-red-700'>*</span>}
-              </p>
-            )
-          : label && (
-              <p>
-                <span className={twMerge(classNames.label)}>{label}</span>
-                {isRequired && <span className='text-red-700'>*</span>}
-              </p>
-            )}
+            ? label && (
+                <p className={twMerge(`order-1`, classNames.label)}>
+                  {label}{' '}
+                  {isRequired && <span className='text-red-700'>*</span>}
+                </p>
+              )
+            : label && (
+                <p>
+                  <span className={twMerge(classNames.label)}>{label}</span>
+                  {isRequired && <span className='text-red-700'>*</span>}
+                </p>
+              )}
         <div className={`relative ${type !== 'passCode' ? 'flex' : ''}`}>
           {startContent && (
             <div className='bg-background grid place-items-center p-2.5 rounded-l-lg border border-r-0 text-nevada'>
@@ -799,7 +795,7 @@ export const RadioCard: FC<RadioCardProps> = ({
       className={cn(
         'group inline-flex items-center hover:opacity-70 active:opacity-50 justify-between flex-row-reverse tap-highlight-transparent',
         'cursor-pointer border-[1px] border-default rounded-lg gap-4 p-2 py-2.5',
-        'data-[selected=true]:border-primary '
+        'data-[selected=true]:border-primary ',
       )}
     >
       <VisuallyHidden>

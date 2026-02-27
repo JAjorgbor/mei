@@ -1,6 +1,6 @@
 'use client'
 import { IChapter } from '@/api-utils/global-interfaces/chapter.interfaces'
-import CreateChapterModal from '@/components/admin/chapters/CreateChapterModal'
+import CreateChapterDrawer from '@/components/admin/chapters/CreateChapterDrawer'
 import DeleteChapterModal from '@/components/admin/chapters/DeleteChapterModal'
 import Container from '@/components/elements/Container'
 import InputField from '@/components/elements/InputField'
@@ -46,7 +46,9 @@ const ChaptersSection = () => {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
     { id: 'status', value: 'all' },
   ])
-  const { allChapters, allChaptersLoading } = useGetAllChapters()
+  const { allChapters: allChaptersData, allChaptersLoading } =
+    useGetAllChapters()
+  const allChapters = allChaptersData?.items
   const [selectedChapter, setSelectedChapter] = useState<IChapter>()
   const [showDeleteChapterModal, setShowDeleteChapterModal] = useState(false)
 
@@ -70,7 +72,7 @@ const ChaptersSection = () => {
               <p className='text-bold text-small capitalize'>{getValue()}</p>
             </div>
           ),
-        }
+        },
       ),
       columnHelper.accessor('pageCount', {
         header: 'Pages',
@@ -95,8 +97,8 @@ const ChaptersSection = () => {
                 getValue() == 'published'
                   ? 'success'
                   : getValue() == 'draft'
-                  ? 'warning'
-                  : 'danger'
+                    ? 'warning'
+                    : 'danger'
               }
             >
               {getValue()}
@@ -145,7 +147,7 @@ const ChaptersSection = () => {
         ),
       }),
     ],
-    [allChapters]
+    [allChapters],
   )
 
   const table = useReactTable({
@@ -211,13 +213,13 @@ const ChaptersSection = () => {
                   key={header.id}
                   align={header.id === 'actions' ? 'center' : 'start'}
                   allowsSorting={['title', 'pageCount', 'dateCreated'].includes(
-                    header.id
+                    header.id,
                   )}
                   onClick={header.column.getToggleSortingHandler()}
                 >
                   {flexRender(
                     header.column.columnDef.header,
-                    header.getContext()
+                    header.getContext(),
                   )}
                 </TableColumn>
               ))}
@@ -265,19 +267,21 @@ const TopContent = ({
 }) => {
   const [showCreateChapterModal, setShowCreateChapterModal] = useState(false)
 
-  const { allChapters } = useGetAllChapters()
+  const { allChapters: allChaptersData } = useGetAllChapters()
+  const allChapters = allChaptersData?.items
   const getStatusCount = useCallback(
     (status: string) => {
       if (allChapters) {
         if (status == 'all') return allChapters.length
-        else
-          return allChapters.filter(
-            (each) => each.status.toLocaleLowerCase() == status
-          ).length
+        else {
+          return allChapters?.filter(
+            (each) => each.status.toLocaleLowerCase() == status,
+          )?.length
+        }
       }
       return '-'
     },
-    [allChapters, table.getColumn('status')?.getFilterValue()]
+    [allChapters, table.getColumn('status')?.getFilterValue()],
   )
   return (
     <>
@@ -338,7 +342,7 @@ const TopContent = ({
           </label>
         </div>
       </div>
-      <CreateChapterModal
+      <CreateChapterDrawer
         isOpen={showCreateChapterModal}
         setIsOpen={setShowCreateChapterModal}
       />
@@ -347,7 +351,8 @@ const TopContent = ({
 }
 
 const BottomContent = ({ table }: { table: TableType<IChapter> }) => {
-  const { allChapters } = useGetAllChapters()
+  const { allChapters: allChaptersData } = useGetAllChapters()
+  const allChapters = allChaptersData?.items || []
   return (
     allChapters && (
       <div className='py-2 px-2 flex justify-between items-center'>

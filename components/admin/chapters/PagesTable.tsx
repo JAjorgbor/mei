@@ -56,7 +56,10 @@ const PagesTable = () => {
   const { chapterId } = useParams()
   const [showDeletePageModal, setShowDeletePageModal] = useState(false)
   const [selectedPage, setSelectedPage] = useState<IPage>()
-  const { pages, pagesLoading } = useGetPagesForChapter(chapterId as string)
+  const { pages: pagesData, pagesLoading } = useGetPagesForChapter(
+    chapterId as string,
+  )
+  const pages = pagesData?.items
   const columns = useMemo(
     () => [
       columnHelper.accessor(`textContent`, {
@@ -103,8 +106,8 @@ const PagesTable = () => {
                 getValue() == 'published'
                   ? 'success'
                   : getValue() == 'draft'
-                  ? 'warning'
-                  : 'danger'
+                    ? 'warning'
+                    : 'danger'
               }
             >
               {getValue()}
@@ -145,7 +148,7 @@ const PagesTable = () => {
         ),
       }),
     ],
-    [pages]
+    [pages],
   )
   // const { allAgencyContacts, allAgencyContactsLoading } =
   //   useGetAllAgencyContacts()
@@ -215,7 +218,7 @@ const PagesTable = () => {
                 >
                   {flexRender(
                     header.column.columnDef.header,
-                    header.getContext()
+                    header.getContext(),
                   )}
                 </TableColumn>
               ))}
@@ -262,7 +265,8 @@ const TopContent = ({
   setGlobalFilter: any
 }) => {
   const { chapterId } = useParams()
-  const { pages } = useGetPagesForChapter(chapterId as string)
+  const { pages: pagesData } = useGetPagesForChapter(chapterId as string)
+  const pages = pagesData?.items
 
   const getStatusCount = useCallback(
     (status: string) => {
@@ -270,11 +274,11 @@ const TopContent = ({
         if (status == 'all') return pages.length
         else
           return pages.filter(
-            (each) => each.status.toLocaleLowerCase() == status
+            (each) => each.status.toLocaleLowerCase() == status,
           ).length
       }
     },
-    [pages, table.getColumn('status')?.getFilterValue()]
+    [pages, table.getColumn('status')?.getFilterValue()],
   )
   return (
     <div className='flex flex-col gap-4'>

@@ -16,6 +16,13 @@ const axiosInstance = axios.create({
   },
 })
 
+axiosInstance.interceptors.response.use((response) => {
+  return {
+    ...response,
+    data: response.data.data,
+  }
+})
+
 export const { handlers, signIn, signOut, auth } = NextAuth((req) => ({
   providers: [
     GoogleProvider({
@@ -105,7 +112,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth((req) => ({
           console.error('Google provider sync failed:', e.config.data)
           const errorMessage = encodeURIComponent(
             e?.response?.data?.detail ||
-              'Something went wrong. Please try again later.'
+              'Something went wrong. Please try again later.',
           )
           const params = new URLSearchParams(req?.nextUrl?.searchParams)
           params.set('error', errorMessage)

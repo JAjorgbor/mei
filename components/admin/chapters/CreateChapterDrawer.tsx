@@ -1,15 +1,11 @@
 'use client'
-import { IChapter } from '@/api-utils/global-interfaces/chapter.interfaces'
-import { updateChapter } from '@/api-utils/admin/requests/chapter.requests'
+import { createChapter } from '@/api-utils/admin/requests/chapter.requests'
 import { uploadToCloudinary } from '@/api-utils/general.requests'
-import extractPublicId from '@/utils/extractCloudinaryPublicId'
-import { urlToFile } from '@/utils/urlToFile'
-import ModalWrapper, {
-  BaseModalProps,
-} from '@/components/admin/elements/ModalWrapper'
+import DrawerWrapper, {
+  BaseDrawerProps,
+} from '@/components/admin/elements/DrawerWrapper'
 import InputField from '@/components/elements/InputField'
 import useGetAllChapters from '@/hooks/requests/useGetAllChapters'
-import useGetChapter from '@/hooks/requests/useGetChapter'
 import { addToast, Button } from '@heroui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CameraIcon } from 'lucide-react'
@@ -18,16 +14,14 @@ import { useEffect, useRef, useState, type FC } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-const BOOK_ID = process.env.NEXT_PUBLIC_BOOK_ID
-
 const schema = z.object({
   coverImage: z
     .any()
     .refine((file) => file && file.length > 0, 'Cover image is required'),
+  bookId: z.any(),
   chapterLabel: z
     .string({ required_error: 'Chapter title is required' })
     .min(1, 'Chapter title is required'),
-  bookId: z.any(),
   status: z
     .string({ required_error: 'Status is required' })
     .min(1, 'Status is required'),
@@ -35,15 +29,11 @@ const schema = z.object({
 
 type FormFields = z.infer<typeof schema>
 
-const ManageChapterModal: FC<BaseModalProps & { chapter: IChapter }> = ({
-  isOpen,
-  setIsOpen,
-  chapter,
-}) => {
+const BOOK_ID = process.env.NEXT_PUBLIC_BOOK_ID
+
+const CreateChapterDrawer: FC<BaseDrawerProps> = ({ isOpen, setIsOpen }) => {
   const formMethods = useForm<FormFields>({ resolver: zodResolver(schema) })
   const { mutateAllChapters } = useGetAllChapters()
-  const { mutateChapter } = useGetChapter(chapter?.id)
-
   const fileInputRef = useRef<any>(null)
   const watchAvatar = formMethods.watch('coverImage')
   const [imagePreview, setImagePreview] = useState('')
@@ -59,22 +49,20 @@ const ManageChapterModal: FC<BaseModalProps & { chapter: IChapter }> = ({
 
   const handleSubmit = async (formData: FormFields) => {
     try {
-      const public_id = extractPublicId(chapter?.coverImage) as string
-
       const { data } = await uploadToCloudinary({
         file: formData.coverImage,
-        public_id,
+        folder: `mie-novel/admin/chapters/cover-images/`,
       })
 
       formData.bookId = BOOK_ID
       formData.coverImage = data.secure_url
-      await updateChapter(chapter.id, formData)
+
+      await createChapter({ ...formData, bookId: BOOK_ID })
 
       setIsOpen(false)
       mutateAllChapters()
-      mutateChapter()
       addToast({
-        title: 'Chapter updated successfully',
+        title: 'Chapter created successfully',
         severity: 'success',
         color: 'success',
       })
@@ -89,29 +77,12 @@ const ManageChapterModal: FC<BaseModalProps & { chapter: IChapter }> = ({
       })
     }
   }
-  useEffect(() => {
-    if (chapter) {
-      formMethods.reset({
-        chapterLabel: chapter.chapterLabel,
-        status: chapter.status,
-      })
-      ;(async () => {
-        const file = await urlToFile(
-          chapter.coverImage,
-          'cover-image',
-          'image/jpeg'
-        )
-        formMethods.setValue('coverImage', [file])
-        const previewUrl = URL.createObjectURL(file)
-        setImagePreview(previewUrl)
-      })()
-    }
-  }, [chapter])
+
   return (
-    <ModalWrapper
+    <DrawerWrapper
       isOpen={isOpen}
       setIsOpen={setIsOpen}
-      title='Manage Chapter'
+      title='Create Chapter'
       footer={
         <div className='flex gap-4 justify-end'>
           <Button
@@ -129,10 +100,10 @@ const ManageChapterModal: FC<BaseModalProps & { chapter: IChapter }> = ({
             size='sm'
             type='submit'
             form='create-chapter-form'
-            //color='secondary'
+            color='primary'
             isLoading={formMethods.formState.isSubmitting}
           >
-            Update
+            Create
           </Button>
         </div>
       }
@@ -156,11 +127,11 @@ const ManageChapterModal: FC<BaseModalProps & { chapter: IChapter }> = ({
                   fileInputRef.current = e
                 }}
               />
-              <Image
-                src={imagePreview || 'https://dummyimage.com/300x500'}
+              <img
+                src={imagePreview || 'https://dummyimage.com/300x400'}
                 alt='chapter-cover-image'
                 className='object-cover h-80'
-                height={500}
+                height={400}
                 width={300}
               />
               <button
@@ -192,6 +163,7 @@ const ManageChapterModal: FC<BaseModalProps & { chapter: IChapter }> = ({
             type='select'
             label='Status'
             isRequired
+            className='md:col-span-2'
             onChange={(value) => formMethods.setValue('status', value)}
             value={formMethods.watch('status')}
             errorMessage={formMethods.formState.errors.status?.message}
@@ -201,16 +173,9 @@ const ManageChapterModal: FC<BaseModalProps & { chapter: IChapter }> = ({
               { value: 'published', label: 'Published' },
             ]}
           />
-          <InputField
-            type='text'
-            label='Chapter Number'
-            isRequired
-            disabled
-            register={{ value: chapter?.number }}
-          />
         </div>
       </form>
-    </ModalWrapper>
+    </DrawerWrapper>
   )
 }
-export default ManageChapterModal
+export default CreateChapterDrawer

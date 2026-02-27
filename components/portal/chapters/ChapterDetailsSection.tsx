@@ -21,24 +21,20 @@ const ChapterDetailsSection = () => {
   const pathname = usePathname()
   const params = useParams()
   const { chapter, chapterLoading } = useGetPortalChapter(
-    params.chapterId as string
+    params.chapterId as string,
   )
 
-  const { pages, pagesLoading } = useGetPortalPagesForChapter(
-    params?.chapterId as string
+  const { pages: pagesData, pagesLoading } = useGetPortalPagesForChapter(
+    params?.chapterId as string,
   )
+  const pages = pagesData?.items
   useSetHeaderNavigation({
     title: `Chapter ${chapter?.number || 'Loading...'}`,
     backLink: '/portal/chapters',
   })
-  const { allChapters, allChaptersLoading } = useGetPortalAllChapters({
-    start: chapter
-      ? chapter?.number - 2 > 0
-        ? chapter?.number - 2
-        : 0
-      : undefined,
-    stop: chapter ? chapter?.number + 2 : undefined,
-  })
+  const { allChapters: allChaptersData, allChaptersLoading } =
+    useGetPortalAllChapters()
+  const allChapters = allChaptersData?.items
   const prevChapter = useMemo(() => {
     if (!allChaptersLoading && allChapters && chapter) {
       return allChapters.find((c) => c.number < chapter.number) || undefined

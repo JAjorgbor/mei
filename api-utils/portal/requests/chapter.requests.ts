@@ -1,11 +1,8 @@
 import axiosInstance from '@/api-utils/portal/request-adapter'
 
-export const getPortalAllChapters = (
-  bookId: string,
-  { start = 0, stop = 100 }: { start?: number; stop?: number }
-) =>
+export const getPortalAllChapters = (bookId: string) =>
   axiosInstance.get(`/chapter/user/get/allChapters/${bookId}`, {
-    params: { start, stop },
+    params: { limit: 1000 },
   })
 
 export const getPortalChapter = (chapterId: string) =>

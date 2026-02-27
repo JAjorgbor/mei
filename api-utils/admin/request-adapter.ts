@@ -56,7 +56,12 @@ axiosInstance.interceptors.request.use(async (config) => {
 
 // === Response Interceptor ===
 axiosInstance.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    return {
+      ...response,
+      data: response.data.data,
+    }
+  },
   async (error) => {
     const session: any = await getSession()
     const originalConfig = error.config

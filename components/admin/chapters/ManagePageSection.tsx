@@ -147,95 +147,65 @@ const ManagePageSection = () => {
           ]}
         />
       </div>
-      <div className='flex justify-center  w-4/5 mx-auto'>
-        <Button
-          className={`p-3 py-5 text-center flex-1 bg-transparent ${
-            activeTab == 'content'
-              ? 'text-primary border-b border-b-primary'
-              : ''
-          }`}
-          radius='none'
-          onPress={() => setActiveTab('content')}
-        >
-          Content
-        </Button>
-        <Button
-          radius='none'
-          className={`p-3 py-5 text-center flex-1 bg-transparent ${
-            activeTab == 'likes' ? 'text-primary border-b border-b-primary' : ''
-          }`}
-          onPress={() => setActiveTab('likes')}
-        >
-          Likes
-        </Button>
-      </div>
-
-      <Tabs classNames={{ tab: 'hidden' }} selectedKey={activeTab}>
-        <Tab key='content' title='Content'>
-          <div>
-            <Tabs aria-label='Options'>
-              <Tab key='editor' title='Editor'>
-                <Card>
-                  <CardBody>
-                    {' '}
-                    <div className='min-h-96'>
-                      {page ? (
-                        isHydrated && (
-                          <ReactQuill
-                            theme='snow'
-                            value={formMethods.watch('textContent')}
-                            onChange={(value) =>
-                              formMethods.setValue('textContent', value)
-                            }
-                            modules={modules}
-                            formats={formats}
-                            className='h-80'
-                          />
-                        )
-                      ) : (
-                        <Skeleton className='h-80' />
-                      )}
-                    </div>
-                  </CardBody>
-                </Card>
-              </Tab>
-              <Tab key='preview' title='Preview'>
-                <Card>
-                  <CardBody>
-                    <div className='min-h-80'>
-                      <div
-                        dangerouslySetInnerHTML={{
-                          __html: formMethods.watch('textContent'),
-                        }}
-                        className='content-renderer'
+      <div className='min-h-96 mt-6'>
+        <Tabs aria-label='Options'>
+          <Tab key='editor' title='Editor'>
+            <Card>
+              <CardBody>
+                {' '}
+                <div className='min-h-96'>
+                  {page ? (
+                    isHydrated && (
+                      <ReactQuill
+                        theme='snow'
+                        value={formMethods.watch('textContent')}
+                        onChange={(value) =>
+                          formMethods.setValue('textContent', value)
+                        }
+                        modules={modules}
+                        formats={formats}
+                        className='h-80'
                       />
-                    </div>
-                  </CardBody>
-                </Card>
-              </Tab>
-            </Tabs>
-            <div className='flex gap-4 justify-end items-center w-full mt-6'>
-              <Button
-                color='danger'
-                disabled={formMethods.formState.isSubmitting || keepLoading}
-                href={`/admin/chapters/${chapterId}`}
-              >
-                Cancel
-              </Button>
-              <Button
-                color='primary'
-                type='submit'
-                isLoading={formMethods.formState.isSubmitting || keepLoading}
-              >
-                Save
-              </Button>
-            </div>
-          </div>
-        </Tab>
-        <Tab key='likes' title='Likes'>
-          Likes
-        </Tab>
-      </Tabs>
+                    )
+                  ) : (
+                    <Skeleton className='h-80' />
+                  )}
+                </div>
+              </CardBody>
+            </Card>
+          </Tab>
+          <Tab key='preview' title='Preview'>
+            <Card>
+              <CardBody>
+                <div className='min-h-80'>
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: formMethods.watch('textContent'),
+                    }}
+                    className='content-renderer'
+                  />
+                </div>
+              </CardBody>
+            </Card>
+          </Tab>
+        </Tabs>
+        <div className='flex gap-4 justify-end items-center w-full mt-6'>
+          <Button
+            color='danger'
+            disabled={formMethods.formState.isSubmitting || keepLoading}
+            href={`/admin/chapters/${chapterId}`}
+          >
+            Cancel
+          </Button>
+          <Button
+            color='primary'
+            type='submit'
+            isLoading={formMethods.formState.isSubmitting || keepLoading}
+          >
+            Save
+          </Button>
+        </div>
+      </div>
     </form>
   )
 }

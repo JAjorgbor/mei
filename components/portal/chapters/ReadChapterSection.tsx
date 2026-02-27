@@ -48,24 +48,19 @@ const ReadChapterSection = () => {
   const { chapterId } = useParams()
   const [showComments, setShowComments] = useState(false)
   const { chapter, chapterLoading } = useGetPortalChapter(chapterId as string)
-  const { pages, pagesLoading } = useGetPortalPagesForChapter(
+  const { pages: pagesData, pagesLoading } = useGetPortalPagesForChapter(
     chapterId as string,
   )
-
+  const pages = pagesData?.items
   useSetHeaderNavigation({
     title: '',
     backLink: `/portal/chapters/${chapterId}`,
     width: 'max-w-[700px]',
   })
 
-  const { allChapters, allChaptersLoading } = useGetPortalAllChapters({
-    start: chapter
-      ? chapter?.number - 2 > 0
-        ? chapter?.number - 2
-        : 0
-      : undefined,
-    stop: chapter ? chapter?.number + 2 : undefined,
-  })
+  const { allChapters: allChaptersData, allChaptersLoading } =
+    useGetPortalAllChapters()
+  const allChapters = allChaptersData?.items
   const prevChapter = useMemo(() => {
     if (!allChaptersLoading && allChapters && chapter) {
       return allChapters.find((c) => c.number < chapter.number) || undefined
@@ -79,7 +74,8 @@ const ReadChapterSection = () => {
     }
     return undefined
   }, [allChapters, allChaptersLoading, chapter])
-  const { bookmarks } = useGetPortalBookmarks()
+  const { bookmarks: bookmarksData } = useGetPortalBookmarks()
+  const bookmarks = bookmarksData?.items
   return (
     <>
       <Container className='space-y-6 mb-16'>
@@ -208,8 +204,9 @@ const ChapterStats = ({
   const { chapterId }: { chapterId: string } = useParams()
   const { chapter, mutateChapter } = useGetPortalChapter(chapterId as string)
   const [loadingLike, setLoadingLike] = useState(false)
-  const { chapterLikes, mutateChapterLikes } =
+  const { chapterLikes: chapterLikesData, mutateChapterLikes } =
     useGetPortalChapterLikes(chapterId)
+  const chapterLikes = chapterLikesData?.items
   const { portalUser } = useGetPortalUser()
   const existingLike = chapterLikes?.find(
     (each) => each.userId == portalUser?.userId,

@@ -1,5 +1,6 @@
 'use client'
 
+import { IList } from '@/api-utils/global-interfaces/lists.interace'
 import { IPage } from '@/api-utils/global-interfaces/page.interface'
 import { getPortalChapterPages } from '@/api-utils/portal/requests/chapter.requests'
 import useSWR from 'swr'
@@ -10,9 +11,9 @@ export default function useGetPortalPagesForChapter(chapterId: string) {
     return data
   }
 
-  const { data, error, mutate, isLoading } = useSWR<IPage[]>(
+  const { data, error, mutate, isLoading } = useSWR<IList<IPage>>(
     `/api/portal/chapter/${chapterId}/pages`,
-    fetcher
+    fetcher,
   )
 
   return {

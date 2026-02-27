@@ -1,6 +1,7 @@
 'use client'
 
 import { ILike } from '@/api-utils/global-interfaces/like.interface'
+import { IList } from '@/api-utils/global-interfaces/lists.interace'
 import { getPortalUserLikes } from '@/api-utils/portal/requests/like.requests'
 import useSWR from 'swr'
 
@@ -9,9 +10,9 @@ export default function useGetPortalUserLikes() {
     const { data } = await getPortalUserLikes()
     return data
   }
-  const { data, error, mutate, isLoading } = useSWR<ILike[]>(
+  const { data, error, mutate, isLoading } = useSWR<IList<ILike>>(
     `/api/portal/likes/users`,
-    fetcher
+    fetcher,
   )
   return {
     userLikes: data,

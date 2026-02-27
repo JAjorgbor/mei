@@ -73,6 +73,8 @@ const Header = () => {
         </NavbarItem>
         <NavbarItem>
           <Button
+            as={Link}
+            href='/portal/subscribe'
             color='secondary'
             className='rounded-3xl p-1.5! px-2 gap-2 items-center text-sm h-7'
             size='sm'

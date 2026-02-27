@@ -55,7 +55,12 @@ axiosInstance.interceptors.request.use(async (config) => {
 
 // === Response Interceptor ===
 axiosInstance.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    return {
+      ...response,
+      data: response.data.data,
+    }
+  },
   async (error) => {
     const session: any = await getSession()
     const originalConfig = error.config
@@ -81,8 +86,6 @@ axiosInstance.interceptors.response.use(
       try {
         const refreshToken =
           sessionStorage.getItem(PORTAL_REFRESH_KEY) || session?.refreshToken
-
-        console.log('refreshing token', refreshToken)
 
         const { data } = await axiosInstance.post(
           'user/refresh',

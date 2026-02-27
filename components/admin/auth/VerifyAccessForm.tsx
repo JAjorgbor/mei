@@ -72,6 +72,7 @@ const VerifyAccessForm = () => {
 
   const handleSubmit = async (formData: FormFields) => {
     try {
+      console.log(session)
       await verifyAccess({
         otp: formData.otp,
         access_token: session?.accessToken,
@@ -91,56 +92,76 @@ const VerifyAccessForm = () => {
     }
   }
   return (
-    <Card>
-      <CardBody className='overflow-hidden'>
-        <form onSubmit={formMethods.handleSubmit(handleSubmit)}>
-          <div className='space-y-4'>
-            <div className='flex flex-col gap items-center'>
-              <Logo width={60} height={60} />
-              <h1 className='text-2xl font-bold'>Verify Access</h1>
-            </div>
-            <p className='text-sm text-center'>
-              Provide the code that was sent to <br />
-              <span className='font-bold'>{session?.user?.email}</span>
-            </p>
-            <div className='gap-4 flex flex-col items-center'>
-              <InputOtp
-                length={6}
-                variant='bordered'
-                value={formMethods.watch('otp')}
-                onValueChange={(value) => formMethods.setValue('otp', value)}
-                size='lg'
-                color='primary'
-                errorMessage={formMethods.formState.errors.otp?.message}
-                isInvalid={!!formMethods.formState.errors.otp}
-              />
-              <Button
-                fullWidth
-                color='primary'
-                type='submit'
-                isLoading={formMethods.formState.isSubmitting || keepLoading}
-              >
-                Verify OTP
-              </Button>
-            </div>
-            <div className='flex justify-center'>
-              <button
-                type='button'
-                onClick={() =>
-                  addToast({
-                    title: 'Please wait...',
-                    promise: handleOTPResend(),
-                    timeout: 1000,
-                  })
-                }
-                disabled={resendOtpLoading || !allowOTPResend}
-                className={`text-sm text-gray-400 !font-normal inline-flex gap-1 items-center hover:text-secondary disabled:cursor-not-allowed`}
-              >
-                <RefreshCcw size={15} />
-                Resend OTP
-                {!allowOTPResend && (
-                  <>
-                    <span>
+    <div className='w-full max-w-md mx-auto'>
+      <Card className='bg-background/60 dark:bg-zinc-900/60 backdrop-blur-2xl border border-default-100 shadow-2xl rounded-[2.5rem] overflow-hidden'>
+        <CardBody className='p-8'>
+          <form onSubmit={formMethods.handleSubmit(handleSubmit)}>
+            <div className='space-y-6'>
+              <div className='flex flex-col gap items-center space-y-4 mb-2'>
+                <div className='p-3 bg-primary/10 rounded-2xl'>
+                  <Logo width={64} height={64} />
+                </div>
+                <div className='flex flex-col items-center text-center'>
+                  <h1 className='text-2xl font-black tracking-tighter leading-none text-foreground'>
+                    VERIFY ACCESS
+                  </h1>
+                  <span className='text-[10px] uppercase font-black text-primary tracking-widest mt-1'>
+                    Two-Factor Authentication
+                  </span>
+                </div>
+              </div>
+              <p className='text-sm text-center text-default-500'>
+                Provide the code that was sent to <br />
+                <span className='font-bold text-foreground'>
+                  {session?.user?.email}
+                </span>
+              </p>
+              <div className='gap-6 flex flex-col items-center pt-2'>
+                <InputOtp
+                  length={6}
+                  variant='bordered'
+                  value={formMethods.watch('otp')}
+                  onValueChange={(value) => formMethods.setValue('otp', value)}
+                  size='lg'
+                  color='primary'
+                  errorMessage={formMethods.formState.errors.otp?.message}
+                  isInvalid={!!formMethods.formState.errors.otp}
+                  classNames={{
+                    segmentWrapper: 'gap-3',
+                    segment:
+                      'w-12 h-14 text-xl border-default-200 bg-background/50 rounded-xl',
+                  }}
+                />
+                <Button
+                  fullWidth
+                  color='primary'
+                  className='font-bold h-12 text-sm uppercase tracking-widest shadow-[0_0_20px_rgba(var(--heroui-primary-rgb),0.2)] rounded-2xl'
+                  type='submit'
+                  isLoading={formMethods.formState.isSubmitting || keepLoading}
+                >
+                  Verify OTP
+                </Button>
+              </div>
+              <div className='flex justify-center pt-2'>
+                <button
+                  type='button'
+                  onClick={() =>
+                    addToast({
+                      title: 'Please wait...',
+                      promise: handleOTPResend(),
+                      timeout: 1000,
+                    })
+                  }
+                  disabled={resendOtpLoading || !allowOTPResend}
+                  className={`text-sm text-default-400 !font-medium inline-flex gap-2 items-center hover:text-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed`}
+                >
+                  <RefreshCcw
+                    size={14}
+                    className={resendOtpLoading ? 'animate-spin' : ''}
+                  />
+                  Resend OTP
+                  {!allowOTPResend && (
+                    <span className='font-bold text-primary'>
                       {' '}
                       in{' '}
                       <TimerCountDown
@@ -154,14 +175,14 @@ const VerifyAccessForm = () => {
                         }}
                       />
                     </span>
-                  </>
-                )}{' '}
-              </button>
+                  )}
+                </button>
+              </div>
             </div>
-          </div>
-        </form>
-      </CardBody>
-    </Card>
+          </form>
+        </CardBody>
+      </Card>
+    </div>
   )
 }
 

@@ -64,36 +64,48 @@ const LoginForm = () => {
   }
 
   return (
-    <div className='space-y-4'>
-      <Card>
-        <CardBody>
+    <div className='space-y-4 w-full max-w-md mx-auto'>
+      <Card className='bg-background/60 dark:bg-zinc-900/60 backdrop-blur-2xl border border-default-100 shadow-2xl rounded-[2.5rem] overflow-hidden'>
+        <CardBody className='p-8'>
           <form onSubmit={formMethods.handleSubmit(handleSubmit)}>
-            <div className='space-y-4'>
-              <div className='flex flex-col gap items-center'>
-                <Logo width={60} height={60} />
-                <h1 className='text-2xl font-bold'>Mie Admin</h1>
+            <div className='space-y-6'>
+              <div className='flex flex-col gap items-center space-y-4 mb-2'>
+                <div className='p-3 bg-primary/10 rounded-2xl'>
+                  <Logo width={64} height={64} />
+                </div>
+                <div className='flex flex-col items-center text-center'>
+                  <h1 className='text-2xl font-black tracking-tighter leading-none text-foreground'>
+                    MEI ADMIN
+                  </h1>
+                  <span className='text-[10px] uppercase font-black text-primary tracking-widest mt-1'>
+                    Secure Access
+                  </span>
+                </div>
               </div>
-              <InputField
-                label='Email Address'
-                placeholder='admin@mie.com'
-                type='email'
-                register={formMethods.register('email')}
-                errorMessage={formMethods.formState.errors.email?.message}
-              />
-              <InputField
-                label='Password'
-                type='password'
-                register={formMethods.register('password')}
-                errorMessage={formMethods.formState.errors.password?.message}
-              />
+
+              <div className='space-y-4 pt-2'>
+                <InputField
+                  label='Email Address'
+                  placeholder='admin@mie.com'
+                  type='email'
+                  register={formMethods.register('email')}
+                  errorMessage={formMethods.formState.errors.email?.message}
+                />
+                <InputField
+                  label='Password'
+                  type='password'
+                  register={formMethods.register('password')}
+                  errorMessage={formMethods.formState.errors.password?.message}
+                />
+              </div>
 
               <Button
                 color='primary'
-                className='w-full'
+                className='w-full font-bold h-12 text-sm uppercase tracking-widest shadow-[0_0_20px_rgba(var(--heroui-primary-rgb),0.2)] rounded-2xl'
                 type='submit'
                 isLoading={formMethods.formState.isSubmitting || keepLoading}
               >
-                Sign In
+                Sign In To Control Center
               </Button>
             </div>
           </form>

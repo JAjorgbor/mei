@@ -32,11 +32,19 @@ const schema = z.object({
 
 type FormFields = z.infer<typeof schema>
 
-const CreatePaymentBundleModal: FC<BaseModalProps> = ({
+interface CreatePaymentBundleModalProps extends BaseModalProps {
+  mutate: () => void
+}
+
+const CreatePaymentBundleModal: FC<CreatePaymentBundleModalProps> = ({
   isOpen,
   setIsOpen,
+  mutate,
 }) => {
-  const formMethods = useForm<FormFields>({ resolver: zodResolver(schema) })
+  const formMethods = useForm<FormFields>({
+    resolver: zodResolver(schema),
+    defaultValues: { bundleType: 'subscriptionCash' },
+  })
 
   const handleSubmit = async (formData: FormFields) => {
     try {
@@ -47,6 +55,7 @@ const CreatePaymentBundleModal: FC<BaseModalProps> = ({
         severity: 'success',
         color: 'success',
       })
+      mutate()
       setIsOpen(false)
     } catch (error: any) {
       addToast({
@@ -117,26 +126,6 @@ const CreatePaymentBundleModal: FC<BaseModalProps> = ({
             errorMessage={formMethods.formState.errors.amount?.message}
           />
 
-          <InputField
-            type='select'
-            label='Bundle Type'
-            isRequired
-            className='md:col-span-2'
-            onChange={(value) => formMethods.setValue('bundleType', value)}
-            value={formMethods.watch('bundleType')}
-            errorMessage={formMethods.formState.errors.bundleType?.message}
-            placeholder='Select Bundle Type'
-            options={[
-              { value: 'cash', label: 'Cash' },
-              { value: 'purchaseOfBooks', label: 'Purchase of Books' },
-              {
-                value: 'transferringStarsToOtherUsers',
-                label: 'Transferring Stars to Other Users',
-              },
-              { value: 'cashPromo', label: 'Cash Promo' },
-              { value: 'bookPromo', label: 'Book Promo' },
-            ]}
-          />
           <InputField
             type='textarea'
             label='Description'

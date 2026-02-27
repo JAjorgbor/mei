@@ -1,7 +1,7 @@
 'use client'
 
-import { IUser } from '@/api-utils/global-interfaces/user.interfaces'
 import { getAllUsers } from '@/api-utils/admin/requests/user.requests'
+import { IUser } from '@/api-utils/global-interfaces/user.interfaces'
 import useSWR from 'swr'
 
 export default function useGetAllUsers() {
@@ -11,7 +11,7 @@ export default function useGetAllUsers() {
   }
   const { data, error, mutate, isLoading } = useSWR<IUser[]>(
     `/api/users/all`,
-    fetcher
+    fetcher,
   )
   return {
     allUsers: data,

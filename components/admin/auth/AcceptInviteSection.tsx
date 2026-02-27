@@ -118,105 +118,122 @@ const AcceptInviteSection = () => {
   }
 
   return (
-    <Card>
-      <CardHeader className='block'>
-        <div className='flex flex-col gap items-center text-center'>
-          <Logo width={60} height={60} />
-          <h1 className='text-2xl font-bold'>Accept Invite</h1>
-        </div>
-      </CardHeader>
-      <CardBody>
-        <form onSubmit={formMethods.handleSubmit(handleSubmit)}>
-          <div className='grid md:grid-cols-2 gap-4'>
-            <div className='flex gap-4 justify-center md:col-span-2'>
-              <label className='flex flex-col gap-3 items-center'>
-                <input
-                  accept='image/*'
-                  type='file'
-                  {...formMethods.register('avatar')}
-                  className='hidden'
-                  ref={(e) => {
-                    const { ref: registerRef } = formMethods.register('avatar')
-                    registerRef(e)
-                    fileInputRef.current = e
-                  }}
+    <div className='w-full max-w-md mx-auto'>
+      <Card className='bg-background/60 dark:bg-zinc-900/60 backdrop-blur-2xl border border-default-100 shadow-2xl rounded-[2.5rem] overflow-hidden'>
+        <CardBody className='p-8'>
+          <form onSubmit={formMethods.handleSubmit(handleSubmit)}>
+            <div className='space-y-6'>
+              <div className='flex flex-col gap items-center space-y-4 mb-2'>
+                <div className='p-3 bg-primary/10 rounded-2xl'>
+                  <Logo width={64} height={64} />
+                </div>
+                <div className='flex flex-col items-center text-center'>
+                  <h1 className='text-2xl font-black tracking-tighter leading-none text-foreground'>
+                    ACCEPT INVITE
+                  </h1>
+                  <span className='text-[10px] uppercase font-black text-primary tracking-widest mt-1'>
+                    Complete Registration
+                  </span>
+                </div>
+              </div>
+
+              <div className='grid md:grid-cols-2 gap-4'>
+                <div className='flex gap-4 justify-center md:col-span-2 mb-2'>
+                  <label className='flex flex-col gap-3 items-center group cursor-pointer'>
+                    <input
+                      accept='image/*'
+                      type='file'
+                      {...formMethods.register('avatar')}
+                      className='hidden'
+                      ref={(e) => {
+                        const { ref: registerRef } =
+                          formMethods.register('avatar')
+                        registerRef(e)
+                        fileInputRef.current = e
+                      }}
+                    />
+                    <div className='relative'>
+                      <Avatar
+                        size='lg'
+                        src={avatarPreview}
+                        className='w-20 h-20 ring-2 ring-primary/20 group-hover:ring-primary/40 transition-all'
+                      />
+                      <div className='absolute bottom-0 right-0 bg-secondary text-white p-1.5 rounded-full shadow-lg hover:scale-110 transition-transform'>
+                        <CameraIcon size={14} />
+                      </div>
+                    </div>
+                    <span className='text-xs font-bold text-default-500 uppercase tracking-widest group-hover:text-primary transition-colors'>
+                      Upload Photo
+                    </span>
+                    {formMethods.formState.errors.avatar && (
+                      <p className='text-xs text-danger font-medium'>
+                        {String(formMethods.formState.errors.avatar?.message)}
+                      </p>
+                    )}
+                  </label>
+                </div>
+                <InputField
+                  type='text'
+                  isName
+                  register={formMethods.register('firstName')}
+                  placeholder='John'
+                  label='First Name'
+                  isRequired
+                  errorMessage={formMethods.formState.errors.firstName?.message}
                 />
-                <Avatar size='lg' src={avatarPreview} />
-                <button
-                  className='p-1 py-0.5 text-sm rounded-md bg-secondary text-white flex gap-2 items-center'
-                  type='button'
-                  onClick={() => fileInputRef.current?.click()}
+                <InputField
+                  type='text'
+                  isName
+                  placeholder='Doe'
+                  register={formMethods.register('lastName')}
+                  label='Last Name'
+                  isRequired
+                  errorMessage={formMethods.formState.errors.lastName?.message}
+                />
+                <InputField
+                  type='email'
+                  register={formMethods.register('email')}
+                  placeholder='johndoe@example.com'
+                  label='Email'
+                  className='md:col-span-2'
+                  isRequired
+                  errorMessage={formMethods.formState.errors.email?.message}
+                />
+                <InputField
+                  type='password'
+                  register={formMethods.register('password')}
+                  placeholder='●●●●●●'
+                  label='Password'
+                  className='md:col-span-2'
+                  isRequired
+                  errorMessage={formMethods.formState.errors.password?.message}
+                />
+                <InputField
+                  type='password'
+                  register={formMethods.register('confirmPassword')}
+                  placeholder='●●●●●●'
+                  label='Confirm Password'
+                  className='md:col-span-2'
+                  isRequired
+                  errorMessage={
+                    formMethods.formState.errors.confirmPassword?.message
+                  }
+                />
+                <Button
+                  className='md:col-span-2 mt-2 font-bold h-12 text-sm uppercase tracking-widest shadow-[0_0_20px_rgba(var(--heroui-primary-rgb),0.2)] rounded-2xl'
+                  endContent={<ArrowRightIcon size={16} />}
+                  color='primary'
+                  type='submit'
+                  isLoading={formMethods.formState.isSubmitting || keepLoading}
                 >
-                  Upload Avatar
-                  <CameraIcon size={18} />
-                </button>
-                {formMethods.formState.errors.avatar && (
-                  <p className='text-sm text-red-400'>
-                    {String(formMethods.formState.errors.avatar?.message)}
-                  </p>
-                )}
-              </label>
+                  Proceed To Dashboard
+                </Button>
+              </div>
             </div>
-            <InputField
-              type='text'
-              isName
-              register={formMethods.register('firstName')}
-              placeholder='John'
-              label='Firt Name'
-              isRequired
-              errorMessage={formMethods.formState.errors.firstName?.message}
-            />
-            <InputField
-              type='text'
-              isName
-              placeholder='Doe'
-              register={formMethods.register('lastName')}
-              label='Last Name'
-              isRequired
-              errorMessage={formMethods.formState.errors.lastName?.message}
-            />
-            <InputField
-              type='email'
-              register={formMethods.register('email')}
-              placeholder='johndoe@example.com'
-              label='Email'
-              className='md:col-span-2'
-              isRequired
-              errorMessage={formMethods.formState.errors.email?.message}
-            />
-            <InputField
-              type='password'
-              register={formMethods.register('password')}
-              placeholder='●●●●●●'
-              label='Password'
-              className='md:col-span-2'
-              isRequired
-              errorMessage={formMethods.formState.errors.password?.message}
-            />
-            <InputField
-              type='password'
-              register={formMethods.register('confirmPassword')}
-              placeholder='●●●●●●'
-              label='Confirm Password'
-              className='md:col-span-2'
-              isRequired
-              errorMessage={
-                formMethods.formState.errors.confirmPassword?.message
-              }
-            />
-            <Button
-              className='md:col-span-2'
-              endContent={<ArrowRightIcon size={18} />}
-              color='primary'
-              type='submit'
-              isLoading={formMethods.formState.isSubmitting || keepLoading}
-            >
-              Proceed
-            </Button>
-          </div>
-        </form>
-      </CardBody>
-    </Card>
+          </form>
+        </CardBody>
+      </Card>
+    </div>
   )
 }
 
