@@ -60,13 +60,14 @@ const AdminLikesSection = () => {
             <TableRow key={item.id}>
               <TableCell>
                 <div className='flex items-center gap-3'>
-                  <Avatar src={item?.userData?.avatar || ''} size='sm' />
+                  <Avatar src={item?.userDetails?.avatar || ''} size='sm' />
                   <div className='flex flex-col'>
                     <span className='font-bold text-sm'>
-                      {item?.userData?.firstName} {item?.userData?.lastName}
+                      {item?.userDetails?.firstName}{' '}
+                      {item?.userDetails?.lastName}
                     </span>
                     <span className='text-tiny text-default-400'>
-                      {item?.userData?.email}
+                      {item?.userDetails?.email}
                     </span>
                   </div>
                 </div>

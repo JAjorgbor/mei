@@ -75,7 +75,7 @@ const LoginForm = () => {
                 </div>
                 <div className='flex flex-col items-center text-center'>
                   <h1 className='text-2xl font-black tracking-tighter leading-none text-foreground'>
-                    MEI ADMIN
+                    ADMIN
                   </h1>
                   <span className='text-[10px] uppercase font-black text-primary tracking-widest mt-1'>
                     Secure Access

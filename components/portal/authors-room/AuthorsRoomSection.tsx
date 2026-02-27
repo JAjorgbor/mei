@@ -167,7 +167,7 @@ const AuthorsRoomSection = () => {
                       />
                       <div>
                         <div className='flex items-center gap-2'>
-                          <p className='font-black text-lg'>Mei</p>
+                          <p className='font-black text-lg'>Echoes</p>
                           <span className='px-2 py-0.5 bg-secondary/10 text-secondary text-[10px] font-bold rounded-full uppercase tracking-wider'>
                             Author
                           </span>

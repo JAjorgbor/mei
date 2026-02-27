@@ -1,3 +1,5 @@
+import { IUser } from '@/api-utils/global-interfaces/user.interfaces'
+
 export interface ILike {
   chapterId: string
   likeType: string
@@ -5,4 +7,5 @@ export interface ILike {
   role: string
   id: string
   dateCreated: Date
+  userDetails: IUser
 }
