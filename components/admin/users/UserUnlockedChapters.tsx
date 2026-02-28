@@ -45,7 +45,9 @@ const UserUnlockedChapters = () => {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
     { id: 'status', value: 'all' },
   ])
-  const { allChapters, allChaptersLoading } = useGetAllChapters()
+  const { allChapters: allChaptersData, allChaptersLoading } =
+    useGetAllChapters()
+  const allChapters = allChaptersData?.items
   const [selectedChapter, setSelectedChapter] = useState<IChapter>()
   const [showDeleteChapterModal, setShowDeleteChapterModal] = useState(false)
 
