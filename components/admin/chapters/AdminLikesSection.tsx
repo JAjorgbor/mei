@@ -52,7 +52,6 @@ const AdminLikesSection = () => {
       >
         <TableHeader>
           <TableColumn>USER</TableColumn>
-          <TableColumn>TYPE</TableColumn>
           <TableColumn>DATE LIKED</TableColumn>
         </TableHeader>
         <TableBody items={items}>
@@ -71,11 +70,6 @@ const AdminLikesSection = () => {
                     </span>
                   </div>
                 </div>
-              </TableCell>
-              <TableCell>
-                <span className='capitalize bg-secondary/10 text-secondary px-2 py-1 rounded-full text-xs font-bold'>
-                  {item.likeType || 'Chapter'}
-                </span>
               </TableCell>
               <TableCell>
                 {moment(item.dateCreated).format('MMM DD, YYYY')}
