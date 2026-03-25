@@ -36,6 +36,7 @@ import {
 } from 'lucide-react'
 import moment from 'moment'
 import React, { useState } from 'react'
+import Link from 'next/link'
 
 const AuthorsRoomSection = () => {
   const { portalUser, portalUserLoading } = useGetPortalUser()
@@ -178,12 +179,15 @@ const AuthorsRoomSection = () => {
                       </div>
                     </div>
                     {post?.chapterSummary?.number && (
-                      <div className='bg-default-100/50 px-3 py-1 rounded-full flex items-center gap-2 border border-foreground-50'>
+                      <Link
+                        href={`/portal/chapters/${post.chapterSummary?.id}`}
+                        className='bg-default-100/50 px-3 py-1 rounded-full flex items-center gap-2 border border-foreground-50'
+                      >
                         <Sparkles className='text-secondary' size={14} />
                         <span className='text-xs font-bold'>
                           Chapter {post.chapterSummary.number}
                         </span>
-                      </div>
+                      </Link>
                     )}
                   </CardHeader>
 
