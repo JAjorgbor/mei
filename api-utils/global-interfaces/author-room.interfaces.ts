@@ -15,7 +15,7 @@ export interface IAuthorPost {
   dateCreated: Date
   lastUpdated: Date
   chapterSummary: ChapterSummary
-  reactions: IReaction[]
+  reactionSummary: Record<string, number>
 }
 
 export interface ChapterSummary {
