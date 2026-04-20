@@ -1,6 +1,5 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
-import { getSession, signIn, signOut } from 'next-auth/react'
 
 const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -18,6 +17,7 @@ let failedQueue: any[] = []
 
 export const PORTAL_REFRESH_KEY = 'portalRefreshToken'
 export const PORTAL_ACCESS_KEY = 'portalAccessToken'
+export const PORTAL_USER_ID = 'portalUserId'
 
 const processQueue = (error: any, token: string | null = null) => {
   failedQueue.forEach((prom) => {
@@ -32,19 +32,7 @@ const processQueue = (error: any, token: string | null = null) => {
 
 // === Request Interceptor ===
 axiosInstance.interceptors.request.use(async (config) => {
-  const session: any = await getSession()
-  const storedAccessToken = sessionStorage.getItem(PORTAL_ACCESS_KEY)
-  const storedRefreshToken = sessionStorage.getItem(PORTAL_REFRESH_KEY)
-  const accessToken =
-    storedAccessToken && storedAccessToken !== 'undefined'
-      ? storedAccessToken
-      : session?.accessToken
-  const refreshToken =
-    storedRefreshToken && storedRefreshToken !== 'undefined'
-      ? storedRefreshToken
-      : session?.refreshToken
-  sessionStorage.setItem(PORTAL_ACCESS_KEY, accessToken)
-  sessionStorage.setItem(PORTAL_REFRESH_KEY, refreshToken)
+  const accessToken = Cookies.get(PORTAL_ACCESS_KEY)
 
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`
@@ -62,7 +50,6 @@ axiosInstance.interceptors.response.use(
     }
   },
   async (error) => {
-    const session: any = await getSession()
     const originalConfig = error.config
 
     if (error?.response?.status === 401 && !originalConfig._retry) {
@@ -84,39 +71,34 @@ axiosInstance.interceptors.response.use(
       isRefreshing = true
 
       try {
-        const refreshToken =
-          sessionStorage.getItem(PORTAL_REFRESH_KEY) || session?.refreshToken
+        const refreshToken = Cookies.get(PORTAL_REFRESH_KEY)
 
-        const { data } = await axiosInstance.post(
-          'user/refresh',
+        if (!refreshToken) throw new Error('No refresh token available')
+
+        const { data } = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}user/refresh`,
           { refreshToken },
-          { headers: { Authorization: null } }, // prevent stale token usage
+          { headers: { 'Content-Type': 'application/json' } }
         )
 
-        sessionStorage.setItem(PORTAL_ACCESS_KEY, data.accessToken)
-        sessionStorage.setItem(PORTAL_REFRESH_KEY, data.refreshToken)
+        const newAccessToken = data.data.accessToken
+        const newRefreshToken = data.data.refreshToken
 
-        await signIn('credentials', {
-          redirect: false,
-          accessToken: data.accessToken,
-          refreshToken: data.refreshToken,
-          userData: JSON.stringify({
-            ...session?.user,
-          }),
-        })
+        Cookies.set(PORTAL_ACCESS_KEY, newAccessToken)
+        Cookies.set(PORTAL_REFRESH_KEY, newRefreshToken, { expires: 60 })
 
-        axiosInstance.defaults.headers.Authorization = `Bearer ${data.accessToken}`
-        processQueue(null, data.accessToken)
+        axiosInstance.defaults.headers.Authorization = `Bearer ${newAccessToken}`
+        processQueue(null, newAccessToken)
 
-        originalConfig.headers.Authorization = `Bearer ${data.accessToken}`
+        originalConfig.headers.Authorization = `Bearer ${newAccessToken}`
         return axiosInstance(originalConfig)
       } catch (err) {
-        console.log(error)
-        sessionStorage.clear()
-        await signOut({ redirect: false })
-        const cookieJar = Cookies.get() // Get all existing cookies
+        console.log('Refresh failed', err)
+        const cookieJar = Cookies.get()
         for (const cookieName in cookieJar) {
-          Cookies.remove(cookieName) // Remove each cookie
+          if (cookieName.startsWith('portal')) {
+            Cookies.remove(cookieName)
+          }
         }
         window.location.href = '/portal'
         return processQueue(err, null)

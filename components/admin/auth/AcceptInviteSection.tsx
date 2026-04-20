@@ -1,4 +1,5 @@
 'use client'
+import Cookies from 'js-cookie'
 import { acceptInvite } from '@/api-utils/admin/requests/team.requests'
 import { uploadToCloudinary } from '@/api-utils/general.requests'
 import InputField from '@/components/elements/InputField'
@@ -12,12 +13,15 @@ import {
 } from '@heroui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ArrowRightIcon, CameraIcon } from 'lucide-react'
-import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import Logo from '@/components/elements/Logo'
+import {
+  ADMIN_ACCESS_KEY,
+  ADMIN_REFRESH_KEY,
+} from '@/api-utils/admin/request-adapter'
 
 const schema = z
   .object({
@@ -92,17 +96,15 @@ const AcceptInviteSection = () => {
 
       const { accessToken, refreshToken, ...userPayload } = res.data
 
-      await signIn('credentials', {
-        redirect: false,
-        accessToken: accessToken,
-        refreshToken: refreshToken,
-        userData: JSON.stringify({
-          ...userPayload,
-          ...payload,
-          verifyAdminAccess: 'not-verified',
-          userType: 'admin',
-        }),
-      })
+      // Set Tokens in Cookies
+      Cookies.set(ADMIN_ACCESS_KEY, accessToken)
+      Cookies.set(ADMIN_REFRESH_KEY, refreshToken, { expires: 60 })
+
+      // Store user info for VerifyAccessForm
+      Cookies.set('adminUserEmail', payload.email)
+      Cookies.set('adminUserPassword', payload.password)
+      Cookies.set('verifyAdminAccess', 'not-verified')
+
       router.push('/admin/verify-access')
       setkeepLoading(true)
     } catch (error: any) {

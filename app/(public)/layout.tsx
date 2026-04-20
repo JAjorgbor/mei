@@ -35,6 +35,8 @@ const roboto = Roboto({
   weight: ['400', '500', '700'],
 })
 
+import Footer from '@/components/landing/Footer'
+
 export const metadata: Metadata = {
   title: { default: 'Echoes', template: '%s | Echoes' },
   description: 'Resonating stories and deep ideas from the soul.',
@@ -55,6 +57,7 @@ export default function RootLayout({
         <Providers>
           <Header />
           {children}
+          <Footer />
         </Providers>
       </body>
     </html>

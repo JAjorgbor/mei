@@ -6,11 +6,12 @@ import useSetHeaderNavigation from '@/hooks/useSetHeaderNavigation'
 import { addToast, Button, InputOtp } from '@heroui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { RefreshCcw } from 'lucide-react'
-import { signIn, useSession } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import Cookies from 'js-cookie'
+import { PORTAL_ACCESS_KEY, PORTAL_REFRESH_KEY } from '@/api-utils/portal/request-adapter'
 
 const schema = z.object({
   otp: z
@@ -26,33 +27,35 @@ const VerifyOTPSection = () => {
   const searchParams = useSearchParams()
   const [keepLoading, setkeepLoading] = useState(false)
   const [countDown, setCountDown] = useState(60000)
-  const [loadingToastData, setloadingToastData] = useState({
-    message: 'Please wait...',
-    color: 'default',
-  })
+  
+  const portalEmail = Cookies.get('portalUserEmail') || 'email@example.com'
+  const portalPassword = Cookies.get('portalUserPassword') || ''
+
   const [allowOTPResend, setAllowOTPResend] = useState<boolean>(true)
   const [resendOtpLoading, setResendOtpLoading] = useState(false)
 
-  const callbackUrl = searchParams.get('callbackUrl') || '/portal/dashboard'
-  const { data: session, update: updateSession } = useSession()
+  const callbackPath = searchParams.get('callbackPath') || '/portal/dashboard'
   const formMethods = useForm<FormFields>({ resolver: zodResolver(schema) })
 
   const router = useRouter()
+  
   const handleOTPResend = async () => {
+    if (!portalEmail || !portalPassword) {
+      addToast({ title: 'Authentication data missing. Please log in again.', color: 'danger' })
+      router.push('/portal')
+      return
+    }
+
     setResendOtpLoading(true)
     try {
       const { data } = await login({
-        email: session?.user?.email,
-        password: session?.user?.password,
+        email: portalEmail,
+        password: portalPassword,
       })
-      await signIn('credentials', {
-        redirect: false,
-        accessToken: data.accessToken,
-        refreshToken: data.refreshToken,
-        userData: JSON.stringify(session?.user),
-      })
-      sessionStorage.setItem('accessToken', data.accessToken)
-      sessionStorage.setItem('refreshToken', data.accessToken)
+      
+      Cookies.set(PORTAL_ACCESS_KEY, data.accessToken)
+      Cookies.set(PORTAL_REFRESH_KEY, data.refreshToken, { expires: 60 })
+
       addToast({
         title: 'OTP has been resent. Please check your email!',
         color: 'success',
@@ -71,13 +74,8 @@ const VerifyOTPSection = () => {
 
   const handleSubmit = async (formData: FormFields) => {
     try {
-      //   await verifyAccess({
-      //     otp: formData.otp,
-      //     access_token: session?.accessToken,
-      //   })
-      //   await updateSession({ verifyAdminAccess: 'verified' })
       setkeepLoading(true)
-      router.push(callbackUrl)
+      router.push(callbackPath)
     } catch (error: any) {
       addToast({
         title:
@@ -89,6 +87,7 @@ const VerifyOTPSection = () => {
       console.log(error)
     }
   }
+
   return (
     <Container>
       <form
@@ -98,8 +97,7 @@ const VerifyOTPSection = () => {
         <div className='space-y-4'>
           <p className='text-sm'>
             Provide the code that was sent to{' '}
-            {/* <span className='font-bold'>{session?.user?.email}</span> */}
-            <span className='font-bold'>email@example.com</span>
+            <span className='font-bold'>{portalEmail}</span>
           </p>
           <div className='space-y-4'>
             <InputOtp

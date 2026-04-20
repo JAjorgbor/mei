@@ -8,7 +8,6 @@ import InputField from '@/components/elements/InputField'
 import { addToast, Button, Card, CardBody } from '@heroui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Cookies from 'js-cookie'
-import { signIn, useSession } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -25,7 +24,7 @@ const LoginForm = () => {
   const [keepLoading, setKeepLoading] = useState(false)
   const router = useRouter()
   const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get('callbackUrl') || '/admin/dashboard'
+  const callbackPath = searchParams.get('callbackPath') || '/admin/dashboard'
 
   const formMethods = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
@@ -35,21 +34,16 @@ const LoginForm = () => {
       const { data } = await login(formData)
 
       const { accessToken, refreshToken, ...userPayload } = data
-      sessionStorage.setItem(ADMIN_ACCESS_KEY, accessToken)
-      sessionStorage.setItem(ADMIN_REFRESH_KEY, refreshToken)
-      await signIn('credentials', {
-        redirect: false,
-        accessToken: accessToken,
-        refreshToken: refreshToken,
-        userData: JSON.stringify({
-          ...userPayload,
-          ...formData,
-          verifyAdminAccess: 'not-verified',
-          userType: 'admin',
-        }),
-      })
-      router.push(`/admin/verify-access?callbackUrl=${callbackUrl}`)
+      
+      Cookies.set(ADMIN_ACCESS_KEY, accessToken)
+      Cookies.set(ADMIN_REFRESH_KEY, refreshToken, { expires: 60 })
+      
+      // Store user info for VerifyAccessForm
+      Cookies.set('adminUserEmail', formData.email)
+      Cookies.set('adminUserPassword', formData.password)
       Cookies.set('verifyAdminAccess', 'not-verified')
+
+      router.push(`/admin/verify-access?callbackPath=${callbackPath}`)
       setKeepLoading(true)
     } catch (error: any) {
       addToast({

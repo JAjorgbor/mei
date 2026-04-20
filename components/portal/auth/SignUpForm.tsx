@@ -1,4 +1,5 @@
 'use client'
+
 import InputField from '@/components/elements/InputField'
 import Cookies from 'js-cookie'
 import {
@@ -6,19 +7,16 @@ import {
   Button,
   Card,
   CardBody,
-  CardHeader,
-  Divider,
 } from '@heroui/react'
-import { Mail, Router } from 'lucide-react'
-import { signIn } from 'next-auth/react'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { registerUser } from '@/api-utils/portal/requests/auth.requests'
+import { GOOGLE_SIGN_IN_URL } from '@/api-utils/admin/requests/portal.auth.requests'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { registerUser } from '@/api-utils/portal/requests/auth.requests'
-import Image from 'next/image'
 
 export const signUpSchema = z
   .object({
@@ -59,33 +57,15 @@ const SignUpForm = () => {
   const [keepLoading, setKeepLoading] = useState(false)
 
   const handleGoogleSignIn = async () => {
-    Cookies.set('isSignup', 'true')
-    const result: any = await signIn('google', {
-      redirect: false,
-      callbackUrl: '/portal/dashboard',
-    })
-
-    if (result?.error) {
-      console.error('Google sign-in failed:', result.error)
-      addToast({ title: 'Google sign-in failed', color: 'danger' })
-      return
-    }
-
-    // Only redirect if we have a URL and no error
-    if (result?.url) {
-      // Small delay to ensure the session is properly initialized
-      setTimeout(() => {
-        window.location.href = result.url
-      }, 100)
-    }
+    window.location.href = `${GOOGLE_SIGN_IN_URL}&redirectPath=/portal/dashboard`
   }
+
   const handleSubmit = async (formData: FormFields) => {
     try {
-      const payload: Partial<FormFields> = formData
+      const payload: Partial<FormFields> = { ...formData }
       delete payload.confirmPassword
       delete payload.agreeToTerms
-      const res = await registerUser(payload)
-      console.log(res)
+      await registerUser(payload)
       router.push('/portal/dashboard')
     } catch (error: any) {
       console.error(error)
@@ -98,6 +78,7 @@ const SignUpForm = () => {
       })
     }
   }
+
   return (
     <div className='w-full max-w-md mx-auto'>
       <Card className='bg-background/60 dark:bg-zinc-900/60 backdrop-blur-2xl border border-default-100 shadow-2xl rounded-[2.5rem] overflow-hidden'>

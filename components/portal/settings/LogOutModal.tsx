@@ -3,22 +3,20 @@ import ModalWrapper, {
   BaseModalProps,
 } from '@/components/admin/elements/ModalWrapper'
 import { Button } from '@heroui/react'
-import { signOut } from 'next-auth/react'
 import Cookies from 'js-cookie'
 import { useState, type FC } from 'react'
-
 const LogOutModal: FC<BaseModalProps> = ({ isOpen, setIsOpen }) => {
   const [isLoading, setIsLoading] = useState(false)
 
   const handleSignOut = async () => {
-    await signOut({ redirect: false })
     const cookieJar = Cookies.get() // Get all existing cookies
     setIsLoading(true)
     console.log('Logging out and clearing cookies', cookieJar)
     for (const cookieName in cookieJar) {
-      Cookies.remove(cookieName) // Remove each cookie
+      if (cookieName.startsWith('portal')) {
+        Cookies.remove(cookieName)
+      }
     }
-    sessionStorage.clear()
     window.location.href = '/'
   }
   return (

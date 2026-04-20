@@ -7,6 +7,7 @@ import type { Metadata } from 'next'
 import '@/app/globals.css'
 
 import Header from '@/components/scaffold/main/portal/Header'
+import Footer from '@/components/scaffold/footer'
 import {
   Dancing_Script,
   Inter,
@@ -64,6 +65,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
         <Providers>
           <Header />
           <main className='min-h-[80vh]'>{children}</main>
+          <Footer />
           <BottomNavigation />
         </Providers>
       </body>

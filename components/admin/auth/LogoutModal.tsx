@@ -3,17 +3,13 @@ import React from 'react'
 import ModalWrapper, { BaseModalProps } from '../elements/ModalWrapper'
 import { Button } from '@heroui/react'
 import { LogOut } from 'lucide-react'
-import { signOut } from 'next-auth/react'
 import Cookies from 'js-cookie'
-
 const LogoutModal: React.FC<BaseModalProps> = ({ isOpen, setIsOpen }) => {
   const handleLogout = async () => {
-    await signOut({ redirect: false })
     const cookieJar = Cookies.get() // Get all existing cookies
     for (const cookieName in cookieJar) {
       Cookies.remove(cookieName) // Remove each cookie
     }
-    sessionStorage.clear()
     window.location.href = '/admin'
   }
 

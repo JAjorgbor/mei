@@ -21,11 +21,18 @@ import {
   NavbarMenuToggle,
 } from '@heroui/react'
 import Cookies from 'js-cookie'
-import { LogOut, MonitorIcon, MoonIcon, SunIcon } from 'lucide-react'
-import { signOut } from 'next-auth/react'
+import {
+  Home,
+  LogOut,
+  MonitorIcon,
+  MoonIcon,
+  Router,
+  SunIcon,
+} from 'lucide-react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
+import { PORTAL_ACCESS_KEY } from '@/api-utils/portal/request-adapter'
 
 const Header = () => {
   const dispatch = useAppDispatch()
@@ -41,6 +48,12 @@ const Header = () => {
   const { portalUser } = useGetPortalUser()
   const [themeState, setThemeState] = useState('')
 
+  const router = useRouter()
+
+  useEffect(() => {
+    setIsLoggedIn(!!Cookies.get(PORTAL_ACCESS_KEY))
+  }, [pathname])
+
   useEffect(() => {
     setThemeState(reduxTheme)
   }, [reduxTheme])
@@ -49,7 +62,6 @@ const Header = () => {
     { label: 'About', route: '/' },
     { label: 'Pricing', route: '/pricing' },
   ]
-
   return (
     <>
       <Navbar
@@ -158,16 +170,24 @@ const Header = () => {
                     </DropdownItem>
                   </DropdownSection>
                   <DropdownItem
+                    key='dashboard'
+                    color='primary'
+                    onPress={async () => {
+                      router.push('/portal/dashboard')
+                    }}
+                    startContent={<Home size={15} />}
+                  >
+                    Dashboard
+                  </DropdownItem>
+                  <DropdownItem
                     key='logout'
                     color='danger'
                     onPress={async () => {
-                      await signOut({ redirect: false })
                       const cookieJar = Cookies.get() // Get all existing cookies
                       console.log('Logging out and clearing cookies', cookieJar)
                       for (const cookieName in cookieJar) {
                         Cookies.remove(cookieName) // Remove each cookie
                       }
-                      sessionStorage.clear()
                       window.location.href = '/'
                     }}
                     startContent={<LogOut size={15} />}

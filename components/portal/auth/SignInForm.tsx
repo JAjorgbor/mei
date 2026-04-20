@@ -1,7 +1,9 @@
 'use client'
+import { GOOGLE_SIGN_IN_URL } from '@/api-utils/admin/requests/portal.auth.requests'
 import {
   PORTAL_ACCESS_KEY,
   PORTAL_REFRESH_KEY,
+  PORTAL_USER_ID,
 } from '@/api-utils/portal/request-adapter'
 import { loginUser } from '@/api-utils/portal/requests/auth.requests'
 import InputField from '@/components/elements/InputField'
@@ -9,7 +11,6 @@ import { addToast, Button, Card, CardBody, CardHeader } from '@heroui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Cookies from 'js-cookie'
 import { Mail } from 'lucide-react'
-import { signIn, signOut } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -33,7 +34,7 @@ const SignInForm = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const oauthErrorMessage = searchParams.get('error')
-  const callbackUrl = searchParams.get('callbackUrl') || '/portal/dashboard'
+  const callbackPath = searchParams.get('callbackPath') || '/portal/dashboard'
   const [keepLoading, setKeepLoading] = useState(false)
 
   useEffect(() => {
@@ -56,44 +57,22 @@ const SignInForm = () => {
   }, [oauthErrorMessage])
 
   const handleGoogleSignIn = async () => {
-    Cookies.remove('isSignup')
-    const result: any = await signIn('google', {
-      redirect: false,
-      callbackUrl: callbackUrl,
-    })
-
-    if (result?.error) {
-      console.error('Google sign-in failed:', result.error)
-      addToast({ title: 'Google sign-in failed', color: 'danger' })
-      return
-    }
-
-    // Only redirect if we have a URL and no error
-    if (result?.url) {
-      // Small delay to ensure the session is properly initialized
-      setTimeout(() => {
-        window.location.href = result.url
-      }, 100)
-    }
+    window.location.href = `${GOOGLE_SIGN_IN_URL}&redirect_path=${callbackPath}`
   }
   const handleSubmit = async (formData: FormFields) => {
     try {
       const { data } = await loginUser(formData)
       console.log(data)
       const { accessToken, refreshToken, ...userPayload } = data
-      sessionStorage.setItem(PORTAL_ACCESS_KEY, accessToken)
-      sessionStorage.setItem(PORTAL_REFRESH_KEY, refreshToken)
-      await signIn('credentials', {
-        redirect: false,
-        accessToken: accessToken,
-        refreshToken: refreshToken,
-        userData: JSON.stringify({
-          ...userPayload,
-          ...formData,
-          userType: 'user',
-        }),
+      Cookies.set(PORTAL_ACCESS_KEY, accessToken)
+      Cookies.set(PORTAL_REFRESH_KEY, refreshToken, {
+        expires: 60,
       })
-      router.push(`${callbackUrl}`)
+      Cookies.set(PORTAL_USER_ID, userPayload._id, {
+        expires: 60,
+      })
+
+      router.push(`${callbackPath}`)
       setKeepLoading(true)
     } catch (error: any) {
       console.log(error)

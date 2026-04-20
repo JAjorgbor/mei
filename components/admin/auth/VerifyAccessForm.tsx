@@ -5,7 +5,6 @@ import TimerCountDown from '@/components/elements/TimerCountDown'
 import { addToast, Button, Card, CardBody, InputOtp } from '@heroui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { RefreshCcw } from 'lucide-react'
-import { signIn, useSession } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -28,32 +27,35 @@ const VerifyAccessForm = () => {
   const searchParams = useSearchParams()
   const [keepLoading, setkeepLoading] = useState(false)
   const [countDown, setCountDown] = useState(60000)
-  const [loadingToastData, setloadingToastData] = useState({
-    message: 'Please wait...',
-    color: 'default',
-  })
+  
+  const adminEmail = Cookies.get('adminUserEmail') || ''
+  const adminPassword = Cookies.get('adminUserPassword') || ''
+  const accessToken = Cookies.get(ADMIN_ACCESS_KEY)
+
   const [allowOTPResend, setAllowOTPResend] = useState<boolean>(true)
   const [resendOtpLoading, setResendOtpLoading] = useState(false)
 
-  const callbackUrl = searchParams.get('callbackUrl') || '/admin/dashboard'
-  const { data: session, update: updateSession } = useSession()
+  const callbackPath = searchParams.get('callbackPath') || '/admin/dashboard'
   const formMethods = useForm<FormFields>({ resolver: zodResolver(schema) })
   const router = useRouter()
+
   const handleOTPResend = async () => {
+    if (!adminEmail || !adminPassword) {
+      addToast({ title: 'Authentication data missing. Please log in again.', color: 'danger' })
+      router.push('/admin')
+      return
+    }
+
     setResendOtpLoading(true)
     try {
       const { data } = await login({
-        email: session?.user?.email,
-        password: session?.user?.password,
+        email: adminEmail,
+        password: adminPassword,
       })
-      await signIn('credentials', {
-        redirect: false,
-        accessToken: data.accessToken,
-        refreshToken: data.refreshToken,
-        userData: JSON.stringify(session?.user),
-      })
-      sessionStorage.setItem(ADMIN_ACCESS_KEY, data.accessToken)
-      sessionStorage.setItem(ADMIN_REFRESH_KEY, data.accessToken)
+      
+      Cookies.set(ADMIN_ACCESS_KEY, data.accessToken)
+      Cookies.set(ADMIN_REFRESH_KEY, data.refreshToken, { expires: 60 })
+
       addToast({
         title: 'OTP has been resent. Please check your email!',
         color: 'success',
@@ -72,14 +74,19 @@ const VerifyAccessForm = () => {
 
   const handleSubmit = async (formData: FormFields) => {
     try {
-      console.log(session)
       await verifyAccess({
         otp: formData.otp,
-        access_token: session?.accessToken,
+        access_token: accessToken || '',
       })
-      await updateSession({ verifyAdminAccess: 'verified' })
+      
+      Cookies.set('verifyAdminAccess', 'verified')
+      
+      // Cleanup temporary credentials
+      Cookies.remove('adminUserEmail')
+      Cookies.remove('adminUserPassword')
+
       setkeepLoading(true)
-      router.push(callbackUrl)
+      router.push(callbackPath)
     } catch (error: any) {
       addToast({
         title:
@@ -91,6 +98,7 @@ const VerifyAccessForm = () => {
       console.log(error)
     }
   }
+
   return (
     <div className='w-full max-w-md mx-auto'>
       <Card className='bg-background/60 dark:bg-zinc-900/60 backdrop-blur-2xl border border-default-100 shadow-2xl rounded-[2.5rem] overflow-hidden'>
@@ -113,7 +121,7 @@ const VerifyAccessForm = () => {
               <p className='text-sm text-center text-default-500'>
                 Provide the code that was sent to <br />
                 <span className='font-bold text-foreground'>
-                  {session?.user?.email}
+                  {adminEmail}
                 </span>
               </p>
               <div className='gap-6 flex flex-col items-center pt-2'>

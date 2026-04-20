@@ -4,7 +4,6 @@ import handleScreenshot from '@/utils/handleScreenshot'
 import { HeroUIProvider, Spinner } from '@heroui/react'
 import { ToastProvider } from '@heroui/toast'
 import Cookies from 'js-cookie'
-import { SessionProvider } from 'next-auth/react'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Provider } from 'react-redux'
@@ -84,20 +83,18 @@ const Providers = ({ children }: ProvidersProps) => {
     }
   }, [pathname])
   return (
-    <SessionProvider>
-      <Provider store={store}>
-        <HeroUIProvider navigate={router.push}>
-          {/* <Suspense> */}
-          <Content>{children}</Content>
-          {/* </Suspense> */}
+    <Provider store={store}>
+      <HeroUIProvider navigate={router.push}>
+        {/* <Suspense> */}
+        <Content>{children}</Content>
+        {/* </Suspense> */}
 
-          <div
-            className='w-screen h-screen fixed top-0 left-0 bg-transparent backdrop-blur-xl z-[999] hidden'
-            id='screenshot-blur-overlay'
-          />
-        </HeroUIProvider>
-      </Provider>
-    </SessionProvider>
+        <div
+          className='w-screen h-screen fixed top-0 left-0 bg-transparent backdrop-blur-xl z-[999] hidden'
+          id='screenshot-blur-overlay'
+        />
+      </HeroUIProvider>
+    </Provider>
   )
 }
 

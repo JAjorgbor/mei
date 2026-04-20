@@ -7,6 +7,7 @@ import type { Metadata } from 'next'
 import { Dancing_Script, Lato, Roboto } from 'next/font/google'
 
 import Header from '@/components/scaffold/main/portal/Header'
+import Footer from '@/components/scaffold/footer'
 
 const dancingScript = Dancing_Script({
   subsets: ['latin'],
@@ -51,6 +52,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
         <Providers>
           <Header />
           <main className='min-h-[80vh]'>{children}</main>
+          <Footer />
         </Providers>
       </body>
     </html>
