@@ -28,7 +28,10 @@ import {
 } from '@heroui/react'
 import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
-import { createReaction } from '@/api-utils/portal/requests/reactions.requests'
+import {
+  createReaction,
+} from '@/api-utils/portal/requests/reactions.requests'
+import { deleteAuthorRoomReaction } from '@/api-utils/portal/requests/author-room.requests'
 import {
   Heart,
   MessageCircle,
@@ -55,10 +58,15 @@ const AuthorsRoomSection = () => {
   } = useGetPortalAllAuthorPosts(rowsPerPage, page)
   const posts = allPostsData?.items || []
 
-  const handleReaction = async (emoji: string, postId: string) => {
-    console.log(emoji)
+  const handleReaction = async (emoji: string, post: IAuthorPost) => {
     try {
-      await createReaction({ reaction: emoji, authorRoomId: postId })
+      if (post.userReaction === emoji) {
+        // Remove reaction if clicking the same one
+        await deleteAuthorRoomReaction(post.id)
+      } else {
+        // Create or Replace reaction
+        await createReaction({ reaction: emoji, authorRoomId: post.id })
+      }
       mutateAllPosts()
     } catch (error: any) {
       console.log(error)
@@ -205,45 +213,77 @@ const AuthorsRoomSection = () => {
 
                   <CardFooter className='px-8 py-6 flex flex-wrap gap-3 items-center'>
                     <div className='flex flex-wrap gap-2'>
-                      {post.reactionSummary && Object.keys(post.reactionSummary).length > 0 && (
-                        <Dropdown>
-                          <DropdownTrigger>
-                            <Button
-                              size='sm'
-                              variant='flat'
-                              radius='full'
-                              className='bg-default-100/80 hover:bg-secondary/10 hover:text-secondary group transition-all h-9 px-3 gap-2 border border-transparent hover:border-secondary/20'
-                            >
-                              <div className='flex flex-row items-center -space-x-1'>
-                                {Object.keys(post.reactionSummary)
-                                  .slice(0, 3)
-                                  .map((emoji, i) => (
-                                    <span
-                                      key={i}
-                                      className='text-[16px] leading-none z-10'
-                                      style={{ zIndex: 10 - i }}
-                                    >
-                                      {emoji}
-                                    </span>
-                                  ))}
-                              </div>
-                              <span className='font-bold ml-1'>
-                                {Object.values(post.reactionSummary).reduce((a, b) => a + Number(b), 0)}
-                              </span>
-                            </Button>
-                          </DropdownTrigger>
-                          <DropdownMenu aria-label='Reactions summary'>
-                            {Object.entries(post.reactionSummary).map(([emoji, count]) => (
-                              <DropdownItem key={emoji} textValue={emoji} className='flex items-center gap-2'>
-                                <div className='flex items-center justify-between w-[50px]'>
-                                  <span className='text-lg'>{emoji}</span>
-                                  <span className='font-bold'>{count as number}</span>
-                                </div>
-                              </DropdownItem>
-                            ))}
-                          </DropdownMenu>
-                        </Dropdown>
+                      {post.userReaction && (
+                        <Tooltip content='Remove reaction'>
+                          <Button
+                            size='sm'
+                            variant='flat'
+                            radius='full'
+                            color='secondary'
+                            onPress={() =>
+                              handleReaction(post.userReaction as string, post)
+                            }
+                            className='h-9 px-3 gap-2 border border-secondary/20'
+                          >
+                            <span className='text-lg'>{post.userReaction}</span>
+                            <span className='text-[10px] uppercase font-bold tracking-wider'>
+                              You
+                            </span>
+                          </Button>
+                        </Tooltip>
                       )}
+                      {post.reactionSummary &&
+                        Object.keys(post.reactionSummary).length > 0 && (
+                          <Dropdown>
+                            <DropdownTrigger>
+                              <Button
+                                size='sm'
+                                variant='flat'
+                                radius='full'
+                                className={`bg-default-100/80 hover:bg-secondary/10 hover:text-secondary group transition-all h-9 px-3 gap-2 border border-transparent hover:border-secondary/20`}
+                              >
+                                <div className='flex flex-row items-center -space-x-1'>
+                                  {Object.keys(post.reactionSummary)
+                                    .slice(0, 3)
+                                    .map((emoji, i) => (
+                                      <span
+                                        key={i}
+                                        className='text-[16px] leading-none z-10'
+                                        style={{ zIndex: 10 - i }}
+                                      >
+                                        {emoji}
+                                      </span>
+                                    ))}
+                                </div>
+                                <span className='font-bold ml-1'>
+                                  {Object.values(post.reactionSummary).reduce(
+                                    (a, b) => a + Number(b),
+                                    0,
+                                  )}
+                                </span>
+                              </Button>
+                            </DropdownTrigger>
+                            <DropdownMenu aria-label='Reactions summary'>
+                              {Object.entries(post.reactionSummary).map(
+                                ([emoji, count]) => (
+                                  <DropdownItem
+                                    key={emoji}
+                                    textValue={emoji}
+                                    onPress={() => handleReaction(emoji, post)}
+                                    className='flex items-center gap-2'
+                                  >
+                                    <div className='flex items-center justify-between w-[50px]'>
+                                      <span className='text-lg'>{emoji}</span>
+                                      <span className='font-bold'>
+                                        {count as number}
+                                      </span>
+                                    </div>
+                                  </DropdownItem>
+                                ),
+                              )}
+                            </DropdownMenu>
+                          </Dropdown>
+                        )}
                       <Popover placement='top'>
                         <PopoverTrigger>
                           <Button
@@ -260,7 +300,7 @@ const AuthorsRoomSection = () => {
                           <Picker
                             data={data}
                             onEmojiSelect={(emoji: any) =>
-                              handleReaction(emoji.native, post.id)
+                              handleReaction(emoji.native, post)
                             }
                             theme='auto'
                           />
