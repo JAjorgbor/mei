@@ -30,17 +30,19 @@ const Hero = () => {
             >
               An Intimate Chronicle
             </motion.span>
-            
+
             <h1 className='text-5xl md:text-7xl lg:text-8xl font-playfair font-bold leading-tight'>
-              One Soul. <br />A Thousand <span className='text-secondary'>Echoes</span>.
+              One Soul. <br />A Thousand{' '}
+              <span className='text-secondary'>Echoes</span>.
             </h1>
-            
+
             <p className='text-lg md:text-xl lg:text-2xl text-default-500 max-w-2xl leading-relaxed italic'>
-              "I am sharing the parts of me I once kept hidden. This is not just a book; it is my resonance, my truth, and my invitation to you."
+              "I am sharing the parts of me I once kept hidden. This is not just
+              a book; it is my resonance, my truth, and my invitation to you."
             </p>
           </div>
 
-          <div className='flex items-center justify-center gap-4 pt-4'>
+          <div className='flex flex-col md:flex-row items-center justify-center gap-4 pt-4'>
             <Button
               size='lg'
               color='secondary'
