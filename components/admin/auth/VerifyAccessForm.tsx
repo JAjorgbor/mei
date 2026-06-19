@@ -27,7 +27,7 @@ const VerifyAccessForm = () => {
   const searchParams = useSearchParams()
   const [keepLoading, setkeepLoading] = useState(false)
   const [countDown, setCountDown] = useState(60000)
-  
+
   const adminEmail = Cookies.get('adminUserEmail') || ''
   const adminPassword = Cookies.get('adminUserPassword') || ''
   const accessToken = Cookies.get(ADMIN_ACCESS_KEY)
@@ -41,7 +41,10 @@ const VerifyAccessForm = () => {
 
   const handleOTPResend = async () => {
     if (!adminEmail || !adminPassword) {
-      addToast({ title: 'Authentication data missing. Please log in again.', color: 'danger' })
+      addToast({
+        title: 'Authentication data missing. Please log in again.',
+        color: 'danger',
+      })
       router.push('/admin')
       return
     }
@@ -52,7 +55,7 @@ const VerifyAccessForm = () => {
         email: adminEmail,
         password: adminPassword,
       })
-      
+
       Cookies.set(ADMIN_ACCESS_KEY, data.accessToken)
       Cookies.set(ADMIN_REFRESH_KEY, data.refreshToken, { expires: 60 })
 
@@ -78,9 +81,9 @@ const VerifyAccessForm = () => {
         otp: formData.otp,
         access_token: accessToken || '',
       })
-      
+
       Cookies.set('verifyAdminAccess', 'verified')
-      
+
       // Cleanup temporary credentials
       Cookies.remove('adminUserEmail')
       Cookies.remove('adminUserPassword')
@@ -90,7 +93,7 @@ const VerifyAccessForm = () => {
     } catch (error: any) {
       addToast({
         title:
-          error?.response?.data?.detail ||
+          error?.data?.message ||
           error?.message ||
           'Something went wrong. Please try again later.',
         color: 'danger',
@@ -101,8 +104,8 @@ const VerifyAccessForm = () => {
 
   return (
     <div className='w-full max-w-md mx-auto'>
-      <Card className='bg-background/60 dark:bg-zinc-900/60 backdrop-blur-2xl border border-default-100 shadow-2xl rounded-[2.5rem] overflow-hidden'>
-        <CardBody className='p-8'>
+      <Card className='bg-background/60 dark:bg-zinc-900/60 backdrop-blur-2xl border border-default-100 shadow-2xl rounded-[2.5rem]'>
+        <CardBody className='p-8 overflow-hidden'>
           <form onSubmit={formMethods.handleSubmit(handleSubmit)}>
             <div className='space-y-6'>
               <div className='flex flex-col gap items-center space-y-4 mb-2'>
@@ -120,9 +123,7 @@ const VerifyAccessForm = () => {
               </div>
               <p className='text-sm text-center text-default-500'>
                 Provide the code that was sent to <br />
-                <span className='font-bold text-foreground'>
-                  {adminEmail}
-                </span>
+                <span className='font-bold text-foreground'>{adminEmail}</span>
               </p>
               <div className='gap-6 flex flex-col items-center pt-2'>
                 <InputOtp

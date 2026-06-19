@@ -30,7 +30,7 @@ const ForgotPasswordForm = () => {
     } catch (error: any) {
       addToast({
         title:
-          error?.response?.data?.detail ||
+          error?.data?.message ||
           error?.message ||
           'Something went wrong. Please try again later',
         color: 'danger',
@@ -56,7 +56,8 @@ const ForgotPasswordForm = () => {
             onSubmit={formMethods.handleSubmit(handleSubmit)}
           >
             <p className='text-sm text-center text-default-500'>
-              Enter your email address and we&apos;ll send you an OTP to reset your password.
+              Enter your email address and we&apos;ll send you an OTP to reset
+              your password.
             </p>
 
             <InputField

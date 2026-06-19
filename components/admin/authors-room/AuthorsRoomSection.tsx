@@ -61,7 +61,7 @@ const AuthorsRoomSection = () => {
           startContent={<PencilLine size={18} />}
           onPress={() => setShowCreateModal(true)}
         >
-          Create Thought
+          Add Thought
         </Button>
       </div>
 
@@ -124,47 +124,61 @@ const AuthorsRoomSection = () => {
                     "{post.text}"
                   </p>
 
-                  {post.reactionSummary && Object.keys(post.reactionSummary).length > 0 && (
-                    <div className='flex flex-wrap gap-2 pt-2'>
-                      <Dropdown>
-                        <DropdownTrigger>
-                          <Button
-                            size='sm'
-                            variant='flat'
-                            radius='full'
-                            className='bg-default-100/50 hover:bg-default-100 border border-default-200 text-sm h-8 px-3'
-                          >
-                            <div className='flex flex-row items-center -space-x-1'>
-                              {Object.keys(post.reactionSummary)
-                                .slice(0, 3)
-                                .map((emoji, i) => (
-                                  <span
-                                    key={i}
-                                    className='text-[14px] leading-none z-10'
-                                    style={{ zIndex: 10 - i }}
-                                  >
-                                    {emoji}
-                                  </span>
-                                ))}
-                            </div>
-                            <span className='font-bold text-default-600 text-xs ml-1'>
-                              {Object.values(post.reactionSummary).reduce((a, b) => a + Number(b), 0)}
-                            </span>
-                          </Button>
-                        </DropdownTrigger>
-                        <DropdownMenu aria-label='Reactions summary'>
-                          {Object.entries(post.reactionSummary).map(([emoji, count], index) => (
-                            <DropdownItem key={index} textValue={emoji} className='flex items-center gap-2'>
-                              <div className='flex items-center justify-between w-[50px]'>
-                                <span className='text-lg leading-none'>{emoji}</span>
-                                <span className='font-bold text-default-600 text-xs'>{count as number}</span>
+                  {post.reactionSummary &&
+                    Object.keys(post.reactionSummary).length > 0 && (
+                      <div className='flex flex-wrap gap-2 pt-2'>
+                        <Dropdown>
+                          <DropdownTrigger>
+                            <Button
+                              size='sm'
+                              variant='flat'
+                              radius='full'
+                              className='bg-default-100/50 hover:bg-default-100 border border-default-200 text-sm h-8 px-3'
+                            >
+                              <div className='flex flex-row items-center -space-x-1'>
+                                {Object.keys(post.reactionSummary)
+                                  .slice(0, 3)
+                                  .map((emoji, i) => (
+                                    <span
+                                      key={i}
+                                      className='text-[14px] leading-none z-10'
+                                      style={{ zIndex: 10 - i }}
+                                    >
+                                      {emoji}
+                                    </span>
+                                  ))}
                               </div>
-                            </DropdownItem>
-                          ))}
-                        </DropdownMenu>
-                      </Dropdown>
-                    </div>
-                  )}
+                              <span className='font-bold text-default-600 text-xs ml-1'>
+                                {Object.values(post.reactionSummary).reduce(
+                                  (a, b) => a + Number(b),
+                                  0,
+                                )}
+                              </span>
+                            </Button>
+                          </DropdownTrigger>
+                          <DropdownMenu aria-label='Reactions summary'>
+                            {Object.entries(post.reactionSummary).map(
+                              ([emoji, count], index) => (
+                                <DropdownItem
+                                  key={index}
+                                  textValue={emoji}
+                                  className='flex items-center gap-2'
+                                >
+                                  <div className='flex items-center justify-between w-[50px]'>
+                                    <span className='text-lg leading-none'>
+                                      {emoji}
+                                    </span>
+                                    <span className='font-bold text-default-600 text-xs'>
+                                      {count as number}
+                                    </span>
+                                  </div>
+                                </DropdownItem>
+                              ),
+                            )}
+                          </DropdownMenu>
+                        </Dropdown>
+                      </div>
+                    )}
                 </CardBody>
 
                 <CardFooter className='px-6 pb-6 flex flex-col gap-4 items-start'>

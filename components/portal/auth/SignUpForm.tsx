@@ -2,12 +2,7 @@
 
 import InputField from '@/components/elements/InputField'
 import Cookies from 'js-cookie'
-import {
-  addToast,
-  Button,
-  Card,
-  CardBody,
-} from '@heroui/react'
+import { addToast, Button, Card, CardBody } from '@heroui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { registerUser } from '@/api-utils/portal/requests/auth.requests'
 import { GOOGLE_SIGN_IN_URL } from '@/api-utils/admin/requests/portal.auth.requests'
@@ -196,7 +191,7 @@ const SignUpForm = () => {
                 type='submit'
                 color='primary'
                 fullWidth
-                className='font-bold h-12 text-sm uppercase tracking-widest shadow-[0_0_20px_rgba(var(--heroui-primary-rgb),0.2)] rounded-2xl block mt-4'
+                className='font-bold h-12 text-sm uppercase tracking-widest shadow-[0_0_20px_rgba(var(--heroui-primary-rgb),0.2)] rounded-2xl mt-4'
                 isLoading={formMethods.formState.isSubmitting || keepLoading}
               >
                 Create Account

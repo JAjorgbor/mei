@@ -11,6 +11,7 @@ export default function useGetPortalAllChapters() {
   const fetcher = async () => {
     if (BOOK_ID) {
       const { data } = await getPortalAllChapters(BOOK_ID)
+
       return data
     }
   }

@@ -20,6 +20,10 @@ export default async (req: NextRequest) => {
 
   const { pathname } = req.nextUrl
 
+  if (pathname === '/' && !!portalToken) {
+    return NextResponse.redirect(new URL('/portal/dashboard', req.url))
+  }
+
   // Admin Guarding
   if (pathname.startsWith('/admin')) {
     const isAdminLoggedIn = !!adminToken
@@ -77,6 +81,7 @@ export default async (req: NextRequest) => {
 
 export const config = {
   matcher: [
+    '/',
     '/admin((?!/api|/_next|/favicon.ico).*)',
     '/portal((?!/api|/_next|/favicon.ico).*)',
   ],

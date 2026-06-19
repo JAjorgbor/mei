@@ -4,12 +4,15 @@ const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
 })
 
-axiosInstance.interceptors.response.use((response) => {
-  return {
-    ...response,
-    data: response.data.data,
-  }
-})
+axiosInstance.interceptors.response.use(
+  (response) => {
+    return {
+      ...response,
+      data: response.data.data,
+    }
+  },
+  (error) => Promise.reject(error.response),
+)
 
 // Login to admin
 export const login = async (data: any) =>

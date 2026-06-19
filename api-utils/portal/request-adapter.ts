@@ -22,7 +22,7 @@ export const PORTAL_USER_ID = 'portalUserId'
 const processQueue = (error: any, token: string | null = null) => {
   failedQueue.forEach((prom) => {
     if (error) {
-      prom.reject(error)
+      prom.reject(error.response)
     } else {
       prom.resolve(token)
     }
@@ -46,7 +46,7 @@ axiosInstance.interceptors.response.use(
   (response) => {
     return {
       ...response,
-      data: response.data.data,
+      data: response.data.data || response.data,
     }
   },
   async (error) => {
@@ -61,7 +61,7 @@ axiosInstance.interceptors.response.use(
               resolve(axiosInstance(originalConfig))
             },
             reject: (err: any) => {
-              reject(err)
+              reject(err.response)
             },
           })
         })
@@ -78,7 +78,7 @@ axiosInstance.interceptors.response.use(
         const { data } = await axios.post(
           `${process.env.NEXT_PUBLIC_API_URL}user/refresh`,
           { refreshToken },
-          { headers: { 'Content-Type': 'application/json' } }
+          { headers: { 'Content-Type': 'application/json' } },
         )
 
         const newAccessToken = data.data.accessToken
@@ -107,7 +107,7 @@ axiosInstance.interceptors.response.use(
       }
     }
 
-    return Promise.reject(error)
+    return Promise.reject(error.response)
   },
 )
 

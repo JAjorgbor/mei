@@ -11,7 +11,10 @@ import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import Cookies from 'js-cookie'
-import { PORTAL_ACCESS_KEY, PORTAL_REFRESH_KEY } from '@/api-utils/portal/request-adapter'
+import {
+  PORTAL_ACCESS_KEY,
+  PORTAL_REFRESH_KEY,
+} from '@/api-utils/portal/request-adapter'
 
 const schema = z.object({
   otp: z
@@ -27,7 +30,7 @@ const VerifyOTPSection = () => {
   const searchParams = useSearchParams()
   const [keepLoading, setkeepLoading] = useState(false)
   const [countDown, setCountDown] = useState(60000)
-  
+
   const portalEmail = Cookies.get('portalUserEmail') || 'email@example.com'
   const portalPassword = Cookies.get('portalUserPassword') || ''
 
@@ -38,10 +41,13 @@ const VerifyOTPSection = () => {
   const formMethods = useForm<FormFields>({ resolver: zodResolver(schema) })
 
   const router = useRouter()
-  
+
   const handleOTPResend = async () => {
     if (!portalEmail || !portalPassword) {
-      addToast({ title: 'Authentication data missing. Please log in again.', color: 'danger' })
+      addToast({
+        title: 'Authentication data missing. Please log in again.',
+        color: 'danger',
+      })
       router.push('/portal')
       return
     }
@@ -52,7 +58,7 @@ const VerifyOTPSection = () => {
         email: portalEmail,
         password: portalPassword,
       })
-      
+
       Cookies.set(PORTAL_ACCESS_KEY, data.accessToken)
       Cookies.set(PORTAL_REFRESH_KEY, data.refreshToken, { expires: 60 })
 
@@ -79,7 +85,7 @@ const VerifyOTPSection = () => {
     } catch (error: any) {
       addToast({
         title:
-          error?.response?.data?.detail ||
+          error?.data?.message ||
           error?.message ||
           'Something went wrong. Please try again later.',
         color: 'danger',

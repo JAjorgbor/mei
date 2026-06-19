@@ -4,12 +4,17 @@ const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
 })
 
-axiosInstance.interceptors.response.use((response) => {
-  return {
-    ...response,
-    data: response.data.data,
-  }
-})
+axiosInstance.interceptors.response.use(
+  (response) => {
+    return {
+      ...response,
+      data: response.data.data,
+    }
+  },
+  (error) => Promise.reject(error.response),
+)
+
+export default axiosInstance
 
 export const registerUser = (data: any) =>
   axiosInstance.post(`/user/sign-up`, data)

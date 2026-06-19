@@ -34,10 +34,10 @@ const LoginForm = () => {
       const { data } = await login(formData)
 
       const { accessToken, refreshToken, ...userPayload } = data
-      
+
       Cookies.set(ADMIN_ACCESS_KEY, accessToken)
       Cookies.set(ADMIN_REFRESH_KEY, refreshToken, { expires: 60 })
-      
+
       // Store user info for VerifyAccessForm
       Cookies.set('adminUserEmail', formData.email)
       Cookies.set('adminUserPassword', formData.password)
@@ -48,7 +48,7 @@ const LoginForm = () => {
     } catch (error: any) {
       addToast({
         title:
-          error?.response?.data?.detail ||
+          error?.data?.message ||
           error?.message ||
           'Something went wrong. Please try again later',
         color: 'danger',

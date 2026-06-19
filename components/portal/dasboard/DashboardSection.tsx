@@ -7,12 +7,10 @@ import Link from 'next/link'
 
 const DashboardSection = () => {
   const { portalUser, portalUserLoading } = useGetPortalUser()
-  console.log(portalUser)
   useSetHeaderNavigation({
     title: undefined,
     backLink: `/`,
   })
-  console.log(portalUser)
   return (
     <div className='relative overflow-hidden min-h-[calc(100vh-140px)] flex flex-col items-center justify-center pb-20'>
       <div className='bg-gradient-radial from-secondary/40 via-secondary-800/10 to-transparent h-screen w-screen absolute -top-1/4 -left-1/4 rounded-full blur-3xl animate-pulsate pointer-events-none' />

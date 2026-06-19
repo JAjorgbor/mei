@@ -63,14 +63,18 @@ const ReadChapterSection = () => {
   const allChapters = allChaptersData?.items
   const prevChapter = useMemo(() => {
     if (!allChaptersLoading && allChapters && chapter) {
-      return allChapters.find((c) => c.number < chapter.number) || undefined
+      return (
+        allChapters.find((c) => chapter.number - c.number == 1) || undefined
+      )
     }
     return undefined
   }, [allChapters, allChaptersLoading, chapter])
 
   const nextChapter = useMemo(() => {
     if (!allChaptersLoading && allChapters && chapter) {
-      return allChapters.find((c) => c.number > chapter.number) || undefined
+      return (
+        allChapters.find((c) => c.number - chapter.number == 1) || undefined
+      )
     }
     return undefined
   }, [allChapters, allChaptersLoading, chapter])
@@ -140,7 +144,9 @@ const ReadChapterSection = () => {
               })
             )}
           </div>
-          {pages?.length && <ChapterStats setShowComments={setShowComments} />}
+          {pages?.length ? (
+            <ChapterStats setShowComments={setShowComments} />
+          ) : null}
         </div>
       </Container>
       <div className='fixed bottom-3 w-full z-[300] px-4'>

@@ -62,7 +62,7 @@ const SignInForm = () => {
   const handleSubmit = async (formData: FormFields) => {
     try {
       const { data } = await loginUser(formData)
-      console.log(data)
+
       const { accessToken, refreshToken, ...userPayload } = data
       Cookies.set(PORTAL_ACCESS_KEY, accessToken)
       Cookies.set(PORTAL_REFRESH_KEY, refreshToken, {
@@ -78,7 +78,7 @@ const SignInForm = () => {
       console.log(error)
       addToast({
         title:
-          error?.response?.data?.detail ||
+          error?.data?.message ||
           error?.message ||
           'Something went wrong. Please try again later',
         color: 'danger',
@@ -155,7 +155,7 @@ const SignInForm = () => {
                 type='submit'
                 color='primary'
                 fullWidth
-                className='font-bold h-12 text-sm uppercase tracking-widest shadow-[0_0_20px_rgba(var(--heroui-primary-rgb),0.2)] rounded-2xl block mt-2'
+                className='font-bold h-12 text-sm uppercase tracking-widest shadow-[0_0_20px_rgba(var(--heroui-primary-rgb),0.2)] rounded-2xl mt-2'
                 isLoading={formMethods.formState.isSubmitting || keepLoading}
               >
                 Sign In To Portal

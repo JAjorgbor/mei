@@ -12,7 +12,9 @@ const schema = z
     email: z.string().email('Invalid email address'),
     otp: z.string().length(6, 'OTP must be exactly 6 characters'),
     password: z.string().min(6, 'Password must be at least 6 characters'),
-    confirmPassword: z.string().min(6, 'Confirm password must be at least 6 characters'),
+    confirmPassword: z
+      .string()
+      .min(6, 'Confirm password must be at least 6 characters'),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
@@ -44,7 +46,7 @@ const ResetPasswordForm = () => {
     } catch (error: any) {
       addToast({
         title:
-          error?.response?.data?.detail ||
+          error?.data?.message ||
           error?.message ||
           'Something went wrong. Please try again later',
         color: 'danger',
@@ -100,14 +102,16 @@ const ResetPasswordForm = () => {
               type='password'
               placeholder='••••••••'
               register={formMethods.register('confirmPassword')}
-              errorMessage={formMethods?.formState?.errors?.confirmPassword?.message}
+              errorMessage={
+                formMethods?.formState?.errors?.confirmPassword?.message
+              }
             />
 
             <Button
               type='submit'
               color='primary'
               fullWidth
-              className='font-bold h-12 text-sm uppercase tracking-widest shadow-[0_0_20px_rgba(var(--heroui-primary-rgb),0.2)] rounded-2xl block mt-4'
+              className='font-bold h-12 text-sm uppercase tracking-widest shadow-[0_0_20px_rgba(var(--heroui-primary-rgb),0.2)] rounded-2xl mt-4'
               isLoading={formMethods.formState.isSubmitting}
             >
               Reset Password
